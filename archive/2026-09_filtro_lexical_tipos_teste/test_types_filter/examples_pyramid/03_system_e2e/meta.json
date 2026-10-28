@@ -1,0 +1,34 @@
+{
+  "layer": "system_e2e",
+  "source_db": "agent_skills_mandatory_only.db",
+  "selection": "keyword_matches.mandatory_hits + test_types layer exclusive/strong",
+  "repo": "flare-foundation/flare-ai-skills",
+  "path": "skills/flare-fcc-skill/SKILL.md",
+  "name": "flare-fcc",
+  "description": "Provides domain knowledge and guidance for Flare Confidential Compute (FCC) and TEE extensions—how confidential extensions run inside a Trusted Execution Environment, the on-chain TeeExtensionRegistry and TeeMachineRegistry, the InstructionSender contract pattern, the OPType/OPCommand routing model, the instruction lifecycle, the extension action handler, the types server, attestation, and reproducible builds. Use when building, deploying, or reasoning about Flare confidential extensions, TEE machines, FCC, confidential compute, the fce-extension-scaffold, the fce-sign signing example, the fce-weather-insurance example, Confidential Space VMs, code-hash attestation, parametric insurance on TEE, or registering a TEE on Coston/Coston2.",
+  "matched_layers": [
+    "system_e2e"
+  ],
+  "matched_terms_by_layer": {
+    "system_e2e": [
+      "e2e test",
+      "end-to-end test"
+    ]
+  },
+  "matched_terms": [
+    "e2e test",
+    "end-to-end test"
+  ],
+  "mandatory_hits": [
+    "blockchain",
+    "dapp",
+    "minting",
+    "msg.sender",
+    "msg.value",
+    "smart contracts",
+    "smart-contracts",
+    "wallet"
+  ],
+  "n_layers": 1,
+  "n_terms": 2
+}

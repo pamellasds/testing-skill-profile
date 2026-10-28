@@ -1,0 +1,85 @@
+NAME: create-infographics
+DESCRIPTION: Creates production-grade infographics as HTML, PNG, and PDF from any data or brief. Use when asked for an infographic, visual summary, one-pager, data visualization, or to convert tables, stats, timelines, or comparisons into a visual format. Also triggers on: "shareable graphic", "visual report", "poster" + data content, "one-pager", or any request where information should be presented as a designed image. Crypto and Web3 triggers: tokenomics, token distribution, token economics, vesting schedule, allocation breakdown, airdrop guide, airdrop infographic, ecosystem map, ecosystem overview, ecosystem infographic, protocol explainer, game overview, game infographic, NFT showcase, how-it-works diagram, comparison chart, pricing graphic, listicle graphic. Also triggers on: "make a graphic for", "design a visual for", "create a visual", "turn this into an infographic", "visualize this data", "make this shareable".
+
+
+---
+name: create-infographics
+description: >
+  Creates production-grade infographics as HTML, PNG, and PDF from any data or brief.
+  Use when asked for an infographic, visual summary, one-pager, data visualization,
+  or to convert tables, stats, timelines, or comparisons into a visual format.
+  Also triggers on: "shareable graphic", "visual report", "poster" + data content,
+  "one-pager", or any request where information should be presented as a designed image.
+  Crypto and Web3 triggers: tokenomics, token distribution, token economics, vesting schedule,
+  allocation breakdown, airdrop guide, airdrop infographic, ecosystem map, ecosystem overview,
+  ecosystem infographic, protocol explainer, game overview, game infographic, NFT showcase,
+  how-it-works diagram, comparison chart, pricing graphic, listicle graphic.
+  Also triggers on: "make a graphic for", "design a visual for", "create a visual",
+  "turn this into an infographic", "visualize this data", "make this shareable".
+dependencies: playwright>=1.40.0
+---
+
+# Infographic Skill
+
+Works in Claude Code and any agent with filesystem + bash access.
+
+Two modes: **Interactive Builder** (preview each component live in the browser, iterate, then assemble) and **One-Shot** (generate the full polished infographic in one pass). Both produce the same final output: HTML + PNG + PDF.
+
+---
+
+## Designer DNA
+
+These infographics are **dense editorial reference material** — closer to a game cheat sheet or crypto research poster than a website. Built across 175 pieces, the signature is: maximum information density organized by strong visual hierarchy, not whitespace.
+
+**The #1 failure mode is producing something that looks like a dark-mode SaaS landing page.** If your output has: uniform card grids, generous breathing room, paragraph descriptions, no arrows/connectors, and could pass as a Next.js marketing page — you have failed. Start over.
+
+**The success state looks like:** A piece someone would screenshot, save to their phone, and reference later. Dense with data. Sections connected by arrows showing how concepts relate. Bullet points, not paragraphs. Tables with real data. Each section structurally different from the last. Bold borders framing content areas. Multiple content types on one canvas — tables next to flow diagrams next to stat callouts next to bullet lists.
+
+### Anti-Frontend Checklist (run before delivery)
+
+Before delivering ANY infographic, verify it does NOT exhibit these frontend-design anti-patterns:
+
+- ❌ **Uniform card grids** — If every section uses the same N-column card grid, redesign. Each section should use a different layout structure.
+- ❌ **Paragraph descriptions** — Body text inside components should be bullet points, not paragraphs. One line per fact. The only paragraph allowed is a 1-2 sentence intro in the hero.
+- ❌ **Generous whitespace within sections** — Whitespace separates SECTIONS from each other. Within a section, content is packed tight. If you can fit more information without it looking chaotic, you should.
+- ❌ **Isolated sections** — Sections should connect to each other visually. Use arrows, flow lines, or shared color coding to show how Section A's output feeds into Section B.
+- ❌ **All same component type** — If 3+ sections all use "feature cards", replace at least one with a table, flow diagram, bullet list, or stat callout. Variety is mandatory.
+- ❌ **No tables** — If the data has any comparison, specs, rates, tiers, or requirements, it should be in a table. Tables are the designer's primary data structure.
+- ❌ **Ghost borders** — Borders should be visible. Use `rgba(primary, 0.3)` minimum, or solid colored borders. `rgba(255,255,255,0.08)` is invisible and looks like a frontend component.
+
+**Background**: Near-black by default. The true signature range is `#060606`–`#090909` — closer to pure black than `#0A0A0A`–`#0D0D0D`. Both ends are valid, but prefer the darker end. Some pieces use medium-dark `#1a1a1a`–`#1d1d1d` (still dark, but noticeably lighter than near-black) — valid for strategy guides and flow-diagram-heavy pieces. **Light mode exceptions**: game event guides, quest cheat sheets, and bounty/pocket guides often use white/light-gray backgrounds — this is correct, not a mistake. "Whitepaper" or "report" context does NOT mean light mode unless the piece is clearly guide/educational style.
+
+**Signature palette**: When no brand color is given, the default is project/brand-driven. Palette is almost always mixed temperature — warm + cool accent together (75% of pieces). The true defaults:
+- Background: `#060606`–`#090909` near-black
+- Default warm accent: **amber `#E99A00`** family (`#E99A00`–`#F6A615`) — the most common recurring primary color
+- Default cool complement: teal/green (`#00E88A`, `#2ED5D7`, `#11C59A`) or blue (`#29B7FF`) — these appear far more than cyan `#00FFFF`
+- Pink/magenta (`#F59AC3`, `#A764F6`) is type-specific (crypto-explainer), not a universal default
+- Multiple accents can coexist on one dark infographic — mixed palette is the norm
+
+**Display font**: All-caps, heavy weight, condensed. True hierarchy by usage across 175 pieces:
+- **Bebas Neue** — 76 uses (43%), the dominant signature font
+- **Teko** — 23 uses (13%), condensed, slightly wider than Bebas
+- **Orbitron** — 13 uses (7%), techno/sci-fi; use for token-economics and game-overview
+- **Press Start 2P** — 8 uses (5%), pixel/retro; use exclusively for pixel/retro game pieces
+- **Bungee** — 6 uses (3%), bold, wide, high-energy
+- **Montserrat ExtraBold/Black** — when display and body font should match
+- Barlow Condensed — acceptable alternative (2 uses); not the signature
+
+Section headers are ALWAYS all-caps. Never use Plus Jakarta Sans, Syne, Outfit, or Space Grotesk as the display font — these feel like generic frontend design, not this designer's work.
+
+**Layout pattern**: Stacked named sections top-to-bottom. Each section gets a bold all-caps header, then its content beneath. This is the dominant structure in 13 of 15 example pieces — it maps to the **Stacked Reference** archetype. The other 4 archetypes (Flow Poster, Hub & Spoke, Stat Poster, Cheat Sheet) are secondary options — only reach for them when the stacked-sections pattern genuinely doesn't fit.
+
+**Signature components** (use these first):
+- **Full-width section separator bands** — solid dark-filled full-width bars spanning the canvas, containing the section label in all-caps. Not just a text header — a full background-colored strip. This is the dominant section-divider pattern.
+- **Numbered section headers with icon prefix** — diamond `◆` or colored circle prefix before section number + name (e.g., `◆1 OVERVIEW`). Common in game guides and mechanic breakdowns.
+- Bold all-caps section headers with color accent or number prefix
+- Colored rounded-rectangle **border** containers (border, not fill) grouping related content
+- **Vertical flow diagrams with labeled arrows** — process nodes (rectangular, colored fill) connected by thin directional arrows. Arrows ALWAYS carry text labels (action names, percentages, token names). Never unlabeled arrows in a flow diagram.
+- **Branch/split flow nodes** — diamond or condition nodes where flow diverges into parallel paths, with each path labeled
+- **Swim-lane architecture diagrams** — horizontal labeled bands (e.g., "AUCTIONEER LAYER" / "STRATEGY LAYER") with flow nodes inside them. Used for two-tier protocol architectures.
+- **Hierarchical tree diagrams** — branching node structure (1 root → 5 columns → 3–4 levels deep). Used for crafting trees, skill trees, dependency maps.
+- **Character/NFT card grid** — tight grid of small cards, each with pixel art / character image + name + colored stat bars. Standard for game-overview and ecosystem pieces.
+- **Tag cloud / pill grid** — irregular rows of rounded-rectangle category pills. Used in guides and event posters to show scope/coverage.
+- Flywheel/economy loop diagrams: rectangular nodes → arrows → circular cycle
+- Colored pill/badge labels 
+[... truncado em 8000 caracteres]

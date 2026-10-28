@@ -1,0 +1,423 @@
+[
+  {
+    "repo": "youugiuhiuh/web3-demos",
+    "path": ".agents/skills/smart-contract-dev/SKILL.md",
+    "name": "smart-contract-dev",
+    "source": "examples_pyramid",
+    "hint": "unit",
+    "artifact_type": "test_guidance_skill",
+    "confidence": "high",
+    "checklist": {
+      "unit": {
+        "answer": "YES",
+        "evidence": {
+          "quote": "Every smart contract must have corresponding unit tests that explicitly test standard execution flow, exact reverts via cheatcodes/assertions, and event emission.",
+          "reason": "Explicit mention of unit testing for smart contracts, including execution flow, reverts, and event emission."
+        }
+      },
+      "integration": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "contract": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "ui": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "end_to_end": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "acceptance": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "exploratory": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "automation": {
+        "answer": "YES",
+        "evidence": {
+          "quote": "unit tests that explicitly test standard execution flow, exact reverts via cheatcodes/assertions",
+          "reason": "Mentions automated testing via assertions and cheatcodes, which are part of test automation frameworks (e.g., Foundry)."
+        }
+      }
+    },
+    "skills_evidenced": [
+      "unit",
+      "automation"
+    ],
+    "skill_profile": {
+      "unit": "yes",
+      "integration": "no",
+      "contract": "no",
+      "ui": "no",
+      "end_to_end": "no",
+      "acceptance": "no",
+      "exploratory": "no",
+      "automation": "yes"
+    },
+    "verification_ok": true,
+    "verification_issues": [],
+    "dropped_non_verbatim": [],
+    "content_truncated": false
+  },
+  {
+    "repo": "abelrguezr/hacktricks-skills",
+    "path": "skills/pentesting-web/dapps-DecentralizedApplications/SKILL.MD",
+    "name": "pentest-dapps",
+    "source": "examples_pyramid",
+    "hint": "integration",
+    "artifact_type": "test_guidance_skill",
+    "confidence": "high",
+    "checklist": {
+      "unit": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "integration": {
+        "answer": "YES",
+        "evidence": {
+          "quote": "Test backend-blockchain synchronization",
+          "reason": "Explicit mention of integration testing between backend and blockchain components."
+        }
+      },
+      "contract": {
+        "answer": "YES",
+        "evidence": {
+          "quote": "Review contract code for vulnerabilities",
+          "reason": "Direct reference to smart contract testing as a dedicated phase."
+        }
+      },
+      "ui": {
+        "answer": "YES",
+        "evidence": {
+          "quote": "Test for XSS (critical in DApps - can manipulate wallet interactions)",
+          "reason": "Explicit mention of client-side UI/API testing (wallet interactions, transaction signing flows)."
+        }
+      },
+      "end_to_end": {
+        "answer": "YES",
+        "evidence": {
+          "quote": "Test backend-blockchain synchronization",
+          "reason": "Integration of backend, smart contracts, and blockchain interactions (e.g., withdrawal + purchase race conditions)."
+        }
+      },
+      "acceptance": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "exploratory": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "automation": {
+        "answer": "UNCERTAIN",
+        "evidence": null
+      }
+    },
+    "skills_evidenced": [
+      "integration",
+      "contract",
+      "ui",
+      "end_to_end"
+    ],
+    "skill_profile": {
+      "unit": "no",
+      "integration": "yes",
+      "contract": "yes",
+      "ui": "yes",
+      "end_to_end": "yes",
+      "acceptance": "no",
+      "exploratory": "no",
+      "automation": "uncertain"
+    },
+    "verification_ok": true,
+    "verification_issues": [],
+    "dropped_non_verbatim": [],
+    "content_truncated": false
+  },
+  {
+    "repo": "flare-foundation/flare-ai-skills",
+    "path": "skills/flare-fcc-skill/SKILL.md",
+    "name": "flare-fcc",
+    "source": "examples_pyramid",
+    "hint": "system_e2e",
+    "artifact_type": "not_test_related",
+    "confidence": "high",
+    "checklist": {
+      "unit": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "integration": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "contract": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "ui": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "end_to_end": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "acceptance": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "exploratory": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "automation": {
+        "answer": "NO",
+        "evidence": null
+      }
+    },
+    "skills_evidenced": [],
+    "skill_profile": {
+      "unit": "no",
+      "integration": "no",
+      "contract": "no",
+      "ui": "no",
+      "end_to_end": "no",
+      "acceptance": "no",
+      "exploratory": "no",
+      "automation": "no"
+    },
+    "verification_ok": true,
+    "verification_issues": [],
+    "dropped_non_verbatim": [],
+    "content_truncated": true
+  },
+  {
+    "repo": "Lay3rLabs/wavs-aave-guardian",
+    "path": ".claude/skills/test-contracts/SKILL.md",
+    "name": "test-contracts",
+    "source": "candidates",
+    "hint": "fuzz_property",
+    "artifact_type": "test_guidance_skill",
+    "confidence": "high",
+    "checklist": {
+      "unit": {
+        "answer": "YES",
+        "evidence": {
+          "quote": "Core unit tests (deposit, withdraw, LP, hedge)",
+          "reason": "Explicit mention of unit tests for core functionalities like deposit, withdraw, LP, and hedge in `SmartVault.t.sol`."
+        }
+      },
+      "integration": {
+        "answer": "UNCERTAIN",
+        "evidence": null
+      },
+      "contract": {
+        "answer": "YES",
+        "evidence": {
+          "quote": "Run Solidity smart contract tests using Foundry forge",
+          "reason": "Focus on testing Solidity smart contracts, which aligns with contract-level testing (e.g., CDC, provider/consumer interactions)."
+        }
+      },
+      "ui": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "end_to_end": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "acceptance": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "exploratory": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "automation": {
+        "answer": "YES",
+        "evidence": {
+          "quote": "Run the Solidity smart contract tests",
+          "reason": "Explicit use of Foundry's `forge test` command, which is an automated test runner for Solidity contracts."
+        }
+      }
+    },
+    "skills_evidenced": [
+      "unit",
+      "contract",
+      "automation"
+    ],
+    "skill_profile": {
+      "unit": "yes",
+      "integration": "uncertain",
+      "contract": "yes",
+      "ui": "no",
+      "end_to_end": "no",
+      "acceptance": "no",
+      "exploratory": "no",
+      "automation": "yes"
+    },
+    "verification_ok": true,
+    "verification_issues": [],
+    "dropped_non_verbatim": [],
+    "content_truncated": false
+  },
+  {
+    "repo": "Matro81/ModernFlyouts-Enhance",
+    "path": ".agent/skills/blockchain-engineer/SKILL.md",
+    "name": "blockchain-engineer",
+    "source": "candidates",
+    "hint": "fork",
+    "artifact_type": "test_guidance_skill",
+    "confidence": "high",
+    "checklist": {
+      "unit": {
+        "answer": "YES",
+        "evidence": {
+          "quote": "Beyond unit tests—implement invariant testing, fuzzing (Echo/Medusa), and fork testing.",
+          "reason": "Mentions unit tests explicitly as part of the testing strategy."
+        }
+      },
+      "integration": {
+        "answer": "YES",
+        "evidence": {
+          "quote": "fork testing",
+          "reason": "Fork testing involves simulating real blockchain interactions, akin to integration testing."
+        }
+      },
+      "contract": {
+        "answer": "YES",
+        "evidence": {
+          "quote": "invariant testing, fuzzing (Echo/Medusa)",
+          "reason": "Invariant and fuzzing tests are contract-specific testing techniques."
+        }
+      },
+      "ui": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "end_to_end": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "acceptance": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "exploratory": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "automation": {
+        "answer": "YES",
+        "evidence": {
+          "quote": "Automated pipelines for linting, testing, and deterministic deployments.",
+          "reason": "Explicit mention of CI/CD automation for testing and deployment."
+        }
+      }
+    },
+    "skills_evidenced": [
+      "unit",
+      "integration",
+      "contract",
+      "automation"
+    ],
+    "skill_profile": {
+      "unit": "yes",
+      "integration": "yes",
+      "contract": "yes",
+      "ui": "no",
+      "end_to_end": "no",
+      "acceptance": "no",
+      "exploratory": "no",
+      "automation": "yes"
+    },
+    "verification_ok": true,
+    "verification_issues": [],
+    "dropped_non_verbatim": [],
+    "content_truncated": false
+  },
+  {
+    "repo": "linkxzhou/build-your-own-x-skills",
+    "path": "skills/blockchain-cryptocurrency-blockchain-ecomunsing-blockchain/SKILL.md",
+    "name": "blockchain-cryptocurrency-blockchain-ecomunsing-blockchain",
+    "source": "candidates",
+    "hint": "regression",
+    "artifact_type": "test_guidance_skill",
+    "confidence": "medium",
+    "checklist": {
+      "unit": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "integration": {
+        "answer": "YES",
+        "evidence": {
+          "quote": "Integration and end-to-end behavior",
+          "reason": "Menciona 'Integration' como um milestone explícito no workflow."
+        }
+      },
+      "contract": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "ui": {
+        "answer": "YES",
+        "evidence": {
+          "quote": "Input/parser/protocol/UI boundary",
+          "reason": "Inclui 'UI boundary' como parte dos milestones, sugerindo interação com interface."
+        }
+      },
+      "end_to_end": {
+        "answer": "YES",
+        "evidence": {
+          "quote": "Integration and end-to-end behavior",
+          "reason": "Menciona explicitamente 'end-to-end behavior' como milestone."
+        }
+      },
+      "acceptance": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "exploratory": {
+        "answer": "NO",
+        "evidence": null
+      },
+      "automation": {
+        "answer": "YES",
+        "evidence": {
+          "quote": "explicit verification commands",
+          "reason": "Referência a comandos de verificação explícitos, sugerindo automação de testes."
+        }
+      }
+    },
+    "skills_evidenced": [
+      "integration",
+      "ui",
+      "end_to_end",
+      "automation"
+    ],
+    "skill_profile": {
+      "unit": "no",
+      "integration": "yes",
+      "contract": "no",
+      "ui": "yes",
+      "end_to_end": "yes",
+      "acceptance": "no",
+      "exploratory": "no",
+      "automation": "yes"
+    },
+    "verification_ok": true,
+    "verification_issues": [],
+    "dropped_non_verbatim": [],
+    "content_truncated": false
+  }
+]

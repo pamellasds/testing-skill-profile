@@ -1,0 +1,76 @@
+[
+  {
+    "layer": "unit",
+    "repo": "youugiuhiuh/web3-demos",
+    "path": ".agents/skills/smart-contract-dev/SKILL.md",
+    "name": "smart-contract-dev",
+    "matched_layers": [
+      "unit"
+    ],
+    "test_terms": [
+      "unit test",
+      "unit tests"
+    ],
+    "mandatory_hits": [
+      "dapp",
+      "erc1155",
+      "erc20",
+      "erc721",
+      "reentrancy",
+      "smart contract",
+      "smart contracts",
+      "smart-contract"
+    ],
+    "n_candidates_strong": 1069
+  },
+  {
+    "layer": "integration",
+    "repo": "abelrguezr/hacktricks-skills",
+    "path": "skills/pentesting-web/dapps-DecentralizedApplications/SKILL.MD",
+    "name": "pentest-dapps",
+    "matched_layers": [
+      "integration"
+    ],
+    "test_terms": [
+      "integration test",
+      "integration testing"
+    ],
+    "mandatory_hits": [
+      "blockchain",
+      "dapp",
+      "decentralized application",
+      "minting",
+      "nft",
+      "reentrancy",
+      "smart contract",
+      "smart contracts",
+      "smart-contract",
+      "wallet"
+    ],
+    "n_candidates_strong": 820
+  },
+  {
+    "layer": "system_e2e",
+    "repo": "flare-foundation/flare-ai-skills",
+    "path": "skills/flare-fcc-skill/SKILL.md",
+    "name": "flare-fcc",
+    "matched_layers": [
+      "system_e2e"
+    ],
+    "test_terms": [
+      "e2e test",
+      "end-to-end test"
+    ],
+    "mandatory_hits": [
+      "blockchain",
+      "dapp",
+      "minting",
+      "msg.sender",
+      "msg.value",
+      "smart contracts",
+      "smart-contracts",
+      "wallet"
+    ],
+    "n_candidates_strong": 355
+  }
+]

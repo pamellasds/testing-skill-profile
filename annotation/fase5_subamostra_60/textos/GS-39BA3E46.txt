@@ -1,0 +1,144 @@
+NAME: offensive-osint
+DESCRIPTION: Comprehensive OSINT methodology skill for offensive security, red team intelligence gathering, and bug bounty reconnaissance. Covers domain recon, email harvesting, social media profiling, GitHub/code leaks, Shodan/Censys enumeration, breach data lookup, employee profiling, infrastructure mapping, cryptocurrency tracing, geospatial intelligence, and AI-assisted analysis workflows. Use when performing reconnaissance against a target domain or organization, investigating a person or entity, tracing cryptocurrency flows, geolocating images or events, or building an attack-surface map.
+
+---
+name: offensive-osint
+description: "Comprehensive OSINT methodology skill for offensive security, red team intelligence gathering, and bug bounty reconnaissance. Covers domain recon, email harvesting, social media profiling, GitHub/code leaks, Shodan/Censys enumeration, breach data lookup, employee profiling, infrastructure mapping, cryptocurrency tracing, geospatial intelligence, and AI-assisted analysis workflows. Use when performing reconnaissance against a target domain or organization, investigating a person or entity, tracing cryptocurrency flows, geolocating images or events, or building an attack-surface map."
+---
+
+# Offensive OSINT Methodology
+
+## Workflow
+
+1. Define target scope (domain, org, person, crypto address, or geo subject)
+2. Select applicable categories below based on scope
+3. Work top-down within each category; pivot on discovered artifacts
+4. Archive every key artifact: URL + timestamp + screenshot (PNG) + hash (SHA-256)
+5. Log findings in JSONL with a `run_id` and tool versions for reproducibility
+6. Suggest next steps based on what each tool returns
+
+---
+
+## General OSINT
+
+- [Bookmarks](https://tools.myosint.training/) — Comprehensive OSINT bookmarks
+- [OSINT Framework](https://osintframework.com/) — Tool/resource directory
+- [IntelTechniques Tools](https://inteltechniques.com/tools/) — Suite of investigative tools
+- [Bellingcat Toolkit](https://www.bellingcat.com/resources/2024/09/24/bellingcat-online-investigations-toolkit/) — Investigative journalism tools
+- [CyberSudo OSINT Toolkit](https://docs.google.com/spreadsheets/d/1EC0sKA_W9znzsxUt0wye9UYtyATXw5m8) — OSINT websites list
+- [Google Dorks](https://dorksearch.com/) — Efficient Google searching
+- [Distributed Denial of Secrets](https://ddosecrets.com/) — Leaked data
+- [Country-Specific Resources](https://digitaldigging.org/osint/) — Country-targeted OSINT
+
+### Search Engines
+
+| Tool | Notes |
+|------|-------|
+| [Carrot2](https://search.carrot2.org/#/search/web) | Clusters results by topic |
+| [etools](https://www.etools.ch/) | Metasearch engine |
+| [Kagi](https://kagi.com/) | Privacy-first, non-personalized results |
+| [Brave Search](https://search.brave.com/) | Independent index; Goggles for custom ranking |
+| [PDF Search](https://www.pdfsearch.io/) | Search PDF files and view table of contents |
+| [Google Fact Check Explorer](https://toolbox.google.com/factcheck/explorer) | Cross-site fact-check search |
+
+---
+
+## Username & Email Investigation
+
+| Tool | Purpose |
+|------|---------|
+| [Sherlock](https://github.com/sherlock-project/sherlock) | Username search across social networks |
+| [Maigret](https://github.com/soxoj/maigret) | Collect profiles by username from many sites |
+| [What's My Name](https://whatsmyname.app/) | Username search across platforms |
+| [Holehe](https://github.com/megadose/holehe) | Check if email is registered on platforms |
+| [Epieos](https://epieos.com/) | Email address pivots and metadata |
+| [OSINT Industries](https://osint.industries/) | Email/username/phone lookups |
+| [Hunter.io](https://hunter.io/) | Find email addresses for a domain |
+| [EmailRep](https://emailrep.io/) | Email reputation and associated data |
+| [Emailable](https://emailable.com/) | Verify email existence |
+| [Mugetsu](https://mugetsu.io/) | X/Twitter username history |
+| [RocketReach](https://rocketreach.co/) / [Apollo](https://www.apollo.io/) | Email enrichment and pattern guessing |
+| [PhoneInfoga](https://github.com/sundowndev/phoneinfoga) | Phone number intelligence framework |
+
+**Browser extensions:** [GetProspect](https://chromewebstore.google.com/detail/email-finder-getprospect/bhbcbkonalnjkflmdkdodieehnmmeknp), [SignalHire](https://chrome.google.com/webstore/detail/signalhire-find-email-or/aeidadjdhppdffggfgjpanbafaedankd)
+
+---
+
+## People Search
+
+- [TruePeopleSearch](https://www.truepeoplesearch.com/) — Free U.S. people search
+- [WhitePages](https://www.whitepages.com/) — Contact information
+- [Spokeo](https://www.spokeo.com/) — People search engine
+- [Webmii](https://webmii.com/) — People search
+- [Pipl](https://pipl.com/) — Deep web people search (paid)
+- [Clearbit](https://clearbit.com/) — Company/individual data enrichment
+- [FaceCheck](https://facecheck.id/) / [FaceSeek](https://faceseek.online/) — Reverse face search
+
+---
+
+## Phone Number OSINT
+
+- [TrueCaller](https://www.truecaller.com/) — Caller ID and spam blocking
+- [ThatsThem](https://thatsthem.com/) — Reverse phone search
+- [Infobel](https://infobel.com/) — Phone search outside USA
+- [FreeCarrierLookup](https://freecarrierlookup.com/) — Carrier/type lookup (US)
+- [NumlookupAPI](https://numlookupapi.com/) [Freemium] — Programmatic carrier/line-type checks
+- [CallerIDTest](https://calleridtest.com/) — Phone search
+- [Advanced Background Checks](https://www.advancedbackgroundchecks.com/) — All people linked to a number
+
+---
+
+## Social Media
+
+| Platform | Tool |
+|----------|------|
+| Instagram | [Picuki](https://www.picuki.com/) — view profiles without account |
+| X/Twitter | [snscrape](https://github.com/snscrape/snscrape) — preferred CLI scraper; use Twint only as fallback |
+| Facebook | [Graph Search](https://inteltechniques.com/tools/Facebook.html), [sowsearch.info](https://sowsearch.info/), [lookup-id.com](https://lookup-id.com/), [whopostedwhat.com](https://whopostedwhat.com/) |
+| Facebook (research) | [Meta Content Library](https://transparency.meta.com/researcher) — CrowdTangle successor (researcher-gated) |
+| YouTube/Twitch | [Social Blade](https://socialblade.com/) — analytics |
+| TikTok | [Tokboard](https://tokboard.com/) — trend and profile analytics |
+| Reddit | [Reveddit](https://www.reveddit.com/) — removed content; [RedTrack.social](https://redtrack.social/) — user history |
+| Bluesky | [Firesky](https://firesky.tv/) — real-time firehose; [SkyView](https://bsky.jazco.dev/) — follower graphs |
+| Mastodon | [FediSearch](https://fedisearch.skorpil.cz/) — cross-instance search; [Fedifinder](https://fedifinder.glitch.me/) — find Twitter users on Mastodon |
+| Faces | [Search4Faces](https://search4faces.com/) |
+
+---
+
+## Public Records & Company Information
+
+- [OpenCorporates](https://opencorporates.com/) — World's largest open company database
+- [SEC EDGAR](https://www.sec.gov/edgar.shtml) — U.S. company filings
+- [OpenOwnership Register](https://register.openownership.org/) — Beneficial ownership datasets
+- [MuckRock](https://www.muckrock.com/) — FOIA repository and request tracking
+- [EU Tenders (TED)](https://ted.europa.eu/) — EU procurement notices
+- [World Bank Projects](https://projects.worldbank.org/) — Project and procurement records
+
+### RU/CN Registries
+
+**Russia:** [Rusprofile](https://www.rusprofile.ru/), [Kontur.Focus](https://focus.kontur.ru/) (freemium), [zakupki.gov.ru](https://zakupki.gov.ru/) (procurement), EGRUL/EGRIP (official, captcha-gated)
+
+**China:** [GSXT](https://www.gsxt.gov.cn/) (National Enterprise Credit), [Qichacha](https://www.qcc.com/)/[Tianyancha](https://www.tianyancha.com/) (freemium), [MIIT ICP/Beian](https://beian.miit.gov.cn/) (ICP filings)
+
+### Sanctions & Compliance
+
+- [OFAC SDN List](https://sanctionssearch.ofac.treas.gov/)
+- [EU Sanctions Map](https://www.sanctionsmap.eu/)
+- [OpenSanctions](https://www.opensanctions.org/) — Aggregated persons/entities datasets
+- [OCCRP Aleph](https://aleph.occrp.org/) — Investigative documents, leaks, company records
+
+---
+
+## Breach & Leak Data
+
+- [Have I Been Pwned](https://haveibeenpwned.com/) — Breach lookup; Pwned Passwords API (k-anonymity)
+- [Dehashed](https://dehashed.com/) — Credential search
+- [IntelX](https://intelx.io/) — Data intelligence
+- [LeakCheck](https://leakcheck.io/) — Breach lookups
+- [Snusbase](https://snusbase.com/) — Database breach lookups
+- [BreachDirectory](https://breachdirectory.org/) — Recent breach credentials
+- [Scattered Secrets](https://scatteredsecrets.com/)
+- [Cavalier (Hudson Rock)](https://cavalier.hudsonrock.com/) — Infostealer lookups
+- [Phonebook](https://phonebook.cz/)
+- [Le
+[... truncado em 8000 caracteres]

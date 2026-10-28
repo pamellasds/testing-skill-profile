@@ -1,0 +1,355 @@
+{
+  "description": "Termos de busca por tipo/nível de teste. Combina (1) pirâmide prática (Cohn/Vocke) e stack Web3, (2) sinônimos e tipos do ISTQB CTFL Syllabus v4.0.1 (Certified Tester.pdf). Frases compostas (não 'test' isolado) para reduzir ruído. Busca case-insensitive por substring no content/name/description.",
+  "sources": [
+    "Cohn Succeeding with Agile — Test Pyramid",
+    "Vocke The Practical Test Pyramid (martinfowler.com)",
+    "ISTQB Certified Tester Foundation Level Syllabus v4.0.1 — test levels and test types"
+  ],
+  "layers": {
+    "unit": {
+      "label": "Unit / component (CTFL)",
+      "terms": [
+        "unit test",
+        "unit tests",
+        "unit testing",
+        "unit-level test",
+        "component testing",
+        "component test",
+        "component tests",
+        "test harness",
+        "test harnesses",
+        "unit test framework",
+        "unit test frameworks",
+        "teste unitário",
+        "testes unitários",
+        "teste de unidade",
+        "testes de unidade",
+        "teste de componente",
+        "testes de componente"
+      ]
+    },
+    "integration": {
+      "label": "Integration (CTFL component/system integration)",
+      "terms": [
+        "integration test",
+        "integration tests",
+        "integration testing",
+        "component integration testing",
+        "component integration test",
+        "component integration tests",
+        "unit integration testing",
+        "unit integration test",
+        "system integration testing",
+        "system integration test",
+        "system integration tests",
+        "contract interaction test",
+        "multi-contract test",
+        "teste de integração",
+        "testes de integração",
+        "integração de componentes",
+        "integração de sistemas"
+      ]
+    },
+    "system_e2e": {
+      "label": "System / end-to-end (CTFL system testing)",
+      "terms": [
+        "e2e test",
+        "e2e tests",
+        "e2e testing",
+        "end-to-end test",
+        "end-to-end tests",
+        "end to end test",
+        "end to end testing",
+        "end-to-end tasks",
+        "system test",
+        "system tests",
+        "system testing",
+        "teste ponta a ponta",
+        "teste de sistema",
+        "testes de sistema",
+        "testes ponta a ponta"
+      ]
+    },
+    "acceptance": {
+      "label": "Acceptance (CTFL)",
+      "terms": [
+        "acceptance test",
+        "acceptance tests",
+        "acceptance testing",
+        "user acceptance test",
+        "user acceptance testing",
+        "operational acceptance testing",
+        "operational acceptance test",
+        "contractual acceptance testing",
+        "regulatory acceptance testing",
+        "alpha testing",
+        "beta testing",
+        "alpha test",
+        "beta test",
+        "acceptance test-driven development",
+        "acceptance test driven development",
+        "atdd",
+        "teste de aceitação",
+        "testes de aceitação",
+        "teste de aceitacao"
+      ]
+    },
+    "confirmation": {
+      "label": "Confirmation testing (CTFL)",
+      "terms": [
+        "confirmation testing",
+        "confirmation test",
+        "confirmation tests",
+        "retesting",
+        "re-testing",
+        "teste de confirmação",
+        "teste de confirmacao"
+      ]
+    },
+    "regression": {
+      "label": "Regression / smoke (CTFL + prática)",
+      "terms": [
+        "regression test",
+        "regression tests",
+        "regression testing",
+        "regression test suite",
+        "regression test suites",
+        "smoke test",
+        "smoke tests",
+        "smoke testing",
+        "teste de regressão",
+        "testes de regressão",
+        "teste de regressao",
+        "teste de fumaça",
+        "teste de fumaca"
+      ]
+    },
+    "maintenance": {
+      "label": "Maintenance testing (CTFL)",
+      "terms": [
+        "maintenance testing",
+        "maintenance test",
+        "maintenance tests",
+        "teste de manutenção",
+        "teste de manutencao",
+        "testes de manutenção"
+      ]
+    },
+    "static_analysis": {
+      "label": "Static testing / analysis (CTFL + scanners)",
+      "terms": [
+        "static testing",
+        "static test",
+        "static analysis",
+        "static analyzer",
+        "static analysers",
+        "análise estática",
+        "analise estatica",
+        "teste estático",
+        "teste estatico",
+        "linting test",
+        "security lint"
+      ]
+    },
+    "black_box": {
+      "label": "Black-box techniques (CTFL)",
+      "terms": [
+        "black-box testing",
+        "black box testing",
+        "black-box test",
+        "black box test",
+        "specification-based testing",
+        "specification based testing",
+        "equivalence partitioning",
+        "boundary value analysis",
+        "decision table testing",
+        "decision table test",
+        "state transition testing",
+        "state transition test",
+        "teste caixa-preta",
+        "teste caixa preta",
+        "particionamento de equivalência",
+        "análise de valor limite",
+        "analise de valor limite"
+      ]
+    },
+    "white_box": {
+      "label": "White-box techniques (CTFL)",
+      "terms": [
+        "white-box testing",
+        "white box testing",
+        "white-box test",
+        "white box test",
+        "structure-based testing",
+        "structure based testing",
+        "statement testing",
+        "statement coverage",
+        "branch testing",
+        "branch coverage",
+        "teste caixa-branca",
+        "teste caixa branca",
+        "cobertura de comandos",
+        "cobertura de ramos"
+      ]
+    },
+    "exploratory": {
+      "label": "Exploratory / experience-based (CTFL)",
+      "terms": [
+        "exploratory testing",
+        "exploratory test",
+        "session-based testing",
+        "session based testing",
+        "experience-based testing",
+        "experience based testing",
+        "error guessing",
+        "checklist-based testing",
+        "checklist based testing",
+        "teste exploratório",
+        "teste exploratorio",
+        "testes exploratórios"
+      ]
+    },
+    "non_functional": {
+      "label": "Non-functional testing (CTFL)",
+      "terms": [
+        "non-functional testing",
+        "non functional testing",
+        "nonfunctional testing",
+        "non-functional test",
+        "usability testing",
+        "usability test",
+        "reliability testing",
+        "security testing",
+        "security test",
+        "teste não funcional",
+        "teste nao funcional",
+        "teste de usabilidade",
+        "teste de segurança",
+        "teste de seguranca"
+      ]
+    },
+    "functional": {
+      "label": "Functional testing (CTFL)",
+      "terms": [
+        "functional testing",
+        "functional test",
+        "functional tests",
+        "teste funcional",
+        "testes funcionais"
+      ]
+    },
+    "fork": {
+      "label": "Fork / mainnet fork (Web3)",
+      "terms": [
+        "fork test",
+        "fork tests",
+        "fork testing",
+        "mainnet fork",
+        "mainnet forking",
+        "forking mainnet",
+        "fork mainnet",
+        "createselectfork",
+        "vm.createselectfork",
+        "hardhat_reset",
+        "teste com fork",
+        "testes com fork"
+      ]
+    },
+    "fuzz_property": {
+      "label": "Fuzz / property-based / invariant (Web3)",
+      "terms": [
+        "fuzz test",
+        "fuzz tests",
+        "fuzz testing",
+        "fuzzing",
+        "fuzzer",
+        "property-based test",
+        "property-based testing",
+        "property based test",
+        "property based testing",
+        "invariant test",
+        "invariant tests",
+        "invariant testing",
+        "stateful fuzz",
+        "stateless fuzz",
+        "foundry invariant",
+        "teste de fuzz",
+        "testes de fuzz",
+        "teste baseado em propriedade"
+      ]
+    },
+    "formal_symbolic": {
+      "label": "Formal verification / symbolic execution",
+      "terms": [
+        "formal verification",
+        "formal methods",
+        "verificação formal",
+        "symbolic execution",
+        "execução simbólica",
+        "model checking",
+        "theorem proving",
+        "smt solver",
+        "certora",
+        "halmos",
+        "hevm",
+        "kontrol"
+      ]
+    },
+    "mutation": {
+      "label": "Mutation testing",
+      "terms": [
+        "mutation test",
+        "mutation tests",
+        "mutation testing",
+        "mutant testing",
+        "teste de mutação",
+        "testes de mutação",
+        "teste de mutacao"
+      ]
+    },
+    "differential": {
+      "label": "Differential testing",
+      "terms": [
+        "differential test",
+        "differential tests",
+        "differential testing",
+        "differential fuzz",
+        "differential fuzzing",
+        "teste diferencial",
+        "testes diferenciais"
+      ]
+    },
+    "gas_performance": {
+      "label": "Gas / performance",
+      "terms": [
+        "gas test",
+        "gas tests",
+        "gas testing",
+        "gas optimization test",
+        "gas optimization testing",
+        "gas reporter",
+        "gas benchmarking",
+        "benchmark test",
+        "performance test",
+        "performance testing",
+        "teste de gas",
+        "testes de gas",
+        "teste de desempenho",
+        "teste de performance"
+      ]
+    },
+    "coverage": {
+      "label": "Coverage (prática + CTFL white-box metrics)",
+      "terms": [
+        "test coverage",
+        "code coverage",
+        "coverage report",
+        "coverage testing",
+        "solidity-coverage",
+        "cobertura de testes",
+        "cobertura de código",
+        "cobertura de codigo"
+      ]
+    }
+  }
+}

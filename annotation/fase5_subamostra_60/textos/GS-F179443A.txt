@@ -1,0 +1,148 @@
+NAME: stacks-blockchain-development
+DESCRIPTION: Builds full-stack decentralized applications on Stacks L2 for Bitcoin. Use when developing dApps, integrating sBTC, connecting wallets (Leather, Xverse), deploying smart contracts, building with Clarity, or interacting with Stacks APIs. Don't use for Ethereum, Solana, or non-Bitcoin layer 2 development.
+
+---
+name: stacks-blockchain-development
+description: Builds full-stack decentralized applications on Stacks L2 for Bitcoin. Use when developing dApps, integrating sBTC, connecting wallets (Leather, Xverse), deploying smart contracts, building with Clarity, or interacting with Stacks APIs. Don't use for Ethereum, Solana, or non-Bitcoin layer 2 development.
+---
+
+# Stacks Blockchain Development
+
+## Procedures
+
+**Step 1: Getting Started**
+1. Verify Clarinet is installed: `clarinet --version`
+2. Install VS Code extension "Clarity - Stacks Labs"
+3. Install Leather wallet and switch to Testnet
+4. Read `references/getting-started.md` for detailed setup instructions
+5. For Clarity smart contract development, use the `clarity-lang` skill
+
+**Step 2: Project Setup**
+1. Create new project: `clarinet new <project-name>`
+2. Generate contract: `clarinet contract new <contract-name>`
+3. Understand networks: simnet (local), devnet (Docker), testnet, mainnet
+4. Read `references/networks.md` for network configuration
+
+**Step 3: Frontend Development with Stacks.js**
+1. Install Stacks.js packages:
+   - `@stacks/connect` - Wallet connections
+   - `@stacks/transactions` - Transaction building
+   - `@stacks/network` - Network configuration
+2. Read `references/stacks-js.md` for:
+   - Wallet authentication (connect/disconnect)
+   - Transaction construction and signing
+   - Calling public and read-only contract functions
+   - Post-condition implementation
+
+**Step 4: Wallet Integration**
+1. Read `references/wallets.md` for wallet-specific integration:
+   - Leather (recommended)
+   - Xverse
+   - Wallet selector modal configuration
+2. Implement wallet connection in frontend
+3. Handle authentication callbacks
+
+**Step 5: sBTC Integration**
+1. Read `references/sbtc.md` for:
+- sBTC contract addresses (mainnet/testnet)
+- Transferring sBTC in contracts
+2. Use sBTC for payments in smart contracts
+3. Read `references/post-conditions.md` for asset protection
+
+**Step 5a: sBTC Bridging (BTC ↔ sBTC)**
+1. Read `references/bridging.md` for:
+- Deposit flow (BTC → sBTC)
+- Withdraw flow (sBTC → BTC)
+- sBTC library usage
+2. Use `sbtc` npm package for integration
+3. Handle signer operations and confirmations
+
+**Step 5b: Token Swaps and DEX**
+1. Read `references/swaps.md` for:
+- Alex DEX integration
+- Token swap API
+- Liquidity pools (add/remove)
+2. Implement swap functionality in dApp
+3. Handle price quotes and slippage
+
+**Step 6: Token Standards**
+1. Read `references/tokens.md` for:
+   - SIP009 NFT implementation
+   - SIP010 fungible token implementation
+2. Deploy standard-compliant tokens
+3. Integrate with marketplaces
+
+**Step 7: Stacking (STX Rewards)**
+1. Read `references/stacking.md` for:
+   - Stacking delegation
+   - Pool operators
+   - Reward cycle management
+2. Implement stacking in dApps
+
+**Step 8: BNS (Bitcoin Name Service)**
+1. Read `references/bns.md` for:
+   - Name registration
+   - Name resolution
+   - BNSv2 integration
+
+**Step 9: Testing**
+1. Run `clarinet check` for contract analysis
+2. Run `clarinet test` for unit tests
+3. Use simnet for fast iteration
+4. Use devnet for integration testing with Bitcoin
+5. Read `references/clarinet.md` for testing patterns
+
+**Step 10: Deployment**
+1. Configure deployment in `settings/Testnet.toml` or `settings/Mainnet.toml`
+2. Generate deployment plan: `clarinet deployments generate --testnet`
+3. Apply deployment: `clarinet deployments apply --testnet`
+4. Read `references/deployment.md` for detailed instructions
+
+**Step 11: APIs and Data Fetching**
+1. Read `references/apis.md` for:
+   - Hiro Platform API
+   - Stacks RPC endpoints
+   - Fetching blockchain data
+   - Getting block info, transactions, contract data
+
+**Step 12: Chainhooks (Event Indexing)**
+1. Read `references/chainhooks.md` for:
+   - Setting up chainhook predicates
+   - Indexing contract events
+   - Webhook configuration
+
+**Step 13: Oracles and Price Feeds**
+1. Read `references/oracles.md` for:
+   - Integrating price oracles
+   - Fetching off-chain data
+
+**Step 14: Security and Monitoring**
+1. Read `references/security.md` for:
+   - Smart contract auditing
+   - Common vulnerabilities
+   - Best practices
+2. Read `references/monitoring.md` for:
+   - Contract alerts
+   - Transaction monitoring
+
+**Step 15: Explorer Usage**
+1. Read `references/explorer.md` for:
+   - Searching transactions
+   - Viewing contracts
+   - Using Sandbox for contract interaction
+
+## Error Handling
+* If Clarinet not found, install from https://github.com/stx-labs/clarinet
+* If wallet connection fails, verify wallet is installed and on correct network (testnet/mainnet)
+* If contract deployment fails, check deployment fees and account balance
+* If transaction rejected, verify post-conditions and network selection
+* If API calls fail, check Hiro API key and rate limits
+
+## Resources
+* Main Docs: https://docs.stacks.co/
+* Clarity Book: https://book.clarity-lang.org/
+* Stacks.js: https://github.com/stx-labs/stacks.js
+* Clarinet: https://github.com/stx-labs/clarinet
+* Stacks Explorer: https://explorer.stacks.co/
+* Hiro Platform: https://platform.hiro.so/
+* Full link collection in `references/links.md` (create if needed)

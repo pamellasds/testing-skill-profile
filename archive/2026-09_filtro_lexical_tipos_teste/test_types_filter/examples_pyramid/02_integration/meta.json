@@ -1,0 +1,36 @@
+{
+  "layer": "integration",
+  "source_db": "agent_skills_mandatory_only.db",
+  "selection": "keyword_matches.mandatory_hits + test_types layer exclusive/strong",
+  "repo": "abelrguezr/hacktricks-skills",
+  "path": "skills/pentesting-web/dapps-DecentralizedApplications/SKILL.MD",
+  "name": "pentest-dapps",
+  "description": "How to pentest decentralized applications (DApps). Use this skill whenever the user mentions DApps, Web3 applications, blockchain applications, smart contracts, or wants to audit/penetrate test any decentralized application. This includes NFT platforms, DeFi protocols, cross-chain bridges, and any application that interacts with blockchain technology. Make sure to use this skill when the user asks about Web3 security, DApp vulnerabilities, or blockchain application testing.",
+  "matched_layers": [
+    "integration"
+  ],
+  "matched_terms_by_layer": {
+    "integration": [
+      "integration test",
+      "integration testing"
+    ]
+  },
+  "matched_terms": [
+    "integration test",
+    "integration testing"
+  ],
+  "mandatory_hits": [
+    "blockchain",
+    "dapp",
+    "decentralized application",
+    "minting",
+    "nft",
+    "reentrancy",
+    "smart contract",
+    "smart contracts",
+    "smart-contract",
+    "wallet"
+  ],
+  "n_layers": 1,
+  "n_terms": 2
+}

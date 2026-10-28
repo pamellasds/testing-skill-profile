@@ -1,0 +1,100 @@
+NAME: blockchain-l2-attack
+DESCRIPTION: Layer-2 blockchain attack — Lightning Network (BOLT, HTLC), Optimistic Rollups (Optimism/Arbitrum/Boba/Base), ZK Rollups (zkSync/StarkNet/Polygon zkEVM/Scroll/Linea), Polygon PoS, Gnosis sidechain, cross-chain bridges (Wormhole/Nomad/Ronin/Poly Network/Multichain/Horizon), state channels, ERC-4337 account abstraction, and DA layers (Celestia/EigenDA/Avail).
+
+---
+name: blockchain-l2-attack
+description: "Layer-2 blockchain attack — Lightning Network (BOLT, HTLC), Optimistic Rollups (Optimism/Arbitrum/Boba/Base), ZK Rollups (zkSync/StarkNet/Polygon zkEVM/Scroll/Linea), Polygon PoS, Gnosis sidechain, cross-chain bridges (Wormhole/Nomad/Ronin/Poly Network/Multichain/Horizon), state channels, ERC-4337 account abstraction, and DA layers (Celestia/EigenDA/Avail)."
+origin: kali-claw
+version: "1.0"
+compatibility:
+  - claude-code
+  - claude-sonnet-4.5
+allowed-tools:
+  - Bash
+  - Read
+  - Write
+  - Edit
+metadata:
+  domain: blockchain-l2-attack
+  category: blockchain-l2
+  tool_count: 13
+  guide_count: 1
+  mitre: "TA0006-Credential Access"
+  keywords:
+    - L2
+    - rollup
+    - bridge
+    - Lightning Network
+    - Optimism
+    - Arbitrum
+    - zkSync
+    - cross-chain
+    - sequencer
+    - fraud-proof
+    - HTLC
+    - ERC-4337
+    - Wormhole
+    - Nomad
+    - Ronin
+---
+
+
+
+
+# Skill: Layer-2 Blockchain Attack
+
+> **Supplementary Files**:
+> - `payloads.md` — Command + exploit catalogue organized by L2 family (Lightning Network, Optimistic Rollups, ZK Rollups, Bridges, Account Abstraction, DA layers) — 60+ code blocks with Foundry/Hardhat/Brownie PoCs, Slither/Echidna harnesses, and replay attack templates for every major L2 incident class.
+> - `test-cases.md` — 12 structured test cases (TC-L2-001 through TC-L2-012) across Static Analysis, Bridge Replay, Sequencer/Fraud-Proof Analysis, ZK Soundness, Lightning/HTLC, Account Abstraction, and DA Layer categories.
+> - `guides/blockchain-l2-attack-playbook.md` — Comprehensive playbook: L2 architecture comparison table, bridge security taxonomy (lock-mint / burn-mint / liquidity / validator-based), real-world exploit deep-dives (Wormhole $326M, Nomad $190M, Ronin $625M, Poly Network $611M, Multichain $1.5B, Horizon $100M), audit methodology, and local lab setup (Foundry + Anvil + OP Bedrock devnet + Arbitrum Nitro dev node + bridge simulator).
+
+## Summary
+
+Layer-2 (L2) blockchain security skill domain covering everything *above* the L1 base layer: payment channels, Optimistic and ZK rollups, sidechains, cross-chain bridges, account abstraction, and data-availability layers.
+
+**Tools**: Foundry (forge/cast/anvil/chisel), Hardhat, Brownie/Ape, Slither, Mythril, Manticore, Echidna, Etheno, web3.py/ethers.js, Tenderly, Forta, OpenZeppelin Defender, Revoke.cash/Etherscan tools
+
+**Domain**: blockchain-l2
+
+**MITRE ATT&CK**: TA0006-Credential Access (validator key compromise, sequencer key theft, multisig social engineering)
+
+## Description
+
+Audit, exploit, and harden protocols that live *above* L1 — payment channels, rollups, sidechains, bridges, account abstraction, and data-availability layers. L2 security is fundamentally different from L1 smart-contract auditing because the trust assumptions, the cryptographic primitives, and the attack surface all change.
+
+The five things that make L2 security different from `blockchain-web3`:
+
+1. **Off-chain components are now in scope.** An L1 audit stops at the contract bytecode. An L2 audit must also cover the sequencer, the prover, the validator set, the relayer, the bridge multisig, and the off-chain message-passing daemon. The 2022 Ronin bridge ($625M loss) was not a smart-contract bug — it was a 5-of-9 validator multisig socially engineered down to effectively 3-of-5. The contract was "correct."
+2. **Cryptography that L1 takes for granted is now attack surface.** ZK rollups depend on sound zero-knowledge proof systems (PLONK, Halo2, STARK). A verifier bug or trusted-setup compromise breaks the entire chain. The 2022 Wormhole hack ($326M) was a signature verification bypass on Solana's `SignatureAccount` program — the contract correctly verified *an* Ed25519 signature, just not *the right one*.
+3. **Liveness and censorship are first-class.** An Optimistic rollup's sequencer can censor any user by refusing to include their transaction, and can stall the entire chain by going offline. There is no L1 equivalent — L1 validators are decentralized by assumption. L2 sequencer centralization is a $1B+ outage risk.
+4. **Bridges are the single most attacked primitive in all of crypto.** As of 2024, bridge hacks account for the majority of all stolen crypto value, totaling >$2.8B in known losses. Bridges concentrate funds (the contract holds TVL from *both* chains), inherit the weaker security model of the two chains they connect, and almost always have an off-chain signer component that is the actual weak link.
+5. **Each L2 family has its own exploit class.** Optimistic rollups: fraud-proof gaming. ZK rollups: prover/verifier soundness. Polygon PoS: validator-set stake concentration. Lightning: channel jamming and HTLC pinning. Bridges: validator/signature multisig compromise plus message-replay. Account abstraction: Paymaster griefing and bundler front-running. Treating L2 as "just more EVM" misses every L2-specific bug.
+
+### Differentiation from `blockchain-web3`
+
+`blockchain-web3` covers **L1 EVM smart contracts**: Solidity basics, the EVM object format, reentrancy/integer-overflow/access-control bugs, DeFi economic attacks (flash loans, oracle manipulation, MEV), proxy patterns, and L1 wallet security.
+
+`blockchain-l2-attack` covers **everything above L1**:
+
+| Concern | `blockchain-web3` (L1) | `blockchain-l2-attack` (L2) |
+|---|---|---|
+| Scope | Single EVM chain (Ethereum mainnet, BNB, Arbitrum as a *target*) | Off-chain + on-chain: rollup sequencers, provers, validators, bridge multisigs |
+| Cryptography in scope | ECDSA, basic Merkle proofs | Ed25519 (Solana), BLS (validator sets), ZK proof systems (PLONK, Halo2, STARK), HTLC/PTLC, threshold signatures |
+| Off-chain components | Out of scope (L1 node is trusted infrastructure) | In scope — sequencer, prover, validator daemon, relayer, indexer |
+| Liveness / censorship | L1 liveness assumed | Critical attack surface — sequencer DoS, validator collusion, channel jamming |
+| Token flow | Tokens stay on one chain | Tokens cross chains via lock-mint / burn-mint / liquidity — each with distinct failure modes |
+| Notable incidents studied | The DAO (2016), bZx (2020), Cream (2021), Euler (2023) | Ronin ($625M), Poly Network ($611M), Wormhole ($326M), Nomad ($190M), Multichain ($1.5B), Horizon ($100M), Lightning channel pin attacks |
+| Primary tooling | Slither, Mythril, Foundry on L1 contracts | Same tools PLUS bridge simulators, L2 node devnets (OP Bedrock, Arbitrum Nitro), c-lightning/LND harnesses, ZK circuit analyzers |
+
+When in doubt: if the bug lives in a contract that runs on Ethereum L1 and could be replayed on any L1 EVM chain, it belongs in `blockchain-web3`. If the bug requires the sequencer, prover, validator set, bridge multisig, off-chain relayer, or L2-specific precompile, it belongs here.
+
+**Difference from `crypto-attacks`**: Crypto-attacks covers the *algorithms* (RSA, ECC, AES, padding oracles, lattice). This skill covers *systems built on top of* those algorithms — bridge signature aggregation, rollup fraud proofs, ZK verifier contracts. The math is assumed sound; the wiring on top of it is not.
+
+**Difference from `supply-chain-security`**: Supply-chain covers dependency provenance and CI/CD compromise. This skill covers a different kind of supply chain — the cross-chain message-passing pipeline where a single compromised relayer can mint unlimited tokens on the destination chain.
+
+## Use Cases
+
+- **Cross-chain bridge pre-deploy audit**: lock-mint/burn-mint wrapper review, validator-set membership changes, signature aggregation soundness, message-replay protection across chain IDs, and rate-limiting on the wrapper contract.
+- **Bridge post-incident forensic replay**: given a drained bridge address and the exploit tx hash (Wormhole, Nomad, Ronin, Poly Network, Multichain, Horizon), reproduce the exploit on an anvil fork at the pre-incident block, identify the root cause, and write a regression test against the patched contract.
+- **Optimistic rollup security review**: challenge
+[... truncado em 8000 caracteres]

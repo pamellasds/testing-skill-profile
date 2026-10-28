@@ -1,0 +1,107 @@
+NAME: sirin-test
+DESCRIPTION: This skill should be used when the user asks to "test a website", "run an E2E test", "verify a user flow", "check if a page works", "run browser tests", "optimize a flaky test", "write a YAML test goal", or mentions Sirin's testing capabilities. Provides the workflow for driving Sirin's AI-powered browser test runner via its MCP API (:7700/mcp), plus authoring guidance for writing tests that actually pass.
+
+---
+name: sirin-test
+description: This skill should be used when the user asks to "test a website", "run an E2E test", "verify a user flow", "check if a page works", "run browser tests", "optimize a flaky test", "write a YAML test goal", or mentions Sirin's testing capabilities. Provides the workflow for driving Sirin's AI-powered browser test runner via its MCP API (:7700/mcp), plus authoring guidance for writing tests that actually pass.
+version: 1.6.0
+---
+
+# Sirin Browser Test Runner
+
+Drive Sirin's AI-powered browser testing from external Claude Code sessions. Unlike Puppeteer/Playwright (scripted), Sirin tests are **goal-driven** — you describe what should happen, the LLM inside Sirin figures out how to click/type/verify.
+
+## When This Skill Applies
+
+- User asks to test a web application ("test the checkout flow", "verify login works")
+- User wants E2E / smoke / regression testing on a specific URL
+- User asks about Sirin's test runner capabilities
+- User wants automated failure diagnosis + bug fixing loop
+
+## Prerequisites
+
+1. **Sirin is running** with MCP server on `http://127.0.0.1:7700/mcp`
+   - Check: `curl -X POST http://127.0.0.1:7700/mcp -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'`
+   - If not running, apply the **`sirin-launch`** skill first — it has
+     a full status-check → build → detached launch → readiness-poll
+     workflow. Do not tell the user "please start Sirin" without trying
+     to launch it yourself.
+
+2. **Sirin is registered as MCP server** in the caller's Claude Desktop config (or equivalent):
+   ```json
+   {
+     "mcpServers": {
+       "sirin": { "url": "http://127.0.0.1:7700/mcp" }
+     }
+   }
+   ```
+
+3. **Chrome** installed for headless browser control
+4. **Test goals** defined in `config/tests/*.yaml` inside the Sirin repo
+
+## Available MCP Tools
+
+| Tool | Purpose | When to use |
+|------|---------|------------|
+| `list_tests` | Enumerate YAML tests in `config/tests/` | "What tests exist?" |
+| `run_test_async` | Run a YAML-defined test | When matching test_id exists |
+| `run_test_batch` | Fan-out N YAML tests in parallel (independent tabs) | **Smoke / nightly suite** — many at once |
+| `run_adhoc_test` | Test a URL with inline goal, no YAML | **User wants to test arbitrary URL** |
+| `persist_adhoc_run` | Promote a passing ad-hoc run → permanent YAML test | **User says "save this as a regression test"** after a successful ad-hoc explore |
+| `get_test_result` | Poll run status by `run_id` | Every 3-5s while test runs |
+| `get_screenshot` | Fetch base64 PNG of failure | status=failed/timeout/error |
+| `get_full_observation` | Un-truncated tool output | Observation mentions `[truncated: ...]` |
+| `list_recent_runs` | Historical test executions (SQLite) | Debug flakiness / see patterns |
+| `list_fixes` | Auto-fix history (claude_session spawns) | Check if a fix is in-flight |
+| `config_diagnostics` | LLM/router/vision health report | Tests failing mysteriously — self-diagnose |
+| `diagnose` | Sirin self-diagnostic snapshot (version/build/host/Chrome/LLM/recent errors + pre-filled GitHub issue body) | **You hit a bug in Sirin itself — call this BEFORE bothering the user.** Use the snapshot to decide retry / suggest upgrade / file issue with `report_issue_template.body` |
+| `page_state` | URL + title + AX summary + console + screenshot | **Quick orientation before deeper inspection** |
+| `browser_exec` | Single imperative browser action | **Debug / one-off exploration without a goal** |
+
+`browser_exec` accepts these `action` values:
+
+**Standard:** `goto`, `screenshot`, `screenshot_analyze`, `click`, `click_point`, `type`, `read`, `eval`, `wait`, `exists`, `attr`, `scroll`, `key`, `console`, `network`, `url`, `title`, `close`, `set_viewport`
+
+**Accessibility tree** (literal string, no vision approximation — **use these for K14/K15 exact-value assertions**):
+- `enable_a11y` — trigger Flutter semantics bridge (call before `ax_tree` on Flutter Canvas apps)
+- `ax_tree` — full a11y node list with `role`, literal `name`, literal `value`, `backend_id`, `child_ids`
+- `ax_find` (params: `role`, `name` substring, `name_regex` full Rust regex, `not_name_matches` exclusion array, `limit` int default 1) — returns `{found, count, nodes:[...]}` array; single-match compat: check `nodes[0]`
+- `ax_snapshot` (param: `id` optional string) — captures current AX tree to memory; returns `{snapshot_id, count}`
+- `ax_diff` (params: `before_id`, `after_id`) — compares two snapshots; returns `{added:[...], removed:[...], changed:[{node_id, before_name, after_name}]}`
+- `wait_for_ax_change` (params: `baseline_id`, `timeout_ms` default 5000) — blocks until tree differs; returns `{changed:true, diff:{...}}` or timeout error
+- `ax_value` (param: `backend_id`) — exact text content (`value || name`)
+- `ax_click` / `ax_focus` (param: `backend_id`) — interaction by DOM backend id
+- `ax_type` (params: `backend_id`, `text`) — focus + insertText
+- `ax_type_verified` (same params) — types then reads back, returns `{typed, actual, matched}` so you know if Flutter dropped chars or the input formatted the value
+
+**Flutter CanvasKit / Shadow DOM** (WebGL canvas apps — AgoraMarket `redandan.github.io` etc.
+Standard DOM click/type don't work. UI is in `<canvas>` inside `flt-glass-pane`):
+- `enable_a11y` — triggers `flt-semantics-host` overlay; call after every route change (wait ≥1000ms first)
+- `shadow_dump` — list all elements; use first on each page to discover available actions
+- `shadow_find` (params: `role`, `name_regex`) — find element by role and/or label regex
+- `shadow_click` (params: `role`, `name_regex`) — click via JS PointerEvent (CDP causes about:blank on Flutter nav)
+- `shadow_type_flutter` (params: `role`, `name_regex`, `text`) — click + type combo for textboxes
+- `flutter_type` (param: `text`) — keydown per char; **ASCII only** — CJK chars (你好) silently fail, use "hello"
+- `flutter_enter` — Enter key to `flt-text-editing`; use after `flutter_type` to submit; beats finding icon-only buttons
+
+Pattern: `enable_a11y → shadow_dump → shadow_click → ax_find textbox → ax_click → flutter_type → flutter_enter`
+After route change: `wait 1000ms → enable_a11y → shadow_dump`
+For chat/SSE verification: use `screenshot_analyze` — Flutter chat bubbles are NOT in `flt-semantics` tree.
+
+**Robustness** (test isolation, race-free assertions, popups):
+- `clear_state` — wipe cookies + localStorage + sessionStorage + IndexedDB + caches between tests so K13 can't leak auth into K14
+- `wait_request` (params: `target` URL substring, `timeout` ms default 10000) — block until a fetch/XHR matching the substring is captured; auto-installs network capture; eliminates click-then-read races; returns the entry **including `req_body`**
+- `wait_new_tab` (param: `timeout` ms default 10000) — block until a popup/OAuth tab opens; auto-discovers via `register_missing_tabs` and switches `active` to the new tab
+
+**Condition waits** (block until state is reached — no manual sleep polling):
+- `wait_for_url` (params: `target` substring or `/regex/`, `timeout_ms` default 10000) — block until URL matches; `{matched, url, elapsed_ms}`; errors on timeout
+- `wait_for_ax_ready` (params: `min_nodes` default 20, `timeout_ms` default 10000) — block until AX tree has ≥ min_nodes nodes; use after `enable_a11y` on Flutter apps; `{node_count, elapsed_ms}`
+- `wait_for_network_idle` (params: `idle_ms` stable window default 500, `timeout_ms` default 15000) — block until network requests stop firing; `{elapsed_ms, request_count}`
+
+**Assertion shortcuts** (error on failure — no extra if-check needed in scripts):
+- `assert_ax_contains` (params: `role`, `name`) — errors with helpful message if no matching AX node found; `{passed, found, node}`
+- `assert_url_matches` (params: `target` substring or `/regex/`) — errors if current URL doesn't match; `{passed, url}`
+
+**Multi-session** (named Chrome tabs — for parallel or multi-user tests):
+- `list_sessions` — `{sessions: [{ses
+[... truncado em 8000 caracteres]

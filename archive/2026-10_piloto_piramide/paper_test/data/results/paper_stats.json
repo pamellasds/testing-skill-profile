@@ -1,0 +1,40 @@
+{
+  "n_pool": 17847,
+  "n_mandatory_only": 89649,
+  "prevalence_any_core": {
+    "integration": 4215,
+    "unit": 5348,
+    "system_e2e": 2552,
+    "acceptance": 496
+  },
+  "prevalence_exclusive_core": {
+    "integration": 1302,
+    "unit": 2240,
+    "system_e2e": 751,
+    "acceptance": 326
+  },
+  "multi_core": 3295,
+  "extras": {
+    "fork": 497,
+    "fuzz_property": 1772,
+    "coverage": 5344,
+    "regression": 4748,
+    "mutation": 267,
+    "gas_performance": 859
+  },
+  "llm_pilot_n": 6,
+  "llm_guidance_n": 5,
+  "llm_skill_coverage": {
+    "unit": 3,
+    "integration": 3,
+    "contract": 3,
+    "ui": 2,
+    "end_to_end": 2,
+    "acceptance": 0,
+    "exploratory": 0,
+    "automation": 4
+  },
+  "manual_sample_per_nivel": 8,
+  "manual_sample_total": 32,
+  "seed": 20270402
+}

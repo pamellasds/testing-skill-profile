@@ -1,0 +1,157 @@
+NAME: pptx
+DESCRIPTION: Presentation creation, editing, and analysis for .pptx files: (1) Creating new presentations, (2) Modifying or editing content
+
+---
+name: pptx
+metadata:
+  author: Z.AI
+  version: "1.0"
+description: "Presentation creation, editing, and analysis for .pptx files: (1) Creating new presentations, (2) Modifying or editing content"
+license: Proprietary. LICENSE.txt has complete terms
+---
+
+# PPT creation, editing, and analysis
+
+## Overview
+
+A user may ask you to create, edit, or analyze the contents of a .pptx file. A .pptx file is essentially a ZIP archive containing XML files and other resources that you can read or edit. You have different tools and workflows available for different tasks.
+
+## Reading and analyzing content
+
+### Text extraction
+
+To read the text content of a presentation, convert it to markdown:
+
+```bash
+python -m markitdown path-to-file.pptx
+```
+
+### Raw XML access
+
+For comments, speaker notes, slide layouts, animations, design elements, or complex formatting, unpack the presentation and inspect its raw XML.
+
+#### Unpacking a file
+
+```
+python ooxml/scripts/unpack.py <office_file> <output_dir>
+```
+
+**Note**: `unpack.py` is at `skills/pptx/ooxml/scripts/unpack.py` relative to the project root. If not found, run `find . -name "unpack.py"` to locate it.
+
+#### Key file structures
+
+| Path | Contents |
+|------|----------|
+| `ppt/presentation.xml` | Main metadata and slide references |
+| `ppt/slides/slide{N}.xml` | Per-slide content |
+| `ppt/notesSlides/notesSlide{N}.xml` | Speaker notes |
+| `ppt/comments/modernComment_*.xml` | Slide comments |
+| `ppt/slideLayouts/` | Layout templates |
+| `ppt/slideMasters/` | Master slide templates |
+| `ppt/theme/` | Theme and styling |
+| `ppt/media/` | Images and other media |
+
+#### Typography and color extraction
+
+**When emulating an existing design**, extract typography and colors before starting:
+
+1. **Theme file** — `ppt/theme/theme1.xml`: colors (`<a:clrScheme>`), fonts (`<a:fontScheme>`)
+2. **Slide content** — `ppt/slides/slide1.xml`: actual font usage (`<a:rPr>`) and colors
+3. **Global search** — grep for `<a:solidFill>`, `<a:srgbClr>`, and font references across all XML files
+
+---
+## Creating a new PowerPoint presentation **without a template**(most case,creating ppt/pptx from scrach)
+
+When user upload pptx and ask for to use it as template ,do not follow this section routine! follow ## Editing an existing PowerPoint presentation（pptx）instead
+You are an elite HTML-PPT design agent. You produce beautiful, content-rich, 1280x720 slide decks rendered as standalone HTML pages and committed to disk via the `Write` tool. Use the `Agent` tool to fan out the rendering of body slides to a **ppt sub-agent** (`subagent_type: ppt-expert`, falling back to `general-purpose` if unavailable) so multiple sections render in parallel.
+
+You operate in four strict stages. Do NOT skip or reorder stages.
+
+═══════════════════════════════════════════════════════════════════════
+STAGE 1 — CLARIFY (collect mandatory inputs via `AskUserQuestion`)
+═══════════════════════════════════════════════════════════════════════
+
+**Step 0 — Reference detection (run BEFORE asking any question).**
+
+Before invoking `AskUserQuestion`, look at the user's upload directory and
+the user's prompt for a single reference asset. The case below is
+auto-handleable; run the matching extraction script first,
+write the result into `<work_dir>/slides/`,the <work_dir> is directly the download directory
+then SKIP the palette and typography questions in the list below (the user has implicitly answered
+them by handing you the reference). Still ask the remaining questions.
+
+  • **HTML reference** (`*.html` containing the desired deck-wide style):
+      ```
+      python /home/z/my-project/skills/ppt/scripts/extract_html_style.py \
+          <reference.html> <work_dir>/slides
+      ```
+      Writes `<work_dir>/slides/global.css` by concatenating every
+      `<style>...</style>` block from the source HTML verbatim. The
+      generated slides will reuse those CSS variables and class names
+      directly. After running this, `slides_brief.json.design` should
+      record `reference: "imitating <reference.html>"` and the model
+      should NOT redefine the palette/typography in `global.css`.
+
+If neither reference exists, proceed to the questions below as normal.
+
+**Step 1 — Ask the user.** Before doing anything else (after Step 0),
+collect the user's explicit choices on the dimensions below.
+**These are mandatory inputs — do NOT silently default any of them**,
+even when the user's request hints at one. Explicit confirmation
+prevents wrong-style decks and saves whole re-renders later.
+
+Mandatory dimensions — ask between 4-6 questions(not exceed 6 questions) across the 10 items below.
+Items marked **★** are strictly mandatory (palette, typography, per-page detail);
+the rest should be asked unless the user's original request explicitly rules
+them out (e.g. "internal deck, no notes" → skip notes question).
+
+  1. **主题与目的 (Topic & purpose)** — the deck's core theme and the main
+     aspects it should showcase. Ask this FIRST — every downstream choice
+     (length, layouts, data) hinges on it, so do not let it be implicit.
+  2. **目标受众 (Audience & tone)** — who is this for, what register.
+  3. **篇幅 (Deck length)** — tight range. like 1–8 / 8–12 / 12以上 slides，you must give user short slides choice.
+  4. **风格与基调 (Style & tone)** — the deck's overall voice as ONE preset:
+     商务 (business) / 简约 (minimal) / 正式汇报 (formal report). This is the
+     high-level register; the palette and typography questions below refine
+     it into concrete colors and fonts.
+  5. **Visual reference** — a recognizable style anchor (one or two named
+     reference decks / websites the user wants this to feel like).
+  6. **★ Palette (调色盘)** — ONE question that collects **all three** of
+     `background` / `primary` / `accent` together (as a unified palette
+     choice). Do NOT split into three separate questions. The options the
+     user picks from must be generated at runtime — do not hard-code
+     specific colors or hex codes here in the skill.
+  7. **Speaker notes (备注讲稿)** — none / short bullet hints / verbatim full script.
+  8. **已有素材 / 数据来源 (Existing materials / data sourcing)** — 用户是否
+     已提供素材或数据;是否需要在最终页面标注数据来源 (是 / 否)。
+  9. **Must include data**
+  10. **Need image search**
+Important constraints when constructing the actual `AskUserQuestion` calls:
+  • **Think carefully before asking.** Before each `AskUserQuestion` call,
+    spend real reasoning on the user's domain, audience, and visual
+    reference (Q1 / Q4). The point of asking is to surface CHOICES — so
+    the choices you offer must themselves be a creative, well-considered
+    design proposal. Generic "Light / Dark / Other" is a failure mode.
+  • **Each option must be a concrete creative direction**, not a category
+    label. For the palette question that means each option names a coherent
+    trio (background + primary + accent) tuned to the user's topic — e.g.
+    a finance deck and a children's-book pitch should NEVER see the same
+    three palette options. Same rule for typography: each option proposes
+    a specific heading + body pairing that fits the deck's voice.
+  • **Mark your recommendation.** In every question, pick ONE option that
+    you genuinely believe is the strongest fit and put it FIRST, with the
+    suffix `(Recommended)` appended to its `label`. Use this for palette,
+    typography, per-page detail level, and visual reference — anywhere the
+    answer materially shapes the deck. Do NOT mark more than one option as
+    recommended per question.
+  • The palette question is a SINGLE question whose options each describe
+    a coherent (background + primary + accent) trio. The user picks one
+    trio, or chooses "Other" to provide their own three colors.
+
+How to dispatch the questions:
+  • `AskUserQuestion` carries 4-6 questions per call. 
+  • Each question: a short `header` (≤12 chars), the `question` itself, and
+    3–4 `options` (each with `label` + short `description`). The user can
+    always pick "Other" for free-text custom input.
+  • Do
+[... truncado em 8000 caracteres]

@@ -1,0 +1,145 @@
+NAME: web3-whitepaper
+DESCRIPTION: Structures, drafts, and reviews technical whitepapers and litepapers for Web3/crypto protocols -- covering architecture, threat model, token mechanism, governance, citations, and audit-ready claims. Enforces verifiable-first writing and cross-references the legalizer skill for all token/staking/governance language. Use when writing, outlining, or reviewing a whitepaper, litepaper, protocol paper, technical spec, or public tokenomics document for a blockchain or crypto project.
+
+---
+name: web3-whitepaper
+description: Structures, drafts, and reviews technical whitepapers and litepapers for Web3/crypto protocols -- covering architecture, threat model, token mechanism, governance, citations, and audit-ready claims. Enforces verifiable-first writing and cross-references the legalizer skill for all token/staking/governance language. Use when writing, outlining, or reviewing a whitepaper, litepaper, protocol paper, technical spec, or public tokenomics document for a blockchain or crypto project.
+---
+
+# Web3 Whitepaper / Litepaper
+
+## Scope
+
+- **Whitepaper**: canonical technical and economic specification -- audit-oriented, assumption-explicit, falsifiable.
+- **Litepaper**: concise orientation (problem, solution, differentiation) that **indexes into** the whitepaper and never contradicts it.
+
+If only one document ships, name it honestly. A litepaper with extra adjectives is not a whitepaper.
+
+## Pre-draft checklist
+
+Before writing a single section, lock these with stakeholders:
+
+1. **Document type** -- whitepaper or litepaper (scope, depth, audience).
+2. **Audience** -- developers / researchers / partners / community / press. Drives reading level and detail.
+3. **Jurisdiction and compliance** -- required disclaimers, restricted regions, regulatory posture. For any token, staking, governance, or fee language, run all public prose through the **legalizer** skill or external counsel. This skill does not replace legal review.
+4. **Terminology glossary** -- define project-specific terms once; use consistently throughout.
+5. **Citation log** -- table of `claim | source | verified-by | date`. Maintain alongside the draft; do not bolt on after.
+6. **Modular structure** -- each section must be independently updatable (metrics refresh, roadmap shift) without rewriting adjacent sections.
+
+## Whitepaper sections (minimum required)
+
+Produce sections in this order. Every section heading is mandatory; mark any section "N/A" with a one-line justification if it truly does not apply.
+
+### 1. Executive summary
+
+One page. State: what the protocol does, for whom, core differentiator, and current stage (testnet / mainnet / audit status). No claims that the body does not substantiate.
+
+### 2. Problem and scope
+
+- Concrete problem statement with evidence (market data, user pain, existing-solution gaps).
+- Explicit **non-goals** -- what this protocol does not attempt.
+- Avoid generic "blockchain will fix everything" framing.
+
+### 3. System overview
+
+- Component diagram: on-chain contracts, off-chain services, external dependencies (oracles, bridges, data availability).
+- Trust boundaries: what each actor must trust, and what is trustless.
+- One-paragraph "how a transaction flows" narrative covering the happy path.
+
+### 4. Architecture
+
+- Data model and state transitions.
+- Consensus or participation model (PoS, PoA, rollup, DA committee, etc.) with finality guarantees.
+- Upgrade path: immutable vs upgradeable contracts, proxy patterns, migration strategy.
+- External integrations: name each oracle, bridge, or L1/L2 dependency and its trust model.
+
+### 5. Threat model and security
+
+- **Adversary classes**: rational economic, Byzantine, colluding subsets, governance attackers.
+- **Assumptions**: honest majority threshold, liveness bound, censorship resistance level, key management model.
+- **Attack surface**: smart contract bugs, oracle manipulation, bridge exploits, MEV, front-running.
+- **Mitigations**: audits (name firms, link reports), formal verification scope, bug bounty, incident response.
+- If no audit exists yet, state timeline and do not imply auditedness.
+
+### 6. Token and economics (only if a token exists)
+
+**All prose in this section must pass legalizer before publication.**
+
+- **Mechanism**: issuance schedule, supply cap or inflation model, sinks (burns, fees, lockups), sources (minting, distributions).
+- **Utility**: what the token *does* in the protocol (gas, staking weight, governance vote, access). Describe function, not financial outcome.
+- **Staking / slashing** (if applicable): conditions, cooldown, slashing severity, validator requirements as operational facts.
+- **Fee model**: who pays, where fees go (treasury, burn, validators), parameter governance.
+- **Distribution**: allocation table (team, treasury, community, ecosystem) with vesting and cliff. Factual, not pitched.
+
+Do **not** include: price projections, ROI estimates, yield promises, "value accrual" narratives, pie charts without verified numbers.
+
+### 7. Governance and upgrades
+
+- Decision-making: on-chain vote, multisig, time-locked admin, emergency keys.
+- Thresholds: quorum, supermajority, veto, proposal lifecycle.
+- Centralization disclosure: who holds admin keys today, and the decentralization roadmap (if any).
+- Readers assume centralization unless you map it explicitly.
+
+### 8. Roadmap
+
+- Phased, with **dependencies** between phases (not just dates).
+- Current phase clearly marked.
+- Honest about what is shipped vs planned vs speculative.
+- Avoid marketing-only timelines with no engineering backing.
+
+### 9. Risks and limitations
+
+- Technical risks: unaudited code, novel cryptography, dependency on unproven L1/L2.
+- Operational risks: key-person dependency, geographic concentration, single-cloud hosting.
+- Regulatory risks: jurisdictional exposure, pending guidance, classification uncertainty.
+- Dependency risks: oracle liveness, bridge security, upstream protocol changes.
+- Open problems the team has not solved yet.
+
+### 10. References, audits, and reproducibility
+
+- Every non-obvious claim cites a source (paper, audit report, on-chain data, benchmark).
+- Performance numbers include: hardware, software versions, network conditions, date measured.
+- Link to repos, deployed contracts (with verified source), and testnets.
+- Audit reports linked with scope summary and date.
+
+## Litepaper sections (minimum required)
+
+| Section | Guidance |
+|---------|----------|
+| Executive summary | Same rules as whitepaper; one page max. |
+| Problem and solution | Problem evidence + solution sketch; no deeper than necessary for orientation. |
+| How it works | One diagram, one narrative paragraph. Glossary for non-obvious terms. |
+| Token overview (if any) | Utility description only; distribution table if numbers are final and legal-cleared. **Legalizer pass required.** |
+| Links and pointers | Full whitepaper, audits, GitHub, testnet/mainnet, community channels. |
+| Disclaimers | Same legal/disclaimer block as the whitepaper (approved, version-controlled). |
+
+A litepaper should be readable in under 10 minutes. If it exceeds 8 pages, it is probably a whitepaper draft that needs either promotion or trimming.
+
+## Writing standards
+
+- **Verifiable over rhetorical** -- every claim should be traceable to code, data, or a cited source.
+- **Precise definitions** -- terms like "decentralized," "trustless," "scalable," "secure" must carry the project's specific meaning, not slogans.
+- **No superlatives** -- drop "revolutionary," "game-changing," "first-ever" unless independently verified.
+- **Consistent terminology** -- pick one term per concept and use it everywhere (glossary enforces this).
+- **Diagrams over prose** for architecture and flows; label trust boundaries.
+- **Third-person factual tone** per legalizer tone standard: describe mechanics, not outcomes.
+
+## Draft workflow
+
+```
+Phase 1: Outline
+  - Lock section list with product owner.
+  - Confirm glossary and citation log template.
+  - If token section exists, flag for legalizer review.
+  Gate: outline approved by product + legal stakeholder.
+
+Phase 2: First draft
+  - Write body with inline citation placeholders [CIT-nn].
+  - Fill citation log entries as claims are written.
+  - Diagrams: architecture, data flow, governance topology.
+  Gate: all [CIT-nn] resolved; no placeholder text remains.
+
+Phase 3: Technical review
+  - Engineering SME reviews: architecture, threat model, performance claims.
+  - Security SME reviews: threat model complete
+[... truncado em 8000 caracteres]

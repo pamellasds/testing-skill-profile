@@ -1,0 +1,23 @@
+{
+  "pool": 4928,
+  "grupos_quase_dup": 3314,
+  "skills_em_grupos_com_2_ou_mais": 2078,
+  "maior_grupo": 151,
+  "repos_distintos_pool": 2100,
+  "teto_1_por_grupo": 3314,
+  "minhash": {
+    "permutacoes": 128,
+    "bandas": 16,
+    "shingle_palavras": 5,
+    "jaccard_min": 0.8
+  },
+  "amostra_principal": 384,
+  "calibracao": 30,
+  "subamostra_humana": 60,
+  "texto_exibido": "nome + descrição + conteúdo até 8.000 caracteres",
+  "skills_truncadas_na_amostra": 246,
+  "instrumento": {
+    "arquivo": "instrument/instrumento.md",
+    "sha256": "520415df15746d90cde8c3df78ce68def700fa1d08733b7342405509902a5b36"
+  }
+}

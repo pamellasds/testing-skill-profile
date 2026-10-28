@@ -1,0 +1,132 @@
+NAME: pm2
+DESCRIPTION: PM2 — process manager for long-running training jobs on remote servers. ecosystem.config.js, common commands, and SSH workflow with uv.
+
+---
+name: pm2
+description: PM2 — process manager for long-running training jobs on remote servers. ecosystem.config.js, common commands, and SSH workflow with uv.
+---
+
+# PM2
+
+## Installation
+
+```bash
+# Via npm (requires Node.js)
+npm install -g pm2
+
+# Via NVM (no sudo needed)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+source ~/.bashrc
+nvm install --lts && npm install -g pm2
+```
+
+## ecosystem.config.js (standard pattern)
+
+```js
+// ecosystem.config.js — at project root
+module.exports = {
+  apps: [{
+    name: "stgraph-train",
+    cwd: "/home/user/fraud-detection-blockchain",
+    script: "uv",
+    args: "run python -m stgraph_fs.cli train --config configs/train.yaml",
+    autorestart: false,   // CRITICAL: prevents infinite restart loop after job ends
+    watch: false,
+    max_restarts: 0,
+    time: true,           // prefix logs with timestamp
+    env: {
+      CUDA_VISIBLE_DEVICES: "0",
+    }
+  }]
+};
+```
+
+**CRITICAL**: Always set `autorestart: false`. PM2 restarts processes by default — a training job that finishes will loop forever without this.
+
+## Starting jobs
+
+```bash
+# From ecosystem.config.js (preferred)
+pm2 start ecosystem.config.js
+
+# Inline (quick, no config file)
+pm2 start --name stgraph-train --no-autorestart --cwd /path/to/repo -- \
+  uv run python -m stgraph_fs.cli train --config configs/train.yaml
+
+# Specific app from ecosystem file
+pm2 start ecosystem.config.js --only stgraph-train
+```
+
+## Monitoring & logs
+
+```bash
+pm2 ls                              # list all processes + status
+pm2 status                          # same as ls
+pm2 logs stgraph-train              # stream logs (Ctrl+C to exit)
+pm2 logs stgraph-train --lines 200  # last 200 lines
+pm2 logs --err                      # stderr only
+pm2 monit                           # TUI dashboard (CPU, mem, logs)
+```
+
+## Job control
+
+```bash
+pm2 stop stgraph-train      # stop (keeps in list)
+pm2 restart stgraph-train   # restart
+pm2 delete stgraph-train    # stop + remove from list
+pm2 kill                    # stop all processes + daemon
+```
+
+## SSH workflow for remote training
+
+```bash
+# 1. Local: commit and push
+git add . && git commit -m "..." && git push
+
+# 2. SSH into server
+ssh user@server
+
+# 3. Pull + sync deps
+cd /path/to/repo
+git pull && uv sync
+
+# 4. Smoke test (fast dev run)
+uv run python -m stgraph_fs.cli train --fast_dev_run
+
+# 5. Launch via PM2
+pm2 start ecosystem.config.js
+
+# 6. Verify started, then disconnect
+pm2 ls
+exit   # job continues running
+```
+
+## Log file locations
+
+```bash
+# Default log path
+~/.pm2/logs/<app-name>-out.log   # stdout
+~/.pm2/logs/<app-name>-error.log # stderr
+
+# Custom log path in ecosystem.config.js
+{
+  out_file: "./logs/train-out.log",
+  error_file: "./logs/train-err.log",
+  merge_logs: true,
+}
+```
+
+## Persist across reboot (requires sudo)
+
+```bash
+pm2 save                    # save current process list
+pm2 startup                 # generates systemd command (run it as shown)
+```
+
+## Pitfalls
+
+- Missing `autorestart: false` will cause a completed training job to restart in an infinite loop, overwriting `outputs/`.
+- Only run one training job at a time per GPU — concurrent jobs will OOM or corrupt outputs.
+- `pm2 logs` streams in real time; use `--lines N` to see recent history without streaming.
+- After SSH disconnect, PM2 daemon keeps running — you don't need `nohup` or `screen`.
+- `pm2 kill` stops the daemon entirely — all jobs stop. Use `pm2 stop` for individual jobs.

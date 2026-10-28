@@ -1,0 +1,18 @@
+{
+  "_descricao": "Fase 1 — filtro de teste (só seleciona candidatas; a classificação é nas fases 4/5). Frases compostas, nunca 'test' isolado. Regex case-insensitive com fronteira alfanumérica. Entra no pool com >= 1 termo. Proposta v0 (gerada por LLM), pendente de revisão por R1/R2.",
+  "termos": [
+    "unit[- ]?(tests?|testing)", "integration (tests?|testing)", "e2e( tests?| testing)?", "end[- ]to[- ]end (tests?|testing)",
+    "contract (tests?|testing)", "consumer[- ]driven contracts?", "pact (tests?|testing)",
+    "ui (tests?|testing)", "acceptance (tests?|testing)", "exploratory (tests?|testing)",
+    "test automation", "automated (tests?|testing)", "regression (tests?|testing)", "smoke (tests?|testing)",
+    "test suites?", "test cases?", "test files?", "(test|code) coverage", "coverage reports?",
+    "tdd", "test[- ]driven", "bdd", "behaviou?r[- ]driven", "gherkin", "given[ /,-]+when[ /,-]+then",
+    "write (unit |integration )?tests", "writing tests", "run (the )?tests",
+    "forge (test|coverage|snapshot)", "hardhat test", "anchor test", "truffle test", "brownie test", "ape test",
+    "pytest", "jest", "vitest", "mocha", "playwright", "cypress",
+    "fuzz(ing|er|ed)?", "fuzz (tests?|testing)", "invariant (tests?|testing)", "property[- ]based (tests?|testing)",
+    "echidna", "halmos", "certora", "formal verification", "symbolic execution",
+    "fork (tests?|testing)", "forked tests?", "mainnet fork(ing|s)?", "--fork-url", "fork[- ]block[- ]number",
+    "gas (snapshots?|reports?)", "mutation (tests?|testing)"
+  ]
+}

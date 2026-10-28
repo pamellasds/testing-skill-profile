@@ -1,0 +1,232 @@
+VR ID,Control Item,Category,Status,Level,Priority
+S1.1.A1,Verify modularity and upgradability.,"Architecture, Design, and Threat Modeling",Unchecked,L2,Optional
+S1.1.A2,Ensure secure and controlled updates.,"Architecture, Design, and Threat Modeling",Unchecked,L2,Optional
+S1.1.A3,Check module boundaries and dependencies.,"Architecture, Design, and Threat Modeling",Unchecked,L2,Optional
+S1.1.A4,Ensure changes to storage variables are managed.,"Architecture, Design, and Threat Modeling",Unchecked,L2,Optional
+S1.1.A5,Verify critical privilege transfers.,"Architecture, Design, and Threat Modeling",Unchecked,L2,Optional
+S1.1.A6,Verify data location handling in function overrides.,"Architecture, Design, and Threat Modeling",Unchecked,L2,Optional
+S1.1.B1,Verify separation of different functionalities.,"Architecture, Design, and Threat Modeling",Unchecked,L1,Essential
+S1.1.B2,Ensure minimal dependencies between modules.,"Architecture, Design, and Threat Modeling",Unchecked,L1,Essential
+S1.1.B3,Check for cross-module dependencies.,"Architecture, Design, and Threat Modeling",Unchecked,L1,Essential
+S1.1.B4,Ensure consistent operation during privilege transfers.,"Architecture, Design, and Threat Modeling",Unchecked,L1,Essential
+S1.1.B5,Verify proxy contract initialization.,"Architecture, Design, and Threat Modeling",Unchecked,L1,Essential
+S1.1.B6,Verify storage layout consistency.,"Architecture, Design, and Threat Modeling",Unchecked,L1,Essential
+S1.1.B7,Ensure immutable variable consistency.,"Architecture, Design, and Threat Modeling",Unchecked,L1,Essential
+S1.1.B8,Verify consistency in logic implementation.,"Architecture, Design, and Threat Modeling",Unchecked,L1,Essential
+S1.1.B9,Ensure separate handling of ETH and WETH.,"Architecture, Design, and Threat Modeling",Unchecked,L1,Essential
+S1.1.B10,Verify proxy setup for contracts with constructors.,"Architecture, Design, and Threat Modeling",Unchecked,L1,Essential
+S1.2.A1,Verify implementation of upgrade mechanisms.,"Architecture, Design, and Threat Modeling",Unchecked,L1,Essential
+S1.2.A2,Ensure safeguards against unauthorized upgrades.,"Architecture, Design, and Threat Modeling",Unchecked,L1,Essential
+S1.2.A3,Review and document the upgrade mechanism.,"Architecture, Design, and Threat Modeling",Unchecked,L1,Essential
+S1.2.A4,Verify consistency of immutable variables.,"Architecture, Design, and Threat Modeling",Unchecked,L1,Essential
+S1.2.A5,Verify use of selfdestruct and delegatecall in proxy setup.,"Architecture, Design, and Threat Modeling",Unchecked,L1,Essential
+S1.2.A6,Protect UUPSUpgradeable contracts.,"Architecture, Design, and Threat Modeling",Unchecked,L1,Essential
+S1.2.B1,Verify handling of deprecated contract versions.,"Architecture, Design, and Threat Modeling",Unchecked,L1,Essential
+S1.2.B2,Ensure restriction or disabling of access to deprecated versions.,"Architecture, Design, and Threat Modeling",Unchecked,L1,Essential
+S1.2.B3,Check security of migration paths from deprecated versions.,"Architecture, Design, and Threat Modeling",Unchecked,L1,Essential
+S1.3.C1,Verify implementation of high-priority risk mitigations.,"Architecture, Design, and Threat Modeling",Unchecked,L1,Essential
+S1.3.C2,Ensure documentation and testing of mitigation strategies.,"Architecture, Design, and Threat Modeling",Unchecked,L1,Essential
+S1.3.C3,Review and validate effectiveness of implemented mitigations.,"Architecture, Design, and Threat Modeling",Unchecked,L1,Essential
+S1.3.G1,Understanding Protocol Actors,"Architecture, Design, and Threat Modeling",Unchecked,L1,Essential
+S1.3.G1,Verify Function Overriding,"Architecture, Design, and Threat Modeling",Unchecked,L1,Essential
+S1.3.G3,Verify Sybil Attack Protection,"Architecture, Design, and Threat Modeling",Unchecked,L1,Essential
+S1.3.G4,Verify Front-Running Protection for Initializer,"Architecture, Design, and Threat Modeling",Unchecked,L1,Essential
+S2.1.A1,Ensure adherence to latest compiler recommendations.,"Policies, Procedures, and Code Management",Unchecked,L1,Essential
+S2.1.A2,Verify non-usage of deprecated functions.,"Policies, Procedures, and Code Management",Unchecked,L1,Essential
+S2.1.B1,Independent expert code review.,"Policies, Procedures, and Code Management",Unchecked,L1,Essential
+S2.1.B2,Incorporate automated static analysis tools.,"Policies, Procedures, and Code Management",Unchecked,L1,Essential
+S2.1.B3,Thorough analysis for vulnerabilities.,"Policies, Procedures, and Code Management",Unchecked,L1,Essential
+S2.1.B4,Adherence to development standards.,"Policies, Procedures, and Code Management",Unchecked,L1,Essential
+S2.1.B5,Checklist for common vulnerabilities.,"Policies, Procedures, and Code Management",Unchecked,L1,Essential
+S2.1.G1,Verify Inherited Function Implementation,"Policies, Procedures, and Code Management",Unchecked,L1,Essential
+S2.1.G2,Verify Interface Implementation,"Policies, Procedures, and Code Management",Unchecked,L1,Essential
+S2.1.G3,Verify Correct Inheritance Order,"Policies, Procedures, and Code Management",Unchecked,L1,Essential
+S2.1.G4,Verify Initializable Usage,"Policies, Procedures, and Code Management",Unchecked,L1,Essential
+S2.1.G5,Verify Comment Accuracy,"Policies, Procedures, and Code Management",Unchecked,L1,Essential
+S3.1.G1,Verify correct handling of operational pauses and liquidations.,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.1.G2,Verify resumption of paused liquidations without issues.,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.1.G3,Verify fair distribution of small position incentives.,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.1.G4,Verify correct interest rate calculations in LTV computations.,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.1.G5,Verify consistency in liquidation and repayment logic.,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.1.G6,Verify accuracy of liquidation return calculations.,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.1.G7,Verify mitigation of perpetual debt risks.,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.1.G8,Verify prevention of arbitrary exchange rate settings in withdrawals.,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.1.G9,Verify security of time lock amplification.,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.1.G10,Verify fairness of reward distribution mechanisms.,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.1.G11,Verify security of update rewards function.,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.1.G12,Verify financial operation consistency.,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.1.G13,Verify correct enforcement of AAVE protocol pauses.,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.1.G14,Verify removal of deprecated pools.,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.1.G15,Verify correct classification of eMode category assets.,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.1.G16,Verify accuracy of flash loan pool index calculations.,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.1.G17,Verify correct implementation of on-chain slippage calculations.,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.1.G18,Verify minimization of intermediate swap slippage.,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.1.G19,Verify enforcement of zero denominator checks.,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.1.G20,Verify Two Transaction Actions Frontrunning,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.1.G21,Verify Dust Transactions Reversion,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.1.G22,Verify Unexpected Rewards Handling,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.1.G23,Ensure Stability for Pegged Tokens,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.1.G24,Verify Visibility Modifier,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.2.G1,Verify ERC20 Compliance,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.2.G2,Verify Approval Race Condition,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.2.G3,Verify Decimal Discrepancies,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.2.G4,Verify Caller Checking,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.2.G5,Verify Address Checks,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.2.G6,Verify Transfer Fees,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.2.G7,Verify ERC777 Compatibility,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.2.G8,Verify Solmate's ERC20.safeTransferLib Usage,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.2.G9,Verify Zero Amount Transfers,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.2.G10,Verify ERC2612 Implementation,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.2.G11,Verify Permit Function Replay Protection,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.3.G1,Verify Token Donation Manipulation,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.3.G2,Detect On-Chain Slippage Manipulation,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.3.G3,Ensure Slippage is Enforced at All Stages,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.3.G4,Verify Initial Deposit Behavior,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.3.G5,Verify Read-Only Reentrancy,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.3.G6,Prevent Flashloan-Based Withdrawals,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.3.G7,Ensure Liquidation Resilience in Volatile Markets,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.3.G8,Manage Risks in Liquidation Processes,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.3.G9,Prevent Self-Liquidation Abuse,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.3.G10,Verify Parent Contract Visibility,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.3.G11,Verify Commit Reveal Scheme,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.3.G12,Ensure Dynamic Slippage Implementation,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.3.G13,Validate Deadline Protection Mechanisms,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.3.G14,Ensure Proper Reserve Validation,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.3.G15,Ensure Slippage Protection,Business Logic and Economic Security,Unchecked,L1,Essential
+S3.3.G16,Ensure Reliable Min Amount Out Calculation,Business Logic and Economic Security,Unchecked,L1,Essential
+S4.1.G1,Verify Authorization Using msg.sender,Access Control and Authentication,Unchecked,L1,Essential
+S4.1.G2,Verify Role-Based Access Control Implementation,Access Control and Authentication,Unchecked,L1,Essential
+S4.1.G3,Verify Modifier Logic,Access Control and Authentication,Unchecked,L1,Essential
+S4.1.G4,Verify debit function validation.,Access Control and Authentication,Unchecked,L1,Essential
+S4.1.G5,Verify presence of required code components.,Access Control and Authentication,Unchecked,L1,Essential
+S4.1.G6,Verify Access Control Implementation,Access Control and Authentication,Unchecked,L1,Essential
+S4.1.G7,Verify Admin Asset Pull Privilege,Access Control and Authentication,Unchecked,L1,Essential
+S4.1.G8,Verify Timelocks for Critical Functions,Access Control and Authentication,Unchecked,L1,Essential
+S4.1.G9,Verify Whitelisting Implementation,Access Control and Authentication,Unchecked,L1,Essential
+S4.1.G10,Verify Contract Initialization Functions,Access Control and Authentication,Unchecked,L1,Essential
+S4.1.G11,Verify Secure Privilege Transfer,Access Control and Authentication,Unchecked,L1,Essential
+S4.2.G1,Verify Critical Function Access Control,Access Control and Authentication,Unchecked,L1,Essential
+S4.2.G2,Prevent Arbitrary Calls Execution,Access Control and Authentication,Unchecked,L1,Essential
+S4.2.G3,Verify Caller Address in Callbacks,Access Control and Authentication,Unchecked,L1,Essential
+S4.2.G4,Mitigate Risks from Excessively High Allowances,Access Control and Authentication,Unchecked,L1,Essential
+S5.1.G1,Verify protection of exchange rates from sandwich attacks.,Secure Interactions and Communications,Unchecked,L1,Essential
+S5.1.G2,Verify front-running protections for oracle price updates.,Secure Interactions and Communications,Unchecked,L1,Essential
+S5.1.G3,Verify enforcement of Balancer flash loan fees.,Secure Interactions and Communications,Unchecked,L1,Essential
+S5.1.G4,Verify accuracy of Balancer oracle pricing.,Secure Interactions and Communications,Unchecked,L1,Essential
+S5.1.G5,Verify security of Balancer boosted pool supply calculations.,Secure Interactions and Communications,Unchecked,L1,Essential
+S5.1.G6,Verify Balancer vault pool liquidity security.,Secure Interactions and Communications,Unchecked,L1,Essential
+S5.1.G7,Verify correct Chainlink VRF parameter configurations.,Secure Interactions and Communications,Unchecked,L1,Essential
+S5.1.G8,Verify secure Chainlink VRF subscription mechanisms.,Secure Interactions and Communications,Unchecked,L1,Essential
+S5.1.G9,Verify security of confirmation number selection.,Secure Interactions and Communications,Unchecked,L1,Essential
+S5.1.G10,Verify correct cbETH rate control.,Secure Interactions and Communications,Unchecked,L1,Essential
+S5.1.G11,Verify security of direct pool swap usage.,Secure Interactions and Communications,Unchecked,L1,Essential
+S5.1.G12,Verify correct use of Uniswap math libraries.,Secure Interactions and Communications,Unchecked,L1,Essential
+S5.1.G13,Verify protection against Slot0 manipulation.,Secure Interactions and Communications,Unchecked,L1,Essential
+S5.1.G14,Verify removal of hardcoded fee tiers.,Secure Interactions and Communications,Unchecked,L1,Essential
+S5.2.G1,Verify Untrusted External Contract Calls,Secure Interactions and Communications,Unchecked,L1,Essential
+S5.2.G2,Verify Input Validation,Secure Interactions and Communications,Unchecked,L1,Essential
+S5.2.G3,Verify Output Validation,Secure Interactions and Communications,Unchecked,L1,Essential
+S5.2.G4,Verify Price Manipulation Vectors,Secure Interactions and Communications,Unchecked,L1,Essential
+S5.3.G1,Verify Arbitrary Input and Low-Level Calls,Secure Interactions and Communications,Unchecked,L1,Essential
+S5.3.G2,Verify External Contract Interaction Safety,Secure Interactions and Communications,Unchecked,L1,Essential
+S6.1.G1,Verify protection against reentrancy in reward withdrawals.,Cryptographic Practices,Unchecked,L1,Essential
+S6.1.G2,Verify EVM opcode compatibility.,Cryptographic Practices,Unchecked,L1,Essential
+S6.2.G1,Verify Failed Transaction Replay Protection,Cryptographic Practices,Unchecked,L1,Essential
+S6.2.G2,Verify Signature Replay Protection,Cryptographic Practices,Unchecked,L1,Essential
+S6.2.G3,Verify Event Emitting on State Change,Cryptographic Practices,Unchecked,L1,Essential
+S7.1.G1,Verify security of lending and borrowing the same token.,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.1.G2,Verify minimization of precision loss in calculations.,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.1.G3,Verify decimal precision consistency.,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.1.G4,Verify avoidance of off-by-one errors.,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.1.G5,Verify prevention of rounding errors.,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.1.G6,Verify secure reward claims implementation.,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.1.G7,Verify correct handling of request confirmation numbers.,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.1.G8,Verify front-running protections for VRF calls.,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.1.G9,Verify correct nonce increments in exec transactions.,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.1.G10,Verify enforcement of Ethereum Beacon Chain penalties.,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.1.G11,Verify secure management of staking rewards.,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.1.G12,Verify correct handling of Rocket Pool deposit burns.,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.1.G13,Verify validation of precompiled code return sizes.,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.1.G14,Verify Variable Bounds Handling,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.1.G15,Ensure Correct Handling of Unsigned Integer Values,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.1.G16,Verify Unchecked Blocks Usage,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.1.G17,Prevent Time Units Overflow,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.2.G1,Verify Low Decimal Token Handling,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.2.G2,Verify Precision in Summation,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.2.G3,Verify Mathematical Calculation Accuracy,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.2.G4,Verify Handling of Precision Loss,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.2.G6,Verify Safe Data Type Conversion,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.2.G7,Verify Multiplication Before Division,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.2.G8,Verify Correct Rounding Direction,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.2.G9,Verify Division by Zero Protection,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.2.G10,Check for Correct Inequality Usage,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.2.G11,Validate Inline Assembly Operations,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.2.G12,Ensure Edge Case Coverage in Calculations,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.2.G13,Validate Type Casting Operations,Arithmetic and Logic Security,Unchecked,L1,Essential
+S7.2.G14,Check for Rounding Errors in Calculations,Arithmetic and Logic Security,Unchecked,L1,Essential
+S8.1.G1,Verify secure iteration over operators and validators.,Denial of Service (DoS),Unchecked,L1,Essential
+S8.1.G2,Verify handling of oracle reverts.,Denial of Service (DoS),Unchecked,L1,Essential
+S8.1.G3,Verify blocking mechanism security.,Denial of Service (DoS),Unchecked,L1,Essential
+S8.1.G4,Verify protocol stability without overreliance on reserves.,Denial of Service (DoS),Unchecked,L1,Essential
+S8.1.G5,Verify Front-Running Risk,Denial of Service (DoS),Unchecked,L1,Essential
+S8.1.G6,Verify correct pausing functionality.,Denial of Service (DoS),Unchecked,L1,Essential
+S8.2.G1,Verify Queue Processing DoS Risks,Denial of Service (DoS),Unchecked,L1,Essential
+S8.2.G2,Prevent Same-Block Withdrawal Attacks,Denial of Service (DoS),Unchecked,L1,Essential
+S8.2.G3,Verify DoS in Loops,Denial of Service (DoS),Unchecked,L1,Essential
+S8.2.G7,Verify msg.value in Loop,Denial of Service (DoS),Unchecked,L1,Essential
+S8.2.G8,Verify Batch Fund Transfer,Denial of Service (DoS),Unchecked,L1,Essential
+S8.2.G9,Verify Block Timestamp Manipulation,Denial of Service (DoS),Unchecked,L1,Essential
+S9.1.G1,Verify handling of stale data in proof-of-reserves oracle.,Blockchain Data and State Management,Unchecked,L1,Essential
+S9.1.G2,Verify removal of deprecated Chainlink functions.,Blockchain Data and State Management,Unchecked,L1,Essential
+S9.1.G3,Verify secure updating of price feed addresses.,Blockchain Data and State Management,Unchecked,L1,Essential
+S9.1.G4,Verify correct cETH token integration.,Blockchain Data and State Management,Unchecked,L1,Essential
+S9.1.G5,Verify management of cbETH rate decreases.,Blockchain Data and State Management,Unchecked,L1,Essential
+S9.1.G6,Verify secure sfrxETH detachment handling.,Blockchain Data and State Management,Unchecked,L1,Essential
+S9.1.G7,Verify stability of sfrxETH rate calculations.,Blockchain Data and State Management,Unchecked,L1,Essential
+S9.1.G8,Verify handling of stETH rebasing mechanisms.,Blockchain Data and State Management,Unchecked,L1,Essential
+S9.1.G9,Verify correct handling of stETH withdrawals.,Blockchain Data and State Management,Unchecked,L1,Essential
+S9.1.G10,Verify secure stETH-wstETH conversions.,Blockchain Data and State Management,Unchecked,L1,Essential
+S9.1.G11,Verify consistency of token order.,Blockchain Data and State Management,Unchecked,L1,Essential
+S9.2.G1,Verify blockchain compatibility.,Blockchain Data and State Management,Unchecked,L1,Essential
+S9.2.G2,Verify secure contract upgradability.,Blockchain Data and State Management,Unchecked,L1,Essential
+S9.2.G3,Verify security of cross-chain messaging.,Blockchain Data and State Management,Unchecked,L1,Essential
+S9.2.G4,Verify handling of unsupported chain messages.,Blockchain Data and State Management,Unchecked,L1,Essential
+S9.2.5,Verify correct PUSH0 opcode support.,Blockchain Data and State Management,Unchecked,L1,Essential
+S9.2.G6,Prevent Accounting Issues from Direct Transfers,Blockchain Data and State Management,Unchecked,L1,Essential
+S9.2.G7,Handle Small Residual Balances,Blockchain Data and State Management,Unchecked,L1,Essential
+S9.2.G8,Verify Array Deletion Method,Blockchain Data and State Management,Unchecked,L1,Essential
+S9.2.G9,Verify Array Index Usage,Blockchain Data and State Management,Unchecked,L1,Essential
+S9.2.G10,Verify Unique Array Validation,Blockchain Data and State Management,Unchecked,L1,Essential
+S9.2.G11,Verify Loop Edge Cases,Blockchain Data and State Management,Unchecked,L1,Essential
+S9.2.G13,Verify Loop Control Statements,Blockchain Data and State Management,Unchecked,L1,Essential
+S9.2.G14,Verify State Variable Initialization,Blockchain Data and State Management,Unchecked,L1,Essential
+S9.2.G15,Verify Proper Deletion of Nested Structures,Blockchain Data and State Management,Unchecked,L1,Essential
+S9.2.G16,Verify External State Changes Impact,Blockchain Data and State Management,Unchecked,L1,Essential
+S9.2.G17,Verify Edge Case Handling,Blockchain Data and State Management,Unchecked,L1,Essential
+S10.1.G1,Verify accuracy of gas estimation.,"Gas Usage, Efficiency, and Limitations",Unchecked,L1,Essential
+S10.1.G2,Verify enforcement of input data validation.,"Gas Usage, Efficiency, and Limitations",Unchecked,L1,Essential
+S10.1.G3,Verify security of gas fee mechanisms.,"Gas Usage, Efficiency, and Limitations",Unchecked,L1,Essential
+S10.1.G4,Verify consistency in block production timing.,"Gas Usage, Efficiency, and Limitations",Unchecked,L1,Essential
+S10.1.G5,Verify Slippage Protection,"Gas Usage, Efficiency, and Limitations",Unchecked,L1,Essential
+S10.1.G6,Verify Transaction Gas Limit,"Gas Usage, Efficiency, and Limitations",Unchecked,L1,Essential
+S11.1.G1,Verify validation of zero price transactions.,Component-Specific Security,Unchecked,L1,Essential
+S11.1.G2,Verify accuracy of price update time validation.,Component-Specific Security,Unchecked,L1,Essential
+S11.1.G3,Verify enforcement of rollup sequencer validation.,Component-Specific Security,Unchecked,L1,Essential
+S11.1.G4,Verify security of TWAP period calculations.,Component-Specific Security,Unchecked,L1,Essential
+S11.1.G5,Verify consistency of price feeds across chains.,Component-Specific Security,Unchecked,L1,Essential
+S11.1.G6,Verify appropriateness of price feed heartbeat intervals.,Component-Specific Security,Unchecked,L1,Essential
+S11.1.G7,Verify suitability of price feeds for financial operations.,Component-Specific Security,Unchecked,L1,Essential
+S11.1.G8,Verify security of AMM spot price calculations.,Component-Specific Security,Unchecked,L1,Essential
+S11.1.G9,Verify mitigation of flash crash price inaccuracies.,Component-Specific Security,Unchecked,L1,Essential
+S11.1.G10,Verify secure usage of LzApp functions.,Component-Specific Security,Unchecked,L1,Essential
+S11.1.G11,Verify correct LayerZero user application configurations.,Component-Specific Security,Unchecked,L1,Essential
+S11.1.G12,Verify security of default contract configurations.,Component-Specific Security,Unchecked,L1,Essential
+S11.1.G13,Verify correct handling of refunds for failed orders.,Component-Specific Security,Unchecked,L1,Essential
+S11.1.G14,Ensure ERC20 Decimal Compatibility,Component-Specific Security,Unchecked,L1,Essential
+S11.1.G15,Ensure ERC20 Token Compatibility,Component-Specific Security,Unchecked,L1,Essential
+S11.1.G16,Verify Reorg Vulnerability with CREATE,Component-Specific Security,Unchecked,L1,Essential
+S11.1.G17,Validate Token Decimal Handling,Component-Specific Security,Unchecked,L1,Essential
+S11.1.G18,Ensure Fee-On-Transfer Token Support,Component-Specific Security,Unchecked,L1,Essential
+S11.1.G19,Handle Rebasing Token Effects,Component-Specific Security,Unchecked,L1,Essential
+S11.1.G20,Mitigate ERC4626 Flashloan Manipulation,Component-Specific Security,Unchecked,L1,Essential
+S11.1.G21,Analyze Risks in Forked Code,Component-Specific Security,Unchecked,L1,Essential

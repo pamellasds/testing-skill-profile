@@ -1,0 +1,243 @@
+NAME: circle-dev
+DESCRIPTION: Comprehensive development support for Circle's stablecoin ecosystem including USDC/EURC integration, wallet solutions (Developer-Controlled, User-Controlled, Modular), cross-chain transfers (CCTP, Bridge Kit, Gateway), smart contracts, and payment APIs. Use when building applications with Circle for - (1) Stablecoin payments and transfers, (2) Wallet creation and management, (3) Cross-chain USDC/EURC transfers, (4) Smart contract deployment and management, (5) Gas fee sponsorship and optimization, (6) Circle Mint integration, (7) Global payment settlement, (8) FX operations with stablecoins. Covers SDK usage (TypeScript/JavaScript), API integration (REST), smart contract development (Solidity), and Circle-specific features like programmable wallets, native cross-chain transfers, and gasless transactions.
+
+
+---
+name: circle-dev
+description: >
+  Comprehensive development support for Circle's stablecoin ecosystem including USDC/EURC integration,
+  wallet solutions (Developer-Controlled, User-Controlled, Modular), cross-chain transfers (CCTP,
+  Bridge Kit, Gateway), smart contracts, and payment APIs. Use when building applications with Circle
+  for - (1) Stablecoin payments and transfers, (2) Wallet creation and management, (3) Cross-chain
+  USDC/EURC transfers, (4) Smart contract deployment and management, (5) Gas fee sponsorship and
+  optimization, (6) Circle Mint integration, (7) Global payment settlement, (8) FX operations with
+  stablecoins. Covers SDK usage (TypeScript/JavaScript), API integration (REST), smart contract
+  development (Solidity), and Circle-specific features like programmable wallets, native cross-chain
+  transfers, and gasless transactions.
+---
+
+# Circle Development Support
+
+Comprehensive toolkit for building stablecoin-powered applications with Circle's ecosystem including USDC, EURC, wallets, cross-chain transfers, and payment infrastructure.
+
+## Quick Start
+
+### Product Selection
+
+Always start by choosing the right Circle product for your use case. See [product-guide.md](references/product-guide.md) for detailed comparison.
+
+**Quick decision**:
+- Accept/send stablecoin payments → **USDC/EURC** (stablecoins)
+- Build wallet into app → **Developer-Controlled Wallets** (programmable wallets)
+- Give users custody → **User-Controlled Wallets** (social login, PIN)
+- Transfer USDC across chains → **CCTP or Bridge Kit** (cross-chain)
+- Unified balance across chains → **Gateway** (chain abstraction)
+- Deploy smart contracts → **Circle Contracts** (no-code + API)
+- Sponsor user gas fees → **Gas Station** (developer-paid)
+- Let users pay gas in USDC → **Circle Paymaster** (user-paid)
+- Institutional liquidity → **Circle Mint** (fiat ↔ USDC/EURC)
+
+### Common Tasks
+
+**1. Create a wallet and send USDC**:
+- Review [wallet_creation_example.ts](scripts/wallet_creation_example.ts) for wallet setup
+- Key points: API key management, blockchain selection, transaction signing
+- See [security.md](references/security.md) for security patterns
+
+**2. Transfer USDC across chains**:
+- Use [cctp_transfer_example.ts](scripts/cctp_transfer_example.ts) for native cross-chain transfers
+- Alternative: [bridge_kit_example.ts](scripts/bridge_kit_example.ts) for simplified integration
+- See [crosschain-guide.md](references/crosschain-guide.md) for comparison
+
+**3. Enable gasless transactions**:
+- Use [paymaster_example.ts](scripts/paymaster_example.ts) for USDC gas payments
+- Or implement Gas Station for developer-sponsored fees
+- See [gas-optimization.md](references/gas-optimization.md) for best practices
+
+**4. Deploy smart contracts**:
+- Start with Circle Contracts Console or API
+- See [contracts-guide.md](references/contracts-guide.md) for deployment patterns
+- Integrate with CCTP for cross-chain contract interactions
+
+## Core Workflows
+
+### Wallet Creation & Management
+
+**Developer-Controlled Wallets** (backend-managed):
+```typescript
+import { initiateDeveloperControlledWalletsClient } from '@circle-fin/developer-controlled-wallets';
+
+// 1. Initialize SDK
+const client = initiateDeveloperControlledWalletsClient({
+  apiKey: process.env.CIRCLE_API_KEY,
+  entitySecret: process.env.ENTITY_SECRET
+});
+
+// 2. Create wallet
+const wallet = await client.createWallet({
+  accountType: 'SCA', // Smart Contract Account for ERC-4337
+  blockchains: ['ETH-SEPOLIA', 'POLY-AMOY'],
+  metadata: [{ name: 'user_id', value: 'user123' }]
+});
+
+// 3. Send USDC
+const transfer = await client.createTransaction({
+  walletId: wallet.data.walletId,
+  blockchain: 'ETH-SEPOLIA',
+  tokenAddress: '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238', // USDC
+  destinationAddress: '0x...',
+  amount: ['10.00']
+});
+```
+
+**User-Controlled Wallets** (user-custodied with social login):
+```typescript
+import { W3SSdk } from '@circle-fin/w3s-pw-web-sdk';
+
+// 1. Initialize SDK
+const sdk = new W3SSdk({
+  appId: process.env.APP_ID,
+  authentication: {
+    userToken: userToken,
+    encryptionKey: encryptionKey
+  }
+});
+
+// 2. Create wallet with social login
+await sdk.execute(challengeId, (error, result) => {
+  if (result) {
+    console.log('Wallet created:', result.data.wallets);
+  }
+});
+```
+
+See [wallet_creation_example.ts](scripts/wallet_creation_example.ts) for complete implementation.
+
+### Cross-Chain USDC Transfers
+
+**CCTP (Native Cross-Chain Transfer Protocol)**:
+```typescript
+import { CircleClient } from '@circle-fin/circle-sdk';
+
+// 1. Initialize SDK
+const circle = new CircleClient({ apiKey: process.env.CIRCLE_API_KEY });
+
+// 2. Burn USDC on source chain (e.g., Ethereum)
+const burnTx = await sourceChainUSDC.burn(amount);
+const messageHash = await waitForAttestation(burnTx.hash);
+
+// 3. Get attestation from Circle
+const attestation = await circle.getAttestation(messageHash);
+
+// 4. Mint USDC on destination chain (e.g., Arbitrum)
+const mintTx = await destChainReceiver.receiveMessage(
+  attestation.message,
+  attestation.signature
+);
+```
+
+**Bridge Kit (Simplified SDK)**:
+```typescript
+import { createBridgeKit } from '@circle-fin/bridge-kit';
+
+// 1. Initialize Bridge Kit
+const kit = createBridgeKit({ apiKey: process.env.BRIDGE_API_KEY });
+
+// 2. Execute transfer (handles CCTP under the hood)
+const result = await kit.bridge({
+  from: { adapter: viemAdapter, chain: 'Ethereum' },
+  to: { adapter: solanaAdapter, chain: 'Solana' },
+  amount: '100.00'
+});
+
+console.log('Transfer status:', result.status);
+```
+
+See [cctp_transfer_example.ts](scripts/cctp_transfer_example.ts) and [bridge_kit_example.ts](scripts/bridge_kit_example.ts).
+
+### Gas Fee Management
+
+**Circle Paymaster (Users Pay in USDC)**:
+```typescript
+import { PaymasterClient } from '@circle-fin/paymaster-sdk';
+
+// 1. Initialize Paymaster client
+const paymaster = new PaymasterClient({
+  chain: 'ethereum',
+  paymasterAddress: '0x...' // Circle Paymaster contract
+});
+
+// 2. Get UserOperation with Paymaster fields
+const userOp = await paymaster.sponsorUserOperation({
+  sender: wallet.address,
+  callData: encodedCallData,
+  // Paymaster will be paid in USDC
+});
+
+// 3. Submit to bundler
+const txHash = await bundler.sendUserOperation(userOp);
+```
+
+**Gas Station (Developer Sponsors Fees)**:
+```typescript
+// 1. Create SCA wallet with Gas Station enabled
+const wallet = await client.createWallet({
+  accountType: 'SCA',
+  blockchains: ['ETH-SEPOLIA']
+});
+
+// 2. Configure Gas Station policy in Circle Console
+// Set spending limits, allowed contracts, etc.
+
+// 3. Transactions automatically use Gas Station
+const tx = await client.createTransaction({
+  walletId: wallet.data.walletId,
+  // Gas fees automatically sponsored
+});
+```
+
+See [gas-optimization.md](references/gas-optimization.md) for detailed patterns.
+
+### Smart Contract Deployment
+
+**Via Console (No-Code)**:
+1. Navigate to Circle Developer Console → Contracts
+2. Select template (ERC-20, ERC-721, ERC-1155, or custom)
+3. Configure parameters and deploy
+
+**Via API (Programmatic)**:
+```typescript
+import { CircleContracts } from '@circle-fin/contracts-sdk';
+
+// 1. Initialize SDK
+const contracts = new CircleContracts({
+  apiKey: process.env.CIRCLE_API_KEY
+});
+
+// 2. Deploy contract
+const deployment = await contracts.deployContract({
+  walletId: wallet.data.walletId,
+  blockchain: 'ETH-SEPOLIA',
+  templateId: 'erc20', // or custom bytecode
+  parameters: {
+    name: 'MyToken',
+    symbol: 'MTK',
+    totalSupply: '1000000'
+  }
+});
+
+// 3. Monitor deployment
+const status = await contracts.getDeploymentStatus(deployment.id);
+```
+
+See [contracts-guide.md](references/contracts-guide.md) for advanced patterns.
+
+## Critical Security Requirements
+
+**Never deploy without**:
+
+1. **API Key Protection**: Store API keys in environment variables, never commit to code
+2. **Entity Secret Encryption**: Use secure key management for wallet entity secrets
+3. **Transaction Validation**: Always verify recipient addresses and amounts
+4. **Rate Limitin
+[... truncado em 8000 caracteres]

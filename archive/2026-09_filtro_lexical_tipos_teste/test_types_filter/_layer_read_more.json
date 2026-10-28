@@ -1,0 +1,539 @@
+{
+  "unit": [
+    {
+      "repo": "nickthelegend/canton-agent-skills",
+      "path": "skills/canton-testing-deployment/SKILL.md",
+      "name": "canton-testing-deployment",
+      "description": "Move a Canton app from local to production through four environments — LocalNet (Docker, free) → DevNet (shared, faucet, frequently reset) → TestNet (mirrors MainNet) → MainNet (real CC). Covers what changes between them (auth/onboarding, connectivity, CC/traffic, DAR deployment), the three Global-Synchronizer upgrade types (weekly Type 1 backward-",
+      "matched_layers": [
+        "unit"
+      ],
+      "mandatory_hits": "smart-contract;wallet",
+      "exclusive": true,
+      "test_lines": [
+        "--- name: canton-testing-deployment description: Move a Canton app from local to production through four environments — LocalNet (Docker, free) → DevNet (shared, faucet, frequently reset) → TestNet (mirrors MainNet) → Ma",
+        "name: canton-testing-deployment description: Move a Canton app from local to production through four environments — LocalNet (Docker, free) → DevNet (shared, faucet, frequently reset) → TestNet (mirrors MainNet) → MainNe",
+        "# Canton Testing & Deployment",
+        "| **DevNet** | Shared dev network on the real Global Synchronizer; **periodically reset**, updates frequently, may break. | | **TestNet** | Pre-production; mirrors MainNet config and upgrade cadence; final validation. | ",
+        "## What changes between environments | Category | LocalNet | Shared (DevNet/TestNet/MainNet) | | --- | --- | --- |",
+        "SVs upgrade the network on a cadence you must tolerate: - **Type 1 — backward-compatible** (weekly, Mondays): non-breaking Splice/sync changes. Keep up to date; \"skip upgrades\" are untested and riskier. - **Type 2 — Daml",
+        "- **Type 1 — backward-compatible** (weekly, Mondays): non-breaking Splice/sync changes. Keep up to date; \"skip upgrades\" are untested and riskier. - **Type 2 — Daml-model changes** (every few months): forks the app chain",
+        "## The testing pyramid 1. **Daml Script** (`dpm test`) — fast, in-process unit tests of contract logic/authorization (`canton-daml-testing`).",
+        "## The testing pyramid 1. **Daml Script** (`dpm test`) — fast, in-process unit tests of contract logic/authorization (`canton-daml-testing`). 2. **Sandbox integration** (`dpm sandbox`) — backend/Ledger-API, codegen, JSON",
+        "2. **Sandbox integration** (`dpm sandbox`) — backend/Ledger-API, codegen, JSON-API, auth. 3. **LocalNet E2E** — multi-validator flows, Canton Coin, Wallet SDK, Splice APIs (`canton-localnet`).",
+        "## Promotion checklists (abridged) - **LocalNet → DevNet:** `dpm test` + backend integration pass; DARs build; **validator onboarded**; **auth configured** (no default Keycloak users). - **DevNet → TestNet:** E2E multi-p",
+        "- **LocalNet → DevNet:** `dpm test` + backend integration pass; DARs build; **validator onboarded**; **auth configured** (no default Keycloak users). - **DevNet → TestNet:** E2E multi-party flows pass; app survives a **T",
+        "- **DevNet → TestNet:** E2E multi-party flows pass; app survives a **Type 1** upgrade; load acceptable; DAR deployment documented; monitoring/alerting configured. - **TestNet → MainNet:** full regression on TestNet; surv",
+        "> Maintain nodes on **DevNet, TestNet, and MainNet** so MainNet upgrades don't surprise you. Use env-specific `dpm` config (`canton-daml-sdk`) and automate promotion via CI/CD.",
+        "- [`appdev/modules/m5-deployment-progression.mdx`](../canton-docs/appdev/modules/m5-deployment-progression.mdx) — environments, upgrade types, checklists - [`appdev/modules/m5-networks-and-use-cases.mdx`](../canton-docs/"
+      ],
+      "head": "---\nname: canton-testing-deployment\ndescription: Move a Canton app from local to production through four environments — LocalNet (Docker, free) → DevNet (shared, faucet, frequently reset) → TestNet (mirrors MainNet) → MainNet (real CC). Covers what changes between them (auth/onboarding, connectivity, CC/traffic, DAR deployment), the three Global-Synchronizer upgrade types (weekly Type 1 backward-compatible, Type 2 Daml-model forks, Type 3 protocol hard-migrations with downtime), promotion checklists, and the testing pyramid (Daml Script → sandbox integration → LocalNet E2E). Maintain nodes on DevNet/TestNet/MainNet.\ncategory: Lifecycle\ndifficulty: Intermediate\nversion: \"0.1.0\"\n---\n\n# Canton Testing & Deployment\n\n## Overview\nA Canton app moves sequentially through **four environments**. The core architecture is identical everywhere (your app → a participant's Ledger API); what changes is the surrounding infrastructure.\n\n| Env | What it is |\n| --- | --- |\n| **LocalNet** | Everything on your machine via Docker Compose; you control all nodes; free. |\n| **DevNet** | Shared dev network on the real Global Synchronizer; **periodically reset**, updates frequently, may break. |\n| **TestNet** | Pre-production; mirrors MainNet config and upgrade cadence; final validation. |\n| **MainNet** | Production; real CC, real traffic costs, real users. |\n\n## What changes between environments\n| Category | LocalNet | Shared (DevNet/TestNet/MainNet) |\n| --- | --- | --- |\n| Identity & auth | Pre-configured Keycloak, default users | Validator **onboarding** + valid JWT from your auth provider |\n| Connectivity | localhost | Validator connects to Global-Synchronizer sequencers |\n| CC & traffic | Simulated | Real CC to buy traffic (auto-top-up); `Tap` on DevNet |\n| DAR deployment | Direct upload to l",
+      "chars": 4607
+    },
+    {
+      "repo": "tejas0111/Pharos",
+      "path": "skill/subskills/solidity-authoring/SKILL.md",
+      "name": "pharos-solidity-authoring",
+      "description": "Write or refactor Pharos Solidity contracts with clear structure, custom errors, events, modifiers, and testable patterns. Use when implementing, writing, or refactoring Solidity smart contracts for Pharos, including ERC-20/721/1155 tokens, staking, vault, AMM, lending, or DeFi/RealFi protocols. Keywords: Solidity, write contract, implement, refact",
+      "matched_layers": [
+        "unit"
+      ],
+      "mandatory_hits": "msg.sender;msg.value;reentrancy;smart contract;smart contracts;staking",
+      "exclusive": true,
+      "test_lines": [
+        "name: pharos-solidity-authoring description: \"Write or refactor Pharos Solidity contracts with clear structure, custom errors, events, modifiers, and testable patterns. Use when implementing, writing, or refactoring Soli",
+        "Write or refactor Solidity contracts with clear structure, custom errors, events, modifiers, and testable patterns for Pharos mainnet (chain ID 1672) using PHRS as native currency (18 decimals).",
+        "designing architecture (use contract-architecture), reviewing code (use contract-review), or writing tests (use test-generation)",
+        "- **Foundry**: `forge build` must succeed. Run `forge --version` to verify installation. - **RPC endpoint**: Set `PHAROS_TESTNET_RPC=$PHAROS_TESTNET_RPC_URL` or `PHAROS_MAINNET_RPC=$PHAROS_MAINNET_RPC_URL` in your enviro",
+        "- **Foundry**: `forge build` must succeed. Run `forge --version` to verify installation. - **RPC endpoint**: Set `PHAROS_TESTNET_RPC=$PHAROS_TESTNET_RPC_URL` or `PHAROS_MAINNET_RPC=$PHAROS_MAINNET_RPC_URL` in your enviro",
+        "- **Network reachability**: Run `cast chain-id --rpc-url $RPC_URL` to confirm the target network is reachable. - **Foundry config**: `foundry.toml` should have `[rpc_endpoints]` section with `pharos_testnet` and `pharos_",
+        "uint256 public constant PHAROS_MAINNET = 1672; uint256 public constant PHAROS_TESTNET = 688689;",
+        "The native currency (PROS on mainnet, PHRS on testnet, 18 decimals) forwards **all remaining gas** in `.call{value:}` — there is **no 2300 gas stipend**. Always specify a gas limit or use a pull-over-push pattern:",
+        "## Workflow - **Strict .env Check**: Confirm `.env` exists with `test -f .env` and check variables via `grep -q` (without printing values). NEVER print `.env` contents. Do NOT proceed if missing or if the user suggests `",
+        "2. **Mandatory Plan (`PLAN.md`)**: Create or update `PLAN.md` in the project root with the proposed strategy. **Wait for explicit 'Approve' or 'Proceed' from the user before taking any action.** 3. Capture the contract g",
+        "3. Capture the contract goal, inputs, outputs, and invariants. 4. Check prerequisites: verify Foundry is installed, RPC endpoints are reachable, and required env vars are set. Ask the user for any missing values before p",
+        "7. Present the implementation plan and ask for confirmation. 8. Write the contract in a way that is easy to test and review. ## Output",
+        "- implementation notes - test hooks - invariants",
+        "- test hooks - invariants",
+        "forge build or npx hardhat compile. Then forge test for unit tests. Verify chain ID in deployment script (see foundry-hardhat-contract-workflow)."
+      ],
+      "head": "---\nname: pharos-solidity-authoring\ndescription: \"Write or refactor Pharos Solidity contracts with clear structure, custom errors, events, modifiers, and testable patterns. Use when implementing, writing, or refactoring Solidity smart contracts for Pharos, including ERC-20/721/1155 tokens, staking, vault, AMM, lending, or DeFi/RealFi protocols. Keywords: Solidity, write contract, implement, refactor, smart contract, ERC-20, ERC-721, ERC-1155, staking, vault, AMM, lending, DeFi, RealFi, Pharos, PHRS, custom errors, events, modifiers, Foundry, forge, Remix.\"\nmetadata:\n  audience: developer\n  version: 1.2.0\n  category: contract\nslash: true\n---\n\n# Solidity Authoring\n\nWrite or refactor Solidity contracts with clear structure, custom errors, events, modifiers, and testable patterns for Pharos mainnet (chain ID 1672) using PHRS as native currency (18 decimals).\n\n## When to Use\n\nwrite Solidity, implement contract, refactor contract, contract code, Solidity, write a contract, implement the staking contract, write smart contract\n\n## When NOT to Use\n\ndesigning architecture (use contract-architecture), reviewing code (use contract-review), or writing tests (use test-generation)\n\n## Prerequisites\n- **Security**:\n    - **.env Usage**: Environment variables MUST be stored in a `.env` file in the project root. NEVER use `export VAR=...` for sensitive data.\n    - **Mandatory Check**: The Agent MUST verify `.env` exists and variables are set using `grep -q` (NEVER `cat`, `head`, `tail` — those expose secrets) before any deployment or on-chain action.\n    - **Git**: Ensure `.env` is listed in `.gitignore` to prevent accidental commits.\n\n- **Foundry**: `forge build` must succeed. Run `forge --version` to verify installation.\n- **RPC endpoint**: Set `PHAROS_TESTNET_RPC=$PHAROS_TESTNET_RPC_U",
+      "chars": 8878
+    },
+    {
+      "repo": "Rezacrown/kirana-stacks",
+      "path": ".opencode/skills/clarity-developer/SKILL.md",
+      "name": "clarity-developer",
+      "description": "Creates Clarity smart contracts for Stacks blockchain. Use when writing Clarity contract code, implementing SIP009 NFTs, SIP010 fungible tokens, defining traits, or working with Clarinet for testing and deployment. Don't use for Solidity, Rust, or general blockchain development outside Stacks.",
+      "matched_layers": [
+        "unit"
+      ],
+      "mandatory_hits": "blockchain;fungible;nft;smart contract;smart contracts;wallet",
+      "exclusive": true,
+      "test_lines": [
+        "name: clarity-developer description: Creates Clarity smart contracts for Stacks blockchain. Use when writing Clarity contract code, implementing SIP009 NFTs, SIP010 fungible tokens, defining traits, or working with Clari",
+        "1. Verify that Clarinet is installed by running `clarinet --version`. If not installed, direct the user to install from https://github.com/hirosystems/clarinet. 2. If starting a new project, run `clarinet new <project-na",
+        "1. Verify that Clarinet is installed by running `clarinet --version`. If not installed, direct the user to install from https://github.com/hirosystems/clarinet. 2. If starting a new project, run `clarinet new <project-na",
+        "3. Navigate to the contracts directory to create or edit `.clar` files. 4. Read `references/clarinet.md` for detailed Clarinet commands and usage.",
+        "1. Read `references/cost-analysis.md` to understand execution costs. 2. Run `clarinet check` for cost analysis. 3. Run `npm run test:report` for detailed cost reports.",
+        "2. Run `clarinet check` for cost analysis. 3. Run `npm run test:report` for detailed cost reports. 4. Optimize by reducing contract calls, inlining variables, and avoiding unnecessary complexity.",
+        "**Step 14: Testing & Validation**",
+        "1. Run `clarinet check` to analyze contracts for type errors and runtime costs. 2. Run `clarinet test` to execute unit tests.",
+        "1. Run `clarinet check` to analyze contracts for type errors and runtime costs. 2. Run `clarinet test` to execute unit tests. 3. Use `clarinet console` for interactive debugging.",
+        "2. Run `clarinet test` to execute unit tests. 3. Use `clarinet console` for interactive debugging. 4. Use `::get_assets_maps` to check balances.",
+        "- If Clarinet is not found, instruct the user to install it from https://github.com/hirosystems/clarinet. - If `clarinet check` fails with type errors, read `references/types.md` to verify type signatures.",
+        "- If Clarinet is not found, instruct the user to install it from https://github.com/hirosystems/clarinet. - If `clarinet check` fails with type errors, read `references/types.md` to verify type signatures. - If public fu",
+        "- Main Documentation: https://book.clarity-lang.org/ - Clarinet Repo: https://github.com/hirosystems/clarinet - Stacks Docs: https://docs.stacks.co/"
+      ],
+      "head": "---\nname: clarity-developer\ndescription: Creates Clarity smart contracts for Stacks blockchain. Use when writing Clarity contract code, implementing SIP009 NFTs, SIP010 fungible tokens, defining traits, or working with Clarinet for testing and deployment. Don't use for Solidity, Rust, or general blockchain development outside Stacks.\n---\n\n# Clarity Smart Contract Development\n\n## Procedures\n\n**Step 1: Project Setup**\n\n1. Verify that Clarinet is installed by running `clarinet --version`. If not installed, direct the user to install from https://github.com/hirosystems/clarinet.\n2. If starting a new project, run `clarinet new <project-name>` to initialize the project structure.\n3. Navigate to the contracts directory to create or edit `.clar` files.\n4. Read `references/clarinet.md` for detailed Clarinet commands and usage.\n\n**Step 2: Syntax & Structure**\n\n1. Write Clarity code using LISP-like S-expression syntax with parentheses.\n2. Use the template in `assets/contract-template.clar` as a starting point for basic contracts.\n3. Ensure all expressions follow the pattern: `(function-name arg1 arg2 ...)`.\n4. Use comments (`;;`) to document code, but remember: code is visible on-chain.\n\n**Step 3: Type System**\n\n1. Read `references/types.md` to understand primitive types (int, uint, bool, principal), sequence types (list, tuple, buffer, string), and composite types (response, optional, trait).\n2. Clarity enforces strict type safety - do not mix types in expressions.\n3. Use type signatures when defining variables and functions.\n\n**Step 4: Data Storage**\n\n1. Define constants using `(define-constant NAME value)`.\n2. Define variables using `(define-data-var NAME TYPE initial-value)`.\n3. Define maps using `(define-map NAME KEY_TYPE VALUE_TYPE)`.\n4. Reference `references/keywords.md` fo",
+      "chars": 5812
+    },
+    {
+      "repo": "MikeCheng1208/BattleTree",
+      "path": ".agents/skills/anchor-expert-2026/SKILL.md",
+      "name": "anchor-expert-2026",
+      "description": "Expert Anchor smart contract development for Solana (January 2026). Use when (1) Writing or auditing Solana programs, (2) Implementing security patterns, (3) Defining account structures and constraints, (4) Building CPI interactions, (5) Testing with Mollusk/LiteSVM, (6) Deploying programs, or any Anchor/Solana program development questions.",
+      "matched_layers": [
+        "unit"
+      ],
+      "mandatory_hits": "smart contract;smart contracts",
+      "exclusive": true,
+      "test_lines": [
+        "name: anchor-expert-2026 description: Expert Anchor smart contract development for Solana (January 2026). Use when (1) Writing or auditing Solana programs, (2) Implementing security patterns, (3) Defining account structu",
+        "- **IDL generation** - Automatic TypeScript client generation - **Testing framework** - Integrated testing with TypeScript - **CLI tooling** - Build, deploy, test, upgrade programs",
+        "- **Testing framework** - Integrated testing with TypeScript - **CLI tooling** - Build, deploy, test, upgrade programs",
+        "- Building cross-program invocations (CPI) - Testing programs with Mollusk or LiteSVM - Deploying and upgrading programs",
+        "## Testing",
+        "### Mollusk (Fast Unit Tests) ```rust",
+        "#[test] fn test_initialize() {",
+        "#[test] fn test_initialize() { let program_id = Pubkey::new_unique();",
+        "// Test execution... }",
+        "### Anchor Tests (Integration) ```bash",
+        "```bash anchor test                # Run all tests anchor test --skip-local-validator  # Skip starting validator",
+        "anchor test                # Run all tests anchor test --skip-local-validator  # Skip starting validator ```"
+      ],
+      "head": "---\nname: anchor-expert-2026\ndescription: Expert Anchor smart contract development for Solana (January 2026). Use when (1) Writing or auditing Solana programs, (2) Implementing security patterns, (3) Defining account structures and constraints, (4) Building CPI interactions, (5) Testing with Mollusk/LiteSVM, (6) Deploying programs, or any Anchor/Solana program development questions.\n---\n\n# Anchor Expert Guide - January 2026\n\n## What is Anchor?\n\nAnchor is a framework for Solana smart contract development that provides:\n- **Security by default** - Automatic checks for common vulnerabilities\n- **Simplified account management** - Declarative account validation\n- **IDL generation** - Automatic TypeScript client generation\n- **Testing framework** - Integrated testing with TypeScript\n- **CLI tooling** - Build, deploy, test, upgrade programs\n\n**Current Version**: 0.32.1\n**Solana Version**: 1.18+ (compatible with 2.x)\n\n## When to Use This Skill\n\n- Writing Rust smart contracts for Solana\n- Implementing secure account validation\n- Building cross-program invocations (CPI)\n- Testing programs with Mollusk or LiteSVM\n- Deploying and upgrading programs\n- Generating TypeScript clients\n\n## Quick Reference\n\nSee `.claude/rules/programs.md` for comprehensive patterns and security checklist.\n\n## Core Patterns\n\n### Program Structure\n```rust\nuse anchor_lang::prelude::*;\n\ndeclare_id!(\"YourProgramId11111111111111111111111111111\");\n\n#[program]\npub mod my_program {\n    use super::*;\n\n    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {\n        // Implementation\n        Ok(())\n    }\n}\n\n#[derive(Accounts)]\npub struct Initialize<'info> {\n    #[account(init, payer = user, space = 8 + MyAccount::INIT_SPACE)]\n    pub my_account: Account<'info, MyAccount>,\n\n    #[account(mut)]\n    pub user: Si",
+      "chars": 3524
+    },
+    {
+      "repo": "ismellike/nft-gacha",
+      "path": ".claude/skills/nft-gacha-contracts/SKILL.md",
+      "name": "nft-gacha-contracts",
+      "description": "Smart contracts in Solidity using Foundry. Gacha mechanics, NFT appraisal, treasury. Use when editing contracts/, running forge, deploying, or handling Solidity code. Triggers on \"deploy contract\", \"run tests\", \"add event\", \"fix Solidity bug\", \"write a test for\", or \"forge build\".",
+      "matched_layers": [
+        "unit"
+      ],
+      "mandatory_hits": "nft;smart contracts",
+      "exclusive": true,
+      "test_lines": [
+        "name: nft-gacha-contracts description: Smart contracts in Solidity using Foundry. Gacha mechanics, NFT appraisal, treasury. Use when editing contracts/, running forge, deploying, or handling Solidity code. Triggers on \"d",
+        "```bash cd contracts && forge build cd contracts && forge test",
+        "cd contracts && forge build cd contracts && forge test cd contracts && forge test --match-test testGachaSpin",
+        "cd contracts && forge test cd contracts && forge test --match-test testGachaSpin cd contracts && forge script script/DeployLocal.s.sol:DeployLocal --rpc-url http://localhost:8548 --broadcast --private-key $DEPLOYER_PRIVA",
+        "cd contracts && forge test --match-test testGachaSpin cd contracts && forge script script/DeployLocal.s.sol:DeployLocal --rpc-url http://localhost:8548 --broadcast --private-key $DEPLOYER_PRIVATE_KEY ```",
+        "1. Run `cd contracts && forge build`. 2. Run `cd contracts && forge test`.",
+        "1. Run `cd contracts && forge build`. 2. Run `cd contracts && forge test`. 3. Deploy if needed.",
+        "3. Emit the event in the setter function 4. Run `forge build && forge test` Result: New event emitted on price change, all tests pass.",
+        "4. Run `forge build && forge test` Result: New event emitted on price change, all tests pass.",
+        "### Example 2: Write a unit test User says: \"write a test for the refund logic\"",
+        "### Example 2: Write a unit test User says: \"write a test for the refund logic\" Actions:",
+        "Actions: 1. Read existing test helpers in `contracts/test/helpers/` 2. Create test in `contracts/test/unit/gacha/`",
+        "1. Read existing test helpers in `contracts/test/helpers/` 2. Create test in `contracts/test/unit/gacha/` 3. Use `StandardTest` base, set up fixtures",
+        "2. Create test in `contracts/test/unit/gacha/` 3. Use `StandardTest` base, set up fixtures 4. Run `forge test --match-test testRefund -vvv`",
+        "3. Use `StandardTest` base, set up fixtures 4. Run `forge test --match-test testRefund -vvv` Result: New test validates refund behavior with verbose output."
+      ],
+      "head": "---\nname: nft-gacha-contracts\ndescription: Smart contracts in Solidity using Foundry. Gacha mechanics, NFT appraisal, treasury. Use when editing contracts/, running forge, deploying, or handling Solidity code. Triggers on \"deploy contract\", \"run tests\", \"add event\", \"fix Solidity bug\", \"write a test for\", or \"forge build\".\nmetadata:\n  author: ismellike\n  version: 1.0.0\n---\n\n# NFT Gacha Contracts\n\n## Quick Commands\n\n```bash\ncd contracts && forge build\ncd contracts && forge test\ncd contracts && forge test --match-test testGachaSpin\ncd contracts && forge script script/DeployLocal.s.sol:DeployLocal --rpc-url http://localhost:8548 --broadcast --private-key $DEPLOYER_PRIVATE_KEY\n```\n\n## Contract Locations\n\n- `contracts/src/gacha/Gacha.sol` - Main game contract, spin logic, randomness\n- `contracts/src/tokens/GachaTreasury.sol` - NFT storage, rarity by price\n- `contracts/src/appraisal/NFTAppraisal.sol` - NFT price appraisal\n- `contracts/src/economy/` - Treasury, vault, economy manager\n- `contracts/script/DeployLocal.s.sol` - Deployment script\n\nFor detailed architecture, see `references/architecture.md`.\n\n## Key Events\n\n```solidity\nevent RandomnessRequested(uint256 indexed triggerId);\nevent SpinCompleted(uint256 indexed triggerId, address indexed requester, uint8 rarity, address collection, uint256 tokenId, uint256 appraisedPrice);\nevent SpinRefunded(uint256 indexed triggerId, address indexed requester, uint8 selectedRarity, uint256 refundAmount);\nevent AppraisalRequested(address indexed nftContract, uint256 indexed tokenId, uint256 indexed requestId);\nevent AppraisalFulfilled(uint256 indexed requestId, uint256 price);\n```\n\n## Rarity by Price (GachaTreasury)\n\n| Rarity | Price Range | Probability |\n|--------|-------------|-------------|\n| Common | $0 - $15 | 70% |\n| Uncommon | $2",
+      "chars": 3499
+    },
+    {
+      "repo": "METARCHY/about_metarchy",
+      "path": ".agents/skills/qa-tester/SKILL.md",
+      "name": "qa-tester",
+      "description": "Expertise in quality assurance, automated testing, and visual playtesting. Use this skill when the user needs to write test suites (Jest, Playwright), manually verify UIs using the browser subagent, or hunt down edge-cases in game logic constraints.",
+      "matched_layers": [
+        "unit"
+      ],
+      "mandatory_hits": "smart contracts",
+      "exclusive": true,
+      "test_lines": [
+        "--- name: qa-tester description: Expertise in quality assurance, automated testing, and visual playtesting. Use this skill when the user needs to write test suites (Jest, Playwright), manually verify UIs using the browse",
+        "name: qa-tester description: Expertise in quality assurance, automated testing, and visual playtesting. Use this skill when the user needs to write test suites (Jest, Playwright), manually verify UIs using the browser su",
+        "# QA Tester",
+        "You are the QA Automation & Playtest Engineer for Metarchy. Your job is to ensure the game works flawlessly. You hunt down edge-cases, write deterministic tests, and use your `browser_subagent` to playtest the game from ",
+        "1. **Automated Testing**: You write unit tests for the backend state machine, conflict resolution algorithms, and smart contracts. 2. **Visual Playtesting (Browser Subagent)**: When the user asks you to \"test the UI,\" yo",
+        "1. **Automated Testing**: You write unit tests for the backend state machine, conflict resolution algorithms, and smart contracts. 2. **Visual Playtesting (Browser Subagent)**: When the user asks you to \"test the UI,\" yo",
+        "### 1. Manual Playtesting with the Browser Subagent When instructed to playtest a feature on the frontend:",
+        "### 1. Manual Playtesting with the Browser Subagent When instructed to playtest a feature on the frontend: 1. Ensure the development server is running (`npm run dev`).",
+        "### 2. Formulating Unit Tests (Backend) When writing logic for the Metarchy Match State:",
+        "When writing logic for the Metarchy Match State: 1. You enforce TDD (Test-Driven Development) or post-implementation validation. 2. Write tests that cover:",
+        "1. You enforce TDD (Test-Driven Development) or post-implementation validation. 2. Write tests that cover: - Valid inputs (e.g., P1 bets 3 Production)."
+      ],
+      "head": "---\nname: qa-tester\ndescription: Expertise in quality assurance, automated testing, and visual playtesting. Use this skill when the user needs to write test suites (Jest, Playwright), manually verify UIs using the browser subagent, or hunt down edge-cases in game logic constraints.\n---\n\n# QA Tester\n\n## Overview\n\nYou are the QA Automation & Playtest Engineer for Metarchy. Your job is to ensure the game works flawlessly. You hunt down edge-cases, write deterministic tests, and use your `browser_subagent` to playtest the game from the user's perspective. \n\n## Core Capabilities\n\n1. **Automated Testing**: You write unit tests for the backend state machine, conflict resolution algorithms, and smart contracts.\n2. **Visual Playtesting (Browser Subagent)**: When the user asks you to \"test the UI,\" you should ALWAYS use the `browser_subagent` tool. You will spin up a headless browser, navigate to the localhost app, interact with the DOM (clicking buttons, dragging items), and report your findings to the user.\n3. **Regression Tracking**: If a feature suddenly breaks after a refactor, you trace the regression back to the exact commit or file change that caused it. \n\n## Workflows\n\n### 1. Manual Playtesting with the Browser Subagent\nWhen instructed to playtest a feature on the frontend:\n1. Ensure the development server is running (`npm run dev`).\n2. Call the `browser_subagent` tool. \n3. Provide an extremely detailed prompt to the subagent regarding what exact buttons to click, what elements to drag, and what visual feedback to expect.\n4. If the subagent reports a failure (e.g., \"The Actor did not snap back to hand\"), file a detailed bug report summarizing exactly what broke and propose a specific code fix in Phase 1 or Phase 2.\n\n### 2. Formulating Unit Tests (Backend)\nWhen writing lo",
+      "chars": 2447
+    }
+  ],
+  "integration": [
+    {
+      "repo": "quicknode/solana-program-examples",
+      "path": ".claude/skills/solana-anchor-claude-skill/SKILL.md",
+      "name": "solana-anchor-claude-skill",
+      "description": "Use when working on Solana software, including one or more of: Solana client code using TypeScript, Rust libraries that use Solana crates, Anchor programs, Quasar programs, LiteSVM tests, including Rust program files, TypeScript tests, and Anchor.toml configuration. Designed to create minimal, reusable code without unnecessary duplication.",
+      "matched_layers": [
+        "integration"
+      ],
+      "mandatory_hits": "fungible;nft;non-fungible;smart contracts",
+      "exclusive": true,
+      "test_lines": [
+        "name: solana-anchor-claude-skill description: \"Use when working on Solana software, including one or more of: Solana client code using TypeScript, Rust libraries that use Solana crates, Anchor programs, Quasar programs, ",
+        "Do it right. Do it with tests. Do it with documentation. Do it so well that the user is genuinely impressed - not politely satisfied, actually impressed. Never offer to \"table this for later\" when the permanent solve is ",
+        "The standard isn't \"good enough\" - it's \"holy shit, that's done.\" Search before building. Test before shipping.",
+        "- Before declaring success, declaring that work is complete, or celebrating, run the project's actual tests using the correct command for that project (for example: `anchor test` for Anchor workspaces, the project's Type",
+        "- Before declaring success, declaring that work is complete, or celebrating, run the project's actual tests using the correct command for that project (for example: `anchor test` for Anchor workspaces, the project's Type",
+        "- Do not write placeholder tests. Placeholder tests don't count as tests, placeholder tests passing does not achieve your task. - Tests that just do `assert.ok(true)` or similar are placeholder tests and do not count as ",
+        "- Tests that just do `assert.ok(true)` or similar are placeholder tests and do not count as tests - Tests that do not call the program's instruction handlers are placeholder tests and do not count as tests - Tests must: ",
+        "- Tests that do not call the program's instruction handlers are placeholder tests and do not count as tests - Tests must: initialize accounts, send transactions, verify state changes, check balances - If you find yoursel",
+        "- Tests must: initialize accounts, send transactions, verify state changes, check balances - If you find yourself writing placeholder tests, stop and write real integration tests instead - DO NOT mark \"Write tests\" as co",
+        "- If you find yourself writing placeholder tests, stop and write real integration tests instead - DO NOT mark \"Write tests\" as complete until tests actually call the program instructions - DO NOT ask \"should I write real",
+        "- DO NOT mark \"Write tests\" as complete until tests actually call the program instructions - DO NOT ask \"should I write real tests now?\" - if the tests are placeholders, write real ones immediately",
+        "- **Anchor**: https://www.anchor-lang.com/docs - **LiteSVM**: https://www.anchor-lang.com/docs/testing/litesvm - **Anchor Error Codes**: https://raw.githubusercontent.com/coral-xyz/anchor/master/lang/src/error.rs",
+        "Use the latest stable Anchor, Rust, TypeScript, Solana Kit, and Kite you can. If a bug occurs, favor updating rather than rolling back.",
+        "- **Major Concepts**: Key architectural concepts, important PDAs, state structures, and program logic - **Testing**: How to run the tests (e.g., `anchor test`) - **Setup**: Any prerequisites or setup steps needed to work",
+        "- Unused imports, unused constants, unused files, and comments that no longer apply. - Doc-comments whose first line just paraphrases the identifier. `/// Pool authority PDA.` above `pub pool_authority` is noise. Either "
+      ],
+      "head": "---\nname: solana-anchor-claude-skill\ndescription: \"Use when working on Solana software, including one or more of: Solana client code using TypeScript, Rust libraries that use Solana crates, Anchor programs, Quasar programs, LiteSVM tests, including Rust program files, TypeScript tests, and Anchor.toml configuration. Designed to create minimal, reusable code without unnecessary duplication.\"\n---\n\n# Coding Guidelines\n\nApply these rules to ensure code quality, maintainability, and adherence to project standards.\n\n## Fight for Truth\n\nDon't write things that aren't currently true — anywhere. Chat, code comments, variable names, PR titles, READMEs, commit messages.\n\n- Documentation and comments that do not match the code are considered untrue.\n- Variable names that do not match the purpose of the variable are considered untrue.\n- Temporary workarounds that aren't labelled as such are lying through omission - there is an issue you aren't telling the next programmer about. Mark them with a `TODO` comment with a link to a git issue (if it exists) and telling the next programmer when they can delete the workaround.\n- If unsure of something, say so. Bluffing is lying.\n- **Ambiguity is a soft lie:** if a phrase could be read two ways and only one is true, it's misleading. Disambiguate before sending — pick the term that says exactly what's meant, name the antecedent of every \"it\"/\"this\"/\"that\".\n- A wrong statement is worse than no statement.\n- Separate scratch labels from real identifiers.\n\nActively fix untrue things when you see them. Don't let \"close enough\" wording stand in for the truthful one.\n\n**Grep before naming.** Before sending any prose, walkthrough, README, comment, or commit message that names a specific identifier (function, struct, file, account, module, field, const",
+      "chars": 25850
+    },
+    {
+      "repo": "Molten-Labs/Arcadia",
+      "path": ".agents/skills/solana/SKILL.md",
+      "name": "solana",
+      "description": "Use when working on Solana software, including one or more of: Solana client code using TypeScript, Rust libraries that use Solana crates, Anchor programs, Quasar programs, LiteSVM tests, including Rust program files, TypeScript tests, and Anchor.toml or Quasar.toml configuration. Designed to create minimal, reusable code without unnecessary duplic",
+      "matched_layers": [
+        "integration"
+      ],
+      "mandatory_hits": "fungible;nft;non-fungible;smart contracts",
+      "exclusive": true,
+      "test_lines": [
+        "name: solana description: \"Use when working on Solana software, including one or more of: Solana client code using TypeScript, Rust libraries that use Solana crates, Anchor programs, Quasar programs, LiteSVM tests, inclu",
+        "Do it right. Do it with tests. Do it with documentation. Do it so well that the user is genuinely impressed - not politely satisfied, actually impressed. Never offer to \"table this for later\" when the permanent solve is ",
+        "The standard isn't \"good enough\" - it's \"holy shit, that's done.\" Search before building. Test before shipping.",
+        "- Before declaring success, declaring that work is complete, or celebrating, run the project's actual tests using the correct command for that project (for example: `anchor test` for Anchor workspaces, the project's Type",
+        "- Before declaring success, declaring that work is complete, or celebrating, run the project's actual tests using the correct command for that project (for example: `anchor test` for Anchor workspaces, the project's Type",
+        "- Create all program state through the program's own instruction handlers in tests. Injecting pre-fabricated accounts (hand-built account data passed straight into the SVM) hides missing init instructions and missing con",
+        "- Tests that use a zero or degenerate value for a parameter (e.g. `duration: 0`) test only the boundary where opposite comparisons coincide. Use nonzero, asymmetric values and test both sides of every boundary. - Do not ",
+        "- Do not write placeholder tests. Placeholder tests don't count as tests, placeholder tests passing does not achieve your task. - Tests that just do `assert.ok(true)` or similar are placeholder tests and do not count as ",
+        "- Tests that just do `assert.ok(true)` or similar are placeholder tests and do not count as tests - Tests that do not call the program's instruction handlers are placeholder tests and do not count as tests - Tests must: ",
+        "- Tests that do not call the program's instruction handlers are placeholder tests and do not count as tests - Tests must: initialize accounts, send transactions, verify state changes, check balances - If you find yoursel",
+        "- Tests must: initialize accounts, send transactions, verify state changes, check balances - If you find yourself writing placeholder tests, stop and write real integration tests instead - DO NOT mark \"Write tests\" as co",
+        "- If you find yourself writing placeholder tests, stop and write real integration tests instead - DO NOT mark \"Write tests\" as complete until tests actually call the program instructions - DO NOT ask \"should I write real",
+        "- DO NOT mark \"Write tests\" as complete until tests actually call the program instructions - DO NOT ask \"should I write real tests now?\" - if the tests are placeholders, write real ones immediately",
+        "- **Anchor**: https://www.anchor-lang.com/docs - **LiteSVM**: https://www.anchor-lang.com/docs/testing/litesvm - **Anchor Error Codes**: https://github.com/otter-sec/anchor/blob/master/lang/error/src/lib.rs",
+        "- Do not use [https://github.com/solana-developers/program-examples]. As of June 2026 these examples are out of date, going back to Anchor 0.26 in 2022, use a bunch of deprecated tools, have security failures and broken "
+      ],
+      "head": "---\nname: solana\ndescription: \"Use when working on Solana software, including one or more of: Solana client code using TypeScript, Rust libraries that use Solana crates, Anchor programs, Quasar programs, LiteSVM tests, including Rust program files, TypeScript tests, and Anchor.toml or Quasar.toml configuration. Designed to create minimal, reusable code without unnecessary duplication.\"\n---\n\n# Coding Guidelines\n\nApply these rules to ensure code quality, maintainability, and adherence to project standards.\n\n## Fight for Truth\n\nDon't write things that aren't currently true — anywhere. Chat, code comments, variable names, PR titles, READMEs, commit messages.\n\n- Documentation and comments that do not match the code are considered untrue.\n- Variable names that do not match the purpose of the variable are considered untrue. For example, a struct called `InitializeMarket` is not true because a struct cannot 'initialize a market' - structs do not do things, only functions can do things.\n- Temporary workarounds that aren't labelled as such are lying through omission - there is an issue you aren't telling the next programmer about. Mark them with a `TODO` comment with a link to a git issue (if it exists) and telling the next programmer when they can delete the workaround.\n- If unsure of something, say so. Bluffing is lying.\n- **Ambiguity is a soft lie:** if a phrase could be read two ways and only one is true, it's misleading. Disambiguate before sending — pick the term that says exactly what's meant, name the antecedent of every \"it\"/\"this\"/\"that\".\n- A wrong statement is worse than no statement.\n- Separate scratch labels from real identifiers.\n\nActively fix untrue things when you see them. Don't let \"close enough\" wording stand in for the truthful one.\n\n**Grep before naming.** Be",
+      "chars": 22220
+    },
+    {
+      "repo": "cartridge-gg/nums",
+      "path": ".agents/skills/dojo/SKILL.md",
+      "name": "dojo",
+      "description": "Dojo Engine framework patterns — World, Systems, Models, Events, Components, Store, permissions, testing with spawn_test_world, and deployment with sozo.",
+      "matched_layers": [
+        "integration"
+      ],
+      "mandatory_hits": "erc20;erc4626;starknet",
+      "exclusive": true,
+      "test_lines": [
+        "name: dojo description: Dojo Engine framework patterns — World, Systems, Models, Events, Components, Store, permissions, testing with spawn_test_world, and deployment with sozo. ---",
+        "- Composing Starknet components within Dojo contracts - Testing with `spawn_test_world` - Configuring permissions and deployment",
+        "// In tests use dojo_cairo_test::{",
+        "// In tests use dojo_cairo_test::{ ContractDef, ContractDefTrait, NamespaceDef, TestResource,",
+        "use dojo_cairo_test::{ ContractDef, ContractDefTrait, NamespaceDef, TestResource, WorldStorageTestTrait, spawn_test_world,",
+        "ContractDef, ContractDefTrait, NamespaceDef, TestResource, WorldStorageTestTrait, spawn_test_world, };",
+        "## Testing",
+        "### Test Setup (Nums pattern)",
+        "```cairo use dojo_cairo_test::{ ContractDef, ContractDefTrait, NamespaceDef, TestResource,",
+        "resources: [ TestResource::Model(m_Game::TEST_CLASS_HASH), TestResource::Model(m_Config::TEST_CLASS_HASH),",
+        "TestResource::Model(m_Game::TEST_CLASS_HASH), TestResource::Model(m_Config::TEST_CLASS_HASH), TestResource::Event(e_Claimed::TEST_CLASS_HASH),",
+        "TestResource::Model(m_Config::TEST_CLASS_HASH), TestResource::Event(e_Claimed::TEST_CLASS_HASH), TestResource::Contract(Play::TEST_CLASS_HASH),",
+        "TestResource::Event(e_Claimed::TEST_CLASS_HASH), TestResource::Contract(Play::TEST_CLASS_HASH), ].span(),",
+        "let ndef = setup_namespace(); let world = spawn_test_world(world::TEST_CLASS_HASH, [ndef].span()); world.sync_perms_and_inits(setup_contracts());",
+        "### Integration Test"
+      ],
+      "head": "---\nname: dojo\ndescription: Dojo Engine framework patterns — World, Systems, Models, Events, Components, Store, permissions, testing with spawn_test_world, and deployment with sozo.\n---\n\n# Dojo Engine Framework\n\nThis skill covers Dojo Engine patterns for building fully on-chain games on Starknet. For pure Cairo language and Starknet contract patterns, see the `cairo` skill.\n\n## When to Use\n\n- Creating or modifying Dojo contracts (`#[dojo::contract]`)\n- Defining models (`#[dojo::model]`) or events (`#[dojo::event]`)\n- Working with WorldStorage (read/write models, emit events)\n- Composing Starknet components within Dojo contracts\n- Testing with `spawn_test_world`\n- Configuring permissions and deployment\n\n## Architecture Overview\n\nDojo is an Entity Component System (ECS) framework:\n\n- **World** — Central coordinator and database, manages all resources within namespaces\n- **Models (What)** — Data structs stored in the World (`#[dojo::model]`)\n- **Systems (How)** — Stateless contracts that operate on models (`#[dojo::contract]`)\n- **Events** — Indexed signals for off-chain sync (`#[dojo::event]`)\n- **Components** — Reusable logic modules (`#[starknet::component]`)\n\n### Data Flow\n\n```\nSystem (#[dojo::contract])\n  └── self.world(@NAMESPACE()) → WorldStorage\n       ├── world.read_model(key) → Model\n       ├── world.write_model(@model)\n       └── world.emit_event(@event)\n```\n\n## Essential Imports\n\n```cairo\n// In systems (always needed)\nuse dojo::model::{ModelStorage, ModelValueStorage};\nuse dojo::event::EventStorage;\nuse dojo::world::WorldStorage;\n\n// In models\nuse starknet::ContractAddress;\n\n// For nested structs in models\nuse dojo::meta::Introspect;\n\n// In tests\nuse dojo_cairo_test::{\n    ContractDef, ContractDefTrait, NamespaceDef, TestResource,\n    WorldStorageTestTrait, spa",
+      "chars": 15462
+    },
+    {
+      "repo": "0xMiden/project-template",
+      "path": ".claude/skills/rust-sdk-testing-patterns/SKILL.md",
+      "name": "rust-sdk-testing-patterns",
+      "description": "Guide to testing Miden smart contracts with MockChain. Covers test setup, contract building, account/note creation, transaction execution, storage verification, faucet setup, output note verification, block numbering, multi-transaction tests, and asset-bearing notes. Use when writing, editing, or debugging Miden integration tests.",
+      "matched_layers": [
+        "integration"
+      ],
+      "mandatory_hits": "fungible;smart contracts;wallet",
+      "exclusive": true,
+      "test_lines": [
+        "--- name: rust-sdk-testing-patterns description: Guide to testing Miden smart contracts with MockChain. Covers test setup, contract building, account/note creation, transaction execution, storage verification, faucet set",
+        "name: rust-sdk-testing-patterns description: Guide to testing Miden smart contracts with MockChain. Covers test setup, contract building, account/note creation, transaction execution, storage verification, faucet setup, ",
+        "# Miden Testing Patterns (MockChain)",
+        "## Test File Setup",
+        "Tests go in `integration/tests/`. All tests are async and use MockChain for local execution without a network.",
+        "See [counter_test.rs](../../../integration/tests/counter_test.rs) for a complete working test covering imports, MockChain setup, contract building, account creation with storage, note creation, transaction execution, and",
+        "## Step-by-Step Test Pattern",
+        "See [counter_test.rs](../../../integration/tests/counter_test.rs) line 21 for the pattern: `let mut builder = MockChain::builder();`",
+        "See [counter_test.rs](../../../integration/tests/counter_test.rs) lines 24-26 for the basic wallet pattern. For wallets with pre-funded assets, use `builder.add_existing_wallet_with_assets(Auth::BasicAuth { auth_scheme: ",
+        "See [counter_test.rs](../../../integration/tests/counter_test.rs) lines 29-35 for the pattern using `build_project_in_dir`.",
+        "See [counter_test.rs](../../../integration/tests/counter_test.rs) lines 38-54 for the current pattern: populate `InitStorageData`, build the component from the compiled package, then register the account with `builder.ad",
+        "See [counter_test.rs](../../../integration/tests/counter_test.rs) lines 56-64 for basic note creation with `RandomCoin`, `NoteScript::from_package`, and `NoteBuilder`.",
+        "use miden_client::{asset::FungibleAsset, crypto::RandomCoin, note::NoteScript, Felt}; use miden_standards::testing::note::NoteBuilder;",
+        "See [counter_test.rs](../../../integration/tests/counter_test.rs) lines 66-70 for seeding the note and building the mock chain. `add_account_from_builder(...)` has already registered the account in the builder, so at thi",
+        "See [counter_test.rs](../../../integration/tests/counter_test.rs) lines 73-82 for the full execution flow: `build_tx_context` -> `execute()` -> `add_pending_executed_transaction()` -> `prove_next_block()`. The single-tra"
+      ],
+      "head": "---\nname: rust-sdk-testing-patterns\ndescription: Guide to testing Miden smart contracts with MockChain. Covers test setup, contract building, account/note creation, transaction execution, storage verification, faucet setup, output note verification, block numbering, multi-transaction tests, and asset-bearing notes. Use when writing, editing, or debugging Miden integration tests.\n---\n\n# Miden Testing Patterns (MockChain)\n\n## Test File Setup\n\nTests go in `integration/tests/`. All tests are async and use MockChain for local execution without a network.\n\nSee [counter_test.rs](../../../integration/tests/counter_test.rs) for a complete working test covering imports, MockChain setup, contract building, account creation with storage, note creation, transaction execution, and storage verification.\n\n## Step-by-Step Test Pattern\n\n### 1. Initialize MockChain Builder\n\nSee [counter_test.rs](../../../integration/tests/counter_test.rs) line 21 for the pattern: `let mut builder = MockChain::builder();`\n\n### 2. Create Sender/Wallet Accounts\n\nSee [counter_test.rs](../../../integration/tests/counter_test.rs) lines 24-26 for the basic wallet pattern. For wallets with pre-funded assets, use `builder.add_existing_wallet_with_assets(Auth::BasicAuth { auth_scheme: AuthSchemeId::Falcon512Poseidon2 }, [FungibleAsset::new(faucet.id(), 100)?.into()])`.\n\n### 3. Set Up Faucets (for fungible assets)\n```rust\nlet faucet = builder.add_existing_basic_faucet(\n    Auth::BasicAuth {\n        auth_scheme: AuthSchemeId::Falcon512Poseidon2,\n    },\n    \"TOKEN\",     // token symbol\n    1000,        // max supply\n    Some(10),    // total_issuance (None for 0)\n)?;\n```\n\n### 4. Build Contracts\n\nSee [counter_test.rs](../../../integration/tests/counter_test.rs) lines 29-35 for the pattern using `build_project_in_dir`.\n",
+      "chars": 15350
+    },
+    {
+      "repo": "NethermindEth/aztec-skills",
+      "path": "aztec-testing/SKILL.md",
+      "name": "aztec-testing",
+      "description": "Use this skill when testing Aztec smart contracts, including Noir tests with TestEnvironment and TypeScript integration tests with Aztec.js on local-network/devnet-like setups.",
+      "matched_layers": [
+        "integration"
+      ],
+      "mandatory_hits": "smart contracts;wallet",
+      "exclusive": true,
+      "test_lines": [
+        "--- name: aztec-testing description: Use this skill when testing Aztec smart contracts, including Noir tests with TestEnvironment and TypeScript integration tests with Aztec.js on local-network/devnet-like setups.",
+        "name: aztec-testing description: Use this skill when testing Aztec smart contracts, including Noir tests with TestEnvironment and TypeScript integration tests with Aztec.js on local-network/devnet-like setups. license: P",
+        "# Aztec Contract Testing",
+        "Use this skill for contract testing only:",
+        "- Noir contract tests using `TestEnvironment` - TypeScript integration tests using `aztec.js`",
+        "- Noir contract tests using `TestEnvironment` - TypeScript integration tests using `aztec.js` - failure-path testing and authwit testing",
+        "- TypeScript integration tests using `aztec.js` - failure-path testing and authwit testing - deterministic time and block progression in tests",
+        "- failure-path testing and authwit testing - deterministic time and block progression in tests - local-network test harness setup and execution",
+        "- deterministic time and block progression in tests - local-network test harness setup and execution",
+        "- For Noir contract tests, always run `aztec test` (not `nargo test`). - Re-run `aztec compile` before `aztec test` after contract changes.",
+        "- For Noir contract tests, always run `aztec test` (not `nargo test`). - Re-run `aztec compile` before `aztec test` after contract changes. - Use `create_contract_account()` whenever authwit behavior is under test.",
+        "- Re-run `aztec compile` before `aztec test` after contract changes. - Use `create_contract_account()` whenever authwit behavior is under test. - Use `create_light_account()` for faster non-authwit tests.",
+        "- Use `create_contract_account()` whenever authwit behavior is under test. - Use `create_light_account()` for faster non-authwit tests. - In TypeScript integration tests, call `.simulate()` before `.send()` for safety an",
+        "- Use `create_light_account()` for faster non-authwit tests. - In TypeScript integration tests, call `.simulate()` before `.send()` for safety and clearer failure assertions. Note that `.simulate()` returns `{ result, ..",
+        "- In TypeScript integration tests, call `.simulate()` before `.send()` for safety and clearer failure assertions. Note that `.simulate()` returns `{ result, ... }` — use the `result` field for reads and assertions. - Tre"
+      ],
+      "head": "---\nname: aztec-testing\ndescription: Use this skill when testing Aztec smart contracts, including Noir tests with TestEnvironment and TypeScript integration tests with Aztec.js on local-network/devnet-like setups.\nlicense: Proprietary. LICENSE.txt has complete terms\ncompatibility: Pinned to aztec-packages v4.2.0 (commit f8c89cf4345df6c4ca9e66ea9b738e96070abc5a).\nmetadata:\n  version_label: v4.2.0\n  commit_sha: f8c89cf4345df6c4ca9e66ea9b738e96070abc5a\n  source_map: aztec-packages/docs/internal_notes/llm_docs_skill_candidates.md\n---\n\n# Aztec Contract Testing\n\n## Overview\n\nUse this skill for contract testing only:\n\n- Noir contract tests using `TestEnvironment`\n- TypeScript integration tests using `aztec.js`\n- failure-path testing and authwit testing\n- deterministic time and block progression in tests\n- local-network test harness setup and execution\n\nOut of scope:\n\n- contract architecture/authoring decisions (use `aztec-contracts`)\n- deployment-only operations (use `aztec-deployment`)\n- full app SDK API documentation (use `aztec-js`)\n\n## Required Repository State\n\nUse the upstream repository and pin:\n\n- Repo: `https://github.com/AztecProtocol/aztec-packages`\n- Tag: `v4.2.0`\n- Commit: `f8c89cf4345df6c4ca9e66ea9b738e96070abc5a`\n\nCheckout example:\n\n```bash\ngit clone https://github.com/AztecProtocol/aztec-packages.git\ncd aztec-packages\ngit checkout v4.2.0\ngit status\n```\n\nExpected status includes `HEAD detached at v4.2.0`.\n\n## Operating Rules\n\n- For Noir contract tests, always run `aztec test` (not `nargo test`).\n- Re-run `aztec compile` before `aztec test` after contract changes.\n- Use `create_contract_account()` whenever authwit behavior is under test.\n- Use `create_light_account()` for faster non-authwit tests.\n- In TypeScript integration tests, call `.simulate()` before `.sen",
+      "chars": 8692
+    },
+    {
+      "repo": "sablier-labs/evm-monorepo",
+      "path": ".agents/skills/btt-testing/SKILL.md",
+      "name": "btt-testing",
+      "description": "Write bulloak tree specifications (.tree files) for smart contract integration tests. Trigger phrases - write a tree, create test tree, BTT spec, bulloak tree, Branching Tree Technique, or when writing integration tests for contract functions.",
+      "matched_layers": [
+        "integration"
+      ],
+      "mandatory_hits": "smart contract",
+      "exclusive": true,
+      "test_lines": [
+        "--- name: btt-testing user-invocable: true",
+        "description: Write bulloak tree specifications (.tree files) for smart contract integration tests. Trigger phrases - write a tree, create test tree, BTT spec, bulloak tree, Branching Tree Technique, or when writing integ",
+        "Write bulloak tree specifications (.tree files) for smart contract integration tests. Trigger phrases - write a tree, create test tree, BTT spec, bulloak tree, Branching Tree Technique, or when writing integration tests ",
+        "Write bulloak tree specifications for smart contract tests.",
+        "| -------------------------------------------------------------- | ----------------------------------------- | ----------------------------- | | `.claude/skills/btt-testing/references/examples.md`            | Complete t",
+        "| `.claude/skills/btt-testing/references/examples.md`            | Complete tree and generated test examples | When learning BTT syntax      | | `.claude/skills/btt-testing/references/sablier-conventions.md` | Sablier-sp",
+        "Bulloak is a Solidity test generator that creates test scaffolds from `.tree` specification files. It offers a structured approach to test case design that ensures comprehensive coverage of all possible scenarios and edg",
+        "Bulloak is a Solidity test generator that creates test scaffolds from `.tree` specification files. It offers a structured approach to test case design that ensures comprehensive coverage of all possible scenarios and edg",
+        "structured approach to test case design that ensures comprehensive coverage of all possible scenarios and edge cases in your smart contract tests.",
+        "### Generate test contract from a .tree file",
+        "- `--format-descriptions` capitalizes the first letter of the branch in the test contract and add a period at the end of it.",
+        "``` FunctionName_ContractName_Integration_Test ├── condition1",
+        "1. In case of single tree per file, the root should be just the function name followed by `_Integration_Concrete_Test`. 2. In case of multiple trees in the same file, each root must be `Contract::function`, using `::` as",
+        "For examples, see [examples](.claude/skills/btt-testing/references/examples.md).",
+        "1. The test file must be placed in the `tests/integration/concrete/{function}` directory. 2. The directory name must use `-` format. For example, if the function name is `createFlowStream`, the corrresponding"
+      ],
+      "head": "---\nname: btt-testing\nuser-invocable: true\ndescription:\n  Write bulloak tree specifications (.tree files) for smart contract integration tests. Trigger phrases - write a tree,\n  create test tree, BTT spec, bulloak tree, Branching Tree Technique, or when writing integration tests for contract\n  functions.\n---\n\n# Branching Tree Technique (BTT) Skill\n\nWrite bulloak tree specifications for smart contract tests.\n\n## Bundled References\n\n| Reference                                                      | Content                                   | When to Read                  |\n| -------------------------------------------------------------- | ----------------------------------------- | ----------------------------- |\n| `.claude/skills/btt-testing/references/examples.md`            | Complete tree and generated test examples | When learning BTT syntax      |\n| `.claude/skills/btt-testing/references/sablier-conventions.md` | Sablier-specific terminology and examples | When working in Sablier repos |\n\n## What is Bulloak?\n\nBulloak is a Solidity test generator that creates test scaffolds from `.tree` specification files. It offers a\nstructured approach to test case design that ensures comprehensive coverage of all possible scenarios and edge cases in\nyour smart contract tests.\n\n## Commands\n\n### To install Bulloak, if not found\n\n```bash\ncargo install bulloak\n```\n\n### Generate test contract from a .tree file\n\n```bash\nbulloak scaffold -wf --skip-modifiers --format-descriptions <path/to/file.tree>\n```\n\nwhere:\n\n- `--format-descriptions` capitalizes the first letter of the branch in the test contract and add a period at the end of\n  it.\n- `--skip-modifiers` skips the generation of modifiers. We do this because we put all the modifiers in a separate\n  `Modifiers.sol` file.\n\n### Check if ",
+      "chars": 7893
+    }
+  ],
+  "system_e2e": [
+    {
+      "repo": "lxyeternal/MalSkillBench",
+      "path": "Dataset/Skills/malware/frontend-test-orchestrator/SKILL.md",
+      "name": "frontend-test-orchestrator",
+      "description": "Run, create, and debug Playwright e2e tests for the web app. ALWAYS invoke this skill using the SlashCommand tool (i.e., `/frontend-test-orchestrator`) BEFORE attempting to run any e2e tests, playwright tests, anvil tests, or debug test failures. DO NOT run `bun playwright test` or other e2e commands directly - you must invoke this skill first to l",
+      "matched_layers": [
+        "system_e2e"
+      ],
+      "mandatory_hits": "blockchain;wallet",
+      "exclusive": true,
+      "test_lines": [
+        "--- name: frontend-test-orchestrator description: Run, create, and debug Playwright e2e tests for the web app. ALWAYS invoke this skill using the SlashCommand tool (i.e., `/frontend-test-orchestrator`) BEFORE attempting ",
+        "name: frontend-test-orchestrator description: Run, create, and debug Playwright e2e tests for the web app. ALWAYS invoke this skill using the SlashCommand tool (i.e., `/frontend-test-orchestrator`) BEFORE attempting to r",
+        "description: Run, create, and debug Playwright e2e tests for the web app. ALWAYS invoke this skill using the SlashCommand tool (i.e., `/frontend-test-orchestrator`) BEFORE attempting to run any e2e tests, playwright test",
+        "# Frontend Test Orchestrator",
+        "This skill helps you create and run end-to-end (e2e) Playwright tests for the Uniswap web application.",
+        "## Test Architecture",
+        "### Test Location - All e2e tests live in `apps/web/src/` directory structure",
+        "### Test Location - All e2e tests live in `apps/web/src/` directory structure - Test files use the naming convention: `*.e2e.test.ts`",
+        "- All e2e tests live in `apps/web/src/` directory structure - Test files use the naming convention: `*.e2e.test.ts` - Anvil-specific tests (requiring local blockchain): `*.anvil.e2e.test.ts`",
+        "- Test files use the naming convention: `*.e2e.test.ts` - Anvil-specific tests (requiring local blockchain): `*.anvil.e2e.test.ts`",
+        "**Important**: When running Playwright tests, the app automatically connects to a test wallet: - **Address**: `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266` (constant: `TEST_WALLET_ADDRESS`)",
+        "**Important**: When running Playwright tests, the app automatically connects to a test wallet: - **Address**: `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266` (constant: `TEST_WALLET_ADDRESS`) - **Display name**: `test0` (th",
+        "- **Address**: `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266` (constant: `TEST_WALLET_ADDRESS`) - **Display name**: `test0` (the Unitag associated with this address) - **Connection**: Happens automatically via `wagmiAutoCo",
+        "- **Display name**: `test0` (the Unitag associated with this address) - **Connection**: Happens automatically via `wagmiAutoConnect.ts` when in Playwright environment",
+        "This means: - Tests start with a wallet already connected - You can immediately test wallet-dependent features"
+      ],
+      "head": "---\nname: frontend-test-orchestrator\ndescription: Run, create, and debug Playwright e2e tests for the web app. ALWAYS invoke this skill using the SlashCommand tool (i.e., `/frontend-test-orchestrator`) BEFORE attempting to run any e2e tests, playwright tests, anvil tests, or debug test failures. DO NOT run `bun playwright test` or other e2e commands directly - you must invoke this skill first to learn the correct commands and test architecture.\nallowed-tools: [Read, Write, Edit, Bash, Glob, Grep, mcp__playwright__browser_navigate, mcp__playwright__browser_snapshot, mcp__playwright__browser_click, mcp__playwright__browser_type, mcp__playwright__browser_take_screenshot, mcp__playwright__browser_console_messages, mcp__playwright__browser_network_requests, mcp__playwright__browser_evaluate]\n---\n\n# Frontend Test Orchestrator\n\nThis skill helps you create and run end-to-end (e2e) Playwright tests for the Uniswap web application.\n\n## Test Architecture\n\n### Test Location\n- All e2e tests live in `apps/web/src/` directory structure\n- Test files use the naming convention: `*.e2e.test.ts`\n- Anvil-specific tests (requiring local blockchain): `*.anvil.e2e.test.ts`\n\n### Automatic Wallet Connection\n\n**Important**: When running Playwright tests, the app automatically connects to a test wallet:\n- **Address**: `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266` (constant: `TEST_WALLET_ADDRESS`)\n- **Display name**: `test0` (the Unitag associated with this address)\n- **Connection**: Happens automatically via `wagmiAutoConnect.ts` when in Playwright environment\n\nThis means:\n- Tests start with a wallet already connected\n- You can immediately test wallet-dependent features\n- The wallet button will show \"test0\" instead of \"Connect wallet\"\n\n**When using Playwright MCP**: To enable automatic wallet conne",
+      "chars": 12786
+    },
+    {
+      "repo": "MikeCheng1208/BattleTree",
+      "path": ".agents/skills/web-e2e/SKILL.md",
+      "name": "web-e2e",
+      "description": "Run, create, and debug Playwright e2e tests for the web app. ALWAYS invoke this skill using the SlashCommand tool (i.e., `/web-e2e`) BEFORE attempting to run any e2e tests, playwright tests, anvil tests, or debug test failures. DO NOT run `bun playwright test` or other e2e commands directly - you must invoke this skill first to learn the correct co",
+      "matched_layers": [
+        "system_e2e"
+      ],
+      "mandatory_hits": "blockchain;wallet",
+      "exclusive": true,
+      "test_lines": [
+        "--- name: web-e2e description: Run, create, and debug Playwright e2e tests for the web app. ALWAYS invoke this skill using the SlashCommand tool (i.e., `/web-e2e`) BEFORE attempting to run any e2e tests, playwright tests",
+        "name: web-e2e description: Run, create, and debug Playwright e2e tests for the web app. ALWAYS invoke this skill using the SlashCommand tool (i.e., `/web-e2e`) BEFORE attempting to run any e2e tests, playwright tests, an",
+        "description: Run, create, and debug Playwright e2e tests for the web app. ALWAYS invoke this skill using the SlashCommand tool (i.e., `/web-e2e`) BEFORE attempting to run any e2e tests, playwright tests, anvil tests, or ",
+        "# Web E2E Testing Skill",
+        "This skill helps you create and run end-to-end (e2e) Playwright tests for the Uniswap web application.",
+        "## Test Architecture",
+        "### Test Location - All e2e tests live in `apps/web/src/` directory structure",
+        "### Test Location - All e2e tests live in `apps/web/src/` directory structure - Test files use the naming convention: `*.e2e.test.ts`",
+        "- All e2e tests live in `apps/web/src/` directory structure - Test files use the naming convention: `*.e2e.test.ts` - Anvil-specific tests (requiring local blockchain): `*.anvil.e2e.test.ts`",
+        "- Test files use the naming convention: `*.e2e.test.ts` - Anvil-specific tests (requiring local blockchain): `*.anvil.e2e.test.ts`",
+        "**Important**: When running Playwright tests, the app automatically connects to a test wallet: - **Address**: `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266` (constant: `TEST_WALLET_ADDRESS`)",
+        "**Important**: When running Playwright tests, the app automatically connects to a test wallet: - **Address**: `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266` (constant: `TEST_WALLET_ADDRESS`) - **Display name**: `test0` (th",
+        "- **Address**: `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266` (constant: `TEST_WALLET_ADDRESS`) - **Display name**: `test0` (the Unitag associated with this address) - **Connection**: Happens automatically via `wagmiAutoCo",
+        "- **Display name**: `test0` (the Unitag associated with this address) - **Connection**: Happens automatically via `wagmiAutoConnect.ts` when in Playwright environment",
+        "This means: - Tests start with a wallet already connected - You can immediately test wallet-dependent features"
+      ],
+      "head": "---\nname: web-e2e\ndescription: Run, create, and debug Playwright e2e tests for the web app. ALWAYS invoke this skill using the SlashCommand tool (i.e., `/web-e2e`) BEFORE attempting to run any e2e tests, playwright tests, anvil tests, or debug test failures. DO NOT run `bun playwright test` or other e2e commands directly - you must invoke this skill first to learn the correct commands and test architecture.\nallowed-tools: [Read, Write, Edit, Bash, Glob, Grep, mcp__playwright__browser_navigate, mcp__playwright__browser_snapshot, mcp__playwright__browser_click, mcp__playwright__browser_type, mcp__playwright__browser_take_screenshot, mcp__playwright__browser_console_messages, mcp__playwright__browser_network_requests, mcp__playwright__browser_evaluate]\n---\n\n# Web E2E Testing Skill\n\nThis skill helps you create and run end-to-end (e2e) Playwright tests for the Uniswap web application.\n\n## Test Architecture\n\n### Test Location\n- All e2e tests live in `apps/web/src/` directory structure\n- Test files use the naming convention: `*.e2e.test.ts`\n- Anvil-specific tests (requiring local blockchain): `*.anvil.e2e.test.ts`\n\n### Automatic Wallet Connection\n\n**Important**: When running Playwright tests, the app automatically connects to a test wallet:\n- **Address**: `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266` (constant: `TEST_WALLET_ADDRESS`)\n- **Display name**: `test0` (the Unitag associated with this address)\n- **Connection**: Happens automatically via `wagmiAutoConnect.ts` when in Playwright environment\n\nThis means:\n- Tests start with a wallet already connected\n- You can immediately test wallet-dependent features\n- The wallet button will show \"test0\" instead of \"Connect wallet\"\n\n**When using Playwright MCP**: To enable automatic wallet connection when browsing via MCP tools, set the ",
+      "chars": 12321
+    },
+    {
+      "repo": "ylazakovich/car-service-platform",
+      "path": ".agents/e2e-testing/SKILL.md",
+      "name": "e2e-testing",
+      "description": "Playwright E2E patterns, Page Object Model, configuration, CI/CD integration, artifact management, and flaky-test mitigation.",
+      "matched_layers": [
+        "system_e2e"
+      ],
+      "mandatory_hits": "blockchain;wallet",
+      "exclusive": true,
+      "test_lines": [
+        "--- name: e2e-testing description: Playwright E2E patterns, Page Object Model, configuration, CI/CD integration, artifact management, and flaky-test mitigation.",
+        "name: e2e-testing description: Playwright E2E patterns, Page Object Model, configuration, CI/CD integration, artifact management, and flaky-test mitigation. origin: ECC",
+        "origin: ECC upstream: https://github.com/affaan-m/everything-claude-code/blob/main/.agents/skills/e2e-testing/SKILL.md ---",
+        "# E2E Testing Patterns",
+        "Comprehensive Playwright patterns for building stable, fast, and maintainable E2E test suites.",
+        "|--------|----------------| | Specs & config | `frontend/e2e/*.spec.ts`, `frontend/playwright.config.ts` | | Global setup | `frontend/e2e/global-setup.ts` — waits for `/api/health`; skip with `E2E_SKIP_GLOBAL_SETUP=1` |",
+        "| Specs & config | `frontend/e2e/*.spec.ts`, `frontend/playwright.config.ts` | | Global setup | `frontend/e2e/global-setup.ts` — waits for `/api/health`; skip with `E2E_SKIP_GLOBAL_SETUP=1` | | Retries | **`retries: 0`**",
+        "| Global setup | `frontend/e2e/global-setup.ts` — waits for `/api/health`; skip with `E2E_SKIP_GLOBAL_SETUP=1` | | Retries | **`retries: 0`** — do not use CI retries to hide flakes; see `docs/testing/playwright-e2e-frame",
+        "| Trace / screenshots | CI: `retain-on-failure`; align with existing reporters (Allure, HTML, JUnit) | | Stack | Docker Compose; `PLAYWRIGHT_BASE_URL` (e.g. `http://127.0.0.1:4173`); API via nginx `/api` | | Validation r",
+        "| Stack | Docker Compose; `PLAYWRIGHT_BASE_URL` (e.g. `http://127.0.0.1:4173`); API via nginx `/api` | | Validation role | `.agents/e2e-validator/SKILL.md` — when to run E2E in the agent workflow | | Domain | `docs/spec/",
+        "When extending tests, follow **this** `playwright.config.ts` and framework doc, not the sample `retries` / `webServer` blocks in the ECC snippets unless you intentionally change project policy.",
+        "## Test File Organization",
+        "Example layout (ECC); **here** tests live under `frontend/e2e/`:",
+        "frontend/ ├── e2e/ │   ├── global-setup.ts",
+        "│   └── ... ├── playwright.config.ts ```"
+      ],
+      "head": "---\nname: e2e-testing\ndescription: Playwright E2E patterns, Page Object Model, configuration, CI/CD integration, artifact management, and flaky-test mitigation.\norigin: ECC\nupstream: https://github.com/affaan-m/everything-claude-code/blob/main/.agents/skills/e2e-testing/SKILL.md\n---\n\n# E2E Testing Patterns\n\nComprehensive Playwright patterns for building stable, fast, and maintainable E2E test suites.\n\n## Car-service-platform overrides (read first)\n\nLocal source of truth for **this** repo supersedes generic examples below when they conflict:\n\n| Topic | This project |\n|--------|----------------|\n| Specs & config | `frontend/e2e/*.spec.ts`, `frontend/playwright.config.ts` |\n| Global setup | `frontend/e2e/global-setup.ts` — waits for `/api/health`; skip with `E2E_SKIP_GLOBAL_SETUP=1` |\n| Retries | **`retries: 0`** — do not use CI retries to hide flakes; see `docs/testing/playwright-e2e-framework.md` |\n| Trace / screenshots | CI: `retain-on-failure`; align with existing reporters (Allure, HTML, JUnit) |\n| Stack | Docker Compose; `PLAYWRIGHT_BASE_URL` (e.g. `http://127.0.0.1:4173`); API via nginx `/api` |\n| Validation role | `.agents/e2e-validator/SKILL.md` — when to run E2E in the agent workflow |\n| Domain | `docs/spec/DOMAIN_RULES.md` for repair/PDF/dashboard/staff vs admin |\n\nWhen extending tests, follow **this** `playwright.config.ts` and framework doc, not the sample `retries` / `webServer` blocks in the ECC snippets unless you intentionally change project policy.\n\n---\n\n## Test File Organization\n\nExample layout (ECC); **here** tests live under `frontend/e2e/`:\n\n```\nfrontend/\n├── e2e/\n│   ├── global-setup.ts\n│   ├── auth/            # optional as suite grows\n│   ├── helpers/\n│   ├── admin-dashboard-visit.spec.ts\n│   └── ...\n├── playwright.config.ts\n```\n\n```\ntests/\n├── e2e",
+      "chars": 9813
+    },
+    {
+      "repo": "Undermybelt/hermes-skills",
+      "path": "skills/community/ecc/ecc-e2e-testing/SKILL.md",
+      "name": "ecc-e2e-testing",
+      "description": "Playwright E2E testing patterns, Page Object Model, configuration, CI/CD integration, artifact management, and flaky test strategies.",
+      "matched_layers": [
+        "system_e2e"
+      ],
+      "mandatory_hits": "blockchain;wallet",
+      "exclusive": true,
+      "test_lines": [
+        "--- name: ecc-e2e-testing description: Playwright E2E testing patterns, Page Object Model, configuration, CI/CD integration, artifact management, and flaky test strategies.",
+        "name: ecc-e2e-testing description: Playwright E2E testing patterns, Page Object Model, configuration, CI/CD integration, artifact management, and flaky test strategies. origin: ECC",
+        "# E2E Testing Patterns",
+        "Comprehensive Playwright patterns for building stable, fast, and maintainable E2E test suites.",
+        "## Test File Organization",
+        "``` tests/ ├── e2e/",
+        "tests/ ├── e2e/ │   ├── auth/",
+        "│   └── data.ts └── playwright.config.ts ```",
+        "```typescript import { Page, Locator } from '@playwright/test'",
+        "this.page = page this.searchInput = page.locator('[data-testid=\"search-input\"]') this.itemCards = page.locator('[data-testid=\"item-card\"]')",
+        "this.searchInput = page.locator('[data-testid=\"search-input\"]') this.itemCards = page.locator('[data-testid=\"item-card\"]') this.createButton = page.locator('[data-testid=\"create-btn\"]')",
+        "this.itemCards = page.locator('[data-testid=\"item-card\"]') this.createButton = page.locator('[data-testid=\"create-btn\"]') }",
+        "## Test Structure",
+        "```typescript import { test, expect } from '@playwright/test' import { ItemsPage } from '../../pages/ItemsPage'",
+        "test.describe('Item Search', () => { let itemsPage: ItemsPage"
+      ],
+      "head": "---\nname: ecc-e2e-testing\ndescription: Playwright E2E testing patterns, Page Object Model, configuration, CI/CD integration, artifact management, and flaky test strategies.\norigin: ECC\n---\n\n# E2E Testing Patterns\n\nComprehensive Playwright patterns for building stable, fast, and maintainable E2E test suites.\n\n## Test File Organization\n\n```\ntests/\n├── e2e/\n│   ├── auth/\n│   │   ├── login.spec.ts\n│   │   ├── logout.spec.ts\n│   │   └── register.spec.ts\n│   ├── features/\n│   │   ├── browse.spec.ts\n│   │   ├── search.spec.ts\n│   │   └── create.spec.ts\n│   └── api/\n│       └── endpoints.spec.ts\n├── fixtures/\n│   ├── auth.ts\n│   └── data.ts\n└── playwright.config.ts\n```\n\n## Page Object Model (POM)\n\n```typescript\nimport { Page, Locator } from '@playwright/test'\n\nexport class ItemsPage {\n  readonly page: Page\n  readonly searchInput: Locator\n  readonly itemCards: Locator\n  readonly createButton: Locator\n\n  constructor(page: Page) {\n    this.page = page\n    this.searchInput = page.locator('[data-testid=\"search-input\"]')\n    this.itemCards = page.locator('[data-testid=\"item-card\"]')\n    this.createButton = page.locator('[data-testid=\"create-btn\"]')\n  }\n\n  async goto() {\n    await this.page.goto('/items')\n    await this.page.waitForLoadState('networkidle')\n  }\n\n  async search(query: string) {\n    await this.searchInput.fill(query)\n    await this.page.waitForResponse(resp => resp.url().includes('/api/search'))\n    await this.page.waitForLoadState('networkidle')\n  }\n\n  async getItemCount() {\n    return await this.itemCards.count()\n  }\n}\n```\n\n## Test Structure\n\n```typescript\nimport { test, expect } from '@playwright/test'\nimport { ItemsPage } from '../../pages/ItemsPage'\n\ntest.describe('Item Search', () => {\n  let itemsPage: ItemsPage\n\n  test.beforeEach(async ({ page }) => {\n    itemsPag",
+      "chars": 7941
+    },
+    {
+      "repo": "marvinrichter/clarc",
+      "path": "skills/e2e-testing-web3/SKILL.md",
+      "name": "e2e-testing-web3",
+      "description": "Playwright E2E test patterns for Web3 and blockchain features — mocking wallet providers (MetaMask, Phantom), testing wallet connection flows, and handling async blockchain confirmations.",
+      "matched_layers": [
+        "system_e2e"
+      ],
+      "mandatory_hits": "blockchain;wallet",
+      "exclusive": true,
+      "test_lines": [
+        "--- name: e2e-testing-web3 description: Playwright E2E test patterns for Web3 and blockchain features — mocking wallet providers (MetaMask, Phantom), testing wallet connection flows, and handling async blockchain confirm",
+        "name: e2e-testing-web3 description: Playwright E2E test patterns for Web3 and blockchain features — mocking wallet providers (MetaMask, Phantom), testing wallet connection flows, and handling async blockchain confirmatio",
+        "# E2E Testing — Web3 & Blockchain",
+        "Playwright patterns for testing applications that integrate with browser wallets and blockchain transactions.",
+        "- Writing E2E tests for wallet connection flows (MetaMask, Phantom, WalletConnect) - Testing DeFi features that trigger on-chain transactions",
+        "- Writing E2E tests for wallet connection flows (MetaMask, Phantom, WalletConnect) - Testing DeFi features that trigger on-chain transactions - Mocking browser wallet providers (`window.ethereum`, `window.solana`) in tes",
+        "- Testing DeFi features that trigger on-chain transactions - Mocking browser wallet providers (`window.ethereum`, `window.solana`) in tests - Handling async blockchain confirmation waits in test flows",
+        "- Mocking browser wallet providers (`window.ethereum`, `window.solana`) in tests - Handling async blockchain confirmation waits in test flows",
+        "> For general Playwright E2E patterns (page objects, CI artifacts, visual testing) — see skill `e2e-testing`.",
+        "## Wallet / Web3 Testing",
+        "```typescript test('wallet connection', async ({ page, context }) => { // Mock wallet provider",
+        "await page.goto('/') await page.locator('[data-testid=\"connect-wallet\"]').click() await expect(page.locator('[data-testid=\"wallet-address\"]')).toContainText('0x1234')",
+        "await page.locator('[data-testid=\"connect-wallet\"]').click() await expect(page.locator('[data-testid=\"wallet-address\"]')).toContainText('0x1234') })",
+        "### Financial / Critical Flow Testing",
+        "```typescript test('trade execution', async ({ page }) => { // Skip on production — real money"
+      ],
+      "head": "---\nname: e2e-testing-web3\ndescription: Playwright E2E test patterns for Web3 and blockchain features — mocking wallet providers (MetaMask, Phantom), testing wallet connection flows, and handling async blockchain confirmations.\n---\n\n# E2E Testing — Web3 & Blockchain\n\nPlaywright patterns for testing applications that integrate with browser wallets and blockchain transactions.\n\n## When to Activate\n\n- Writing E2E tests for wallet connection flows (MetaMask, Phantom, WalletConnect)\n- Testing DeFi features that trigger on-chain transactions\n- Mocking browser wallet providers (`window.ethereum`, `window.solana`) in tests\n- Handling async blockchain confirmation waits in test flows\n\n> For general Playwright E2E patterns (page objects, CI artifacts, visual testing) — see skill `e2e-testing`.\n\n## Wallet / Web3 Testing\n\n### Mock Wallet Provider (Ethereum/MetaMask)\n\n```typescript\ntest('wallet connection', async ({ page, context }) => {\n  // Mock wallet provider\n  await context.addInitScript(() => {\n    window.ethereum = {\n      isMetaMask: true,\n      request: async ({ method }) => {\n        if (method === 'eth_requestAccounts')\n          return ['0x1234567890123456789012345678901234567890']\n        if (method === 'eth_chainId') return '0x1'\n      }\n    }\n  })\n\n  await page.goto('/')\n  await page.locator('[data-testid=\"connect-wallet\"]').click()\n  await expect(page.locator('[data-testid=\"wallet-address\"]')).toContainText('0x1234')\n})\n```\n\n### Financial / Critical Flow Testing\n\n```typescript\ntest('trade execution', async ({ page }) => {\n  // Skip on production — real money\n  test.skip(process.env.NODE_ENV === 'production', 'Skip on production')\n\n  await page.goto('/markets/test-market')\n  await page.locator('[data-testid=\"position-yes\"]').click()\n  await page.locator('[data-testid=",
+      "chars": 5289
+    },
+    {
+      "repo": "dappvibe/pexfi",
+      "path": ".agents/skills/playwright-testing/SKILL.md",
+      "name": "playwright-testing",
+      "description": "End-to-end (e2e) GUI testing with Playwright. Use when agent needs to run, debug, or create browser-based tests, take screenshots, or verify UI flows in a web application.",
+      "matched_layers": [
+        "system_e2e"
+      ],
+      "mandatory_hits": "blockchain;wallet",
+      "exclusive": true,
+      "test_lines": [
+        "--- name: playwright-testing description: End-to-end (e2e) GUI testing with Playwright. Use when agent needs to run, debug, or create browser-based tests, take screenshots, or verify UI flows in a web application.",
+        "name: playwright-testing description: End-to-end (e2e) GUI testing with Playwright. Use when agent needs to run, debug, or create browser-based tests, take screenshots, or verify UI flows in a web application. ---",
+        "# Playwright Testing",
+        "This skill provides guidance and tools for running and maintaining end-to-end tests using Playwright.",
+        "### 1. Running Tests To run tests, use the following commands:",
+        "### 1. Running Tests To run tests, use the following commands: - **Run all tests:** `npx playwright test --reporter=line --headed`",
+        "To run tests, use the following commands: - **Run all tests:** `npx playwright test --reporter=line --headed` - **Run a specific test file:** `npx playwright test tests/e2e/path/to/test.ts --reporter=line --headed`",
+        "- **Run all tests:** `npx playwright test --reporter=line --headed` - **Run a specific test file:** `npx playwright test tests/e2e/path/to/test.ts --reporter=line --headed` - **Always use line reporter:** Add `--reporter",
+        "- **Always use headed mode:** Add `--headed` to ensure the browser is visible for debugging and consistent behavior. - **Debug a test:** `npx playwright test --debug --headed`",
+        "**CRITICAL: Use Single Worker** 1. End-to-end tests **MUST** run with a single worker (`workers: 1`) to prevent nonce collisions on the local blockchain node (Anvil/Hardhat). Parallel execution will cause transactions to",
+        "1. End-to-end tests **MUST** run with a single worker (`workers: 1`) to prevent nonce collisions on the local blockchain node (Anvil/Hardhat). Parallel execution will cause transactions to fail with \"Nonce too low\" error",
+        "### 2. Debugging Failures When a test fails: 1.  **Read the CLI Output:** Use `--reporter=line` to get immediate, high-signal error messages and stack traces directly in your terminal.",
+        "### 3. Creating New Tests Follow the existing patterns in `tests/e2e/`.",
+        "### 3. Creating New Tests Follow the existing patterns in `tests/e2e/`. - **Custom Setup:** Use `tests/e2e/setup.ts` which provides utilities like `setAccount` for wallet interactions.",
+        "Follow the existing patterns in `tests/e2e/`. - **Custom Setup:** Use `tests/e2e/setup.ts` which provides utilities like `setAccount` for wallet interactions. - **Fast Setup with Fixtures:** For faster test setup (bypass"
+      ],
+      "head": "---\nname: playwright-testing\ndescription: End-to-end (e2e) GUI testing with Playwright. Use when agent needs to run, debug, or create browser-based tests, take screenshots, or verify UI flows in a web application.\n---\n\n# Playwright Testing\n\nThis skill provides guidance and tools for running and maintaining end-to-end tests using Playwright.\n\n## Workflow\n\n### 1. Running Tests\nTo run tests, use the following commands:\n- **Run all tests:** `npx playwright test --reporter=line --headed`\n- **Run a specific test file:** `npx playwright test tests/e2e/path/to/test.ts --reporter=line --headed`\n- **Always use line reporter:** Add `--reporter=line` to see output in the CLI.\n- **Always use headed mode:** Add `--headed` to ensure the browser is visible for debugging and consistent behavior.\n- **Debug a test:** `npx playwright test --debug --headed`\n\n**CRITICAL: Use Single Worker**\n1. End-to-end tests **MUST** run with a single worker (`workers: 1`) to prevent nonce collisions on the local blockchain node (Anvil/Hardhat). Parallel execution will cause transactions to fail with \"Nonce too low\" errors.\n2. You MUST run tests with `--headed` flag, so that your pair programmer can see test flow on workstation.\n\n### 2. Debugging Failures\nWhen a test fails:\n1.  **Read the CLI Output:** Use `--reporter=line` to get immediate, high-signal error messages and stack traces directly in your terminal.\n2.  **Inspect Browser Console:** Look for `[Browser Console]` entries in the CLI output (forwarded via `setup.ts`) to identify frontend crashes or network errors.\n3.  **Take a Screenshot (if needed):** Use the `take_screenshot.cjs` script if you need to visually verify the page state.\n\n### 3. Creating New Tests\nFollow the existing patterns in `tests/e2e/`.\n- **Custom Setup:** Use `tests/e2e/setup.ts",
+      "chars": 2913
+    }
+  ]
+}

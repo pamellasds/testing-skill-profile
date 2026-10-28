@@ -1,0 +1,188 @@
+{
+  "n_skills": 17847,
+  "by_layer": {
+    "unit": 5348,
+    "integration": 4215,
+    "system_e2e": 2552,
+    "acceptance": 496,
+    "confirmation": 217,
+    "regression": 4748,
+    "maintenance": 2,
+    "static_analysis": 2266,
+    "black_box": 91,
+    "white_box": 204,
+    "exploratory": 36,
+    "non_functional": 1375,
+    "functional": 284,
+    "fork": 497,
+    "fuzz_property": 1772,
+    "formal_symbolic": 2025,
+    "mutation": 267,
+    "differential": 76,
+    "gas_performance": 859,
+    "coverage": 5344
+  },
+  "top_terms": [
+    [
+      "unit test",
+      4921
+    ],
+    [
+      "test coverage",
+      4725
+    ],
+    [
+      "integration test",
+      4205
+    ],
+    [
+      "unit tests",
+      4139
+    ],
+    [
+      "regression test",
+      3154
+    ],
+    [
+      "integration tests",
+      3070
+    ],
+    [
+      "smoke test",
+      2554
+    ],
+    [
+      "static analysis",
+      2163
+    ],
+    [
+      "e2e test",
+      2117
+    ],
+    [
+      "e2e tests",
+      1541
+    ],
+    [
+      "formal verification",
+      1506
+    ],
+    [
+      "security test",
+      1258
+    ],
+    [
+      "smoke tests",
+      1128
+    ],
+    [
+      "security testing",
+      1058
+    ],
+    [
+      "regression tests",
+      1003
+    ],
+    [
+      "fuzzing",
+      998
+    ],
+    [
+      "coverage report",
+      808
+    ],
+    [
+      "performance test",
+      737
+    ],
+    [
+      "code coverage",
+      624
+    ],
+    [
+      "property-based test",
+      580
+    ],
+    [
+      "integration testing",
+      563
+    ],
+    [
+      "performance testing",
+      551
+    ],
+    [
+      "component test",
+      529
+    ],
+    [
+      "unit testing",
+      515
+    ],
+    [
+      "regression testing",
+      509
+    ],
+    [
+      "end-to-end test",
+      479
+    ],
+    [
+      "fuzz test",
+      439
+    ],
+    [
+      "property-based testing",
+      411
+    ],
+    [
+      "test harness",
+      369
+    ],
+    [
+      "acceptance test",
+      365
+    ],
+    [
+      "fuzzer",
+      356
+    ],
+    [
+      "invariant test",
+      328
+    ],
+    [
+      "e2e testing",
+      320
+    ],
+    [
+      "fork test",
+      312
+    ],
+    [
+      "functional test",
+      283
+    ],
+    [
+      "fuzz testing",
+      268
+    ],
+    [
+      "mutation test",
+      267
+    ],
+    [
+      "component tests",
+      240
+    ],
+    [
+      "mutation testing",
+      237
+    ],
+    [
+      "symbolic execution",
+      218
+    ]
+  ],
+  "multi_layer": 7491
+}

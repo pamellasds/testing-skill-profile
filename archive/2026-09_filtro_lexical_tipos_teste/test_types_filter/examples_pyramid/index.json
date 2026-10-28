@@ -1,0 +1,64 @@
+[
+  {
+    "layer": "unit",
+    "dir": "01_unit",
+    "repo": "youugiuhiuh/web3-demos",
+    "path": ".agents/skills/smart-contract-dev/SKILL.md",
+    "name": "smart-contract-dev",
+    "mandatory_hits": [
+      "dapp",
+      "erc1155",
+      "erc20",
+      "erc721",
+      "reentrancy",
+      "smart contract",
+      "smart contracts",
+      "smart-contract"
+    ],
+    "skill_file": "examples_pyramid/01_unit/SKILL.md",
+    "bytes": 2186,
+    "lines": 45
+  },
+  {
+    "layer": "integration",
+    "dir": "02_integration",
+    "repo": "abelrguezr/hacktricks-skills",
+    "path": "skills/pentesting-web/dapps-DecentralizedApplications/SKILL.MD",
+    "name": "pentest-dapps",
+    "mandatory_hits": [
+      "blockchain",
+      "dapp",
+      "decentralized application",
+      "minting",
+      "nft",
+      "reentrancy",
+      "smart contract",
+      "smart contracts",
+      "smart-contract",
+      "wallet"
+    ],
+    "skill_file": "examples_pyramid/02_integration/SKILL.md",
+    "bytes": 7490,
+    "lines": 172
+  },
+  {
+    "layer": "system_e2e",
+    "dir": "03_system_e2e",
+    "repo": "flare-foundation/flare-ai-skills",
+    "path": "skills/flare-fcc-skill/SKILL.md",
+    "name": "flare-fcc",
+    "mandatory_hits": [
+      "blockchain",
+      "dapp",
+      "minting",
+      "msg.sender",
+      "msg.value",
+      "smart contracts",
+      "smart-contracts",
+      "wallet"
+    ],
+    "skill_file": "examples_pyramid/03_system_e2e/SKILL.md",
+    "bytes": 26771,
+    "lines": 372
+  }
+]

@@ -1,0 +1,135 @@
+NAME: raven-zero-day-hunter
+DESCRIPTION: Run Project Raven's MDASH (Multi-Model Agentic Security Harness) pipeline against a target codebase or runtime. Use when the user says "hunt 0-days", "look for zero-days", "ARES scan", "variant analysis", "memory corruption hunt", "kernel/driver hunt", "smart-contract 0-day", or asks Raven to anticipate kill chains, generate exploit hypotheses, or validate LLM-claimed vulnerabilities. Every finding ends in a tool-oracle (𝒯), classical-ML detector (𝓜), or scored hypothesis (𝓛) — never raw LLM speculation — and ships with D3FEND defensive techniques, ATT&CK offensive context, and real-world exposure scoring.
+
+---
+name: raven-zero-day-hunter
+description: Run Project Raven's MDASH (Multi-Model Agentic Security Harness) pipeline against a target codebase or runtime. Use when the user says "hunt 0-days", "look for zero-days", "ARES scan", "variant analysis", "memory corruption hunt", "kernel/driver hunt", "smart-contract 0-day", or asks Raven to anticipate kill chains, generate exploit hypotheses, or validate LLM-claimed vulnerabilities. Every finding ends in a tool-oracle (𝒯), classical-ML detector (𝓜), or scored hypothesis (𝓛) — never raw LLM speculation — and ships with D3FEND defensive techniques, ATT&CK offensive context, and real-world exposure scoring.
+---
+
+# Raven — 0-Day Threat Hunter
+
+This skill drives Project Raven's MDASH (Multi-Model Agentic Security Harness) pipeline. It composes modules from `pipeline/` into a single end-to-end flow:
+
+```
+target ─► prepare ─► scan ─► validate ─► dedup ─► prove ─► enrich ─► report
+         │           │          │          │        │         │
+         │           │          │          │        │         └─ D3FEND + ATT&CK + threat intel
+         │           │          │          │        └─ symbolic execution / formal verification
+         │           │          │          └─ semantic clustering
+         │           │          └─ multi-model debate
+         │           └─ 100+ specialized auditor agents
+         └─ surface map + threat model + cross-language taint
+```
+
+Every emission terminates at a tool oracle, a classical-ML detector, or a scored hypothesis. This is the CDP (Compositional Defense Pipelines) contract — the skill MUST NOT print a free-text "this looks vulnerable" verdict that is not backed by one of those three terminators.
+
+The skill is defender-first. It MUST NOT load `raven/redteam/offensive.py`, `raven/tools/metasploit_integration.py`, `raven/tools/empire_client.py`, `raven/tools/exploitdb*.py`, or any other excluded-from-Defender-Edition module listed in `raven-modules.md`.
+
+## When to use
+
+Trigger when the user asks any of:
+
+- "Hunt 0-days in `<repo>` / `<binary>` / `<program>`"
+- "Run ARES on this Solana program"
+- "Variant analysis for CVE-YYYY-NNNNN"
+- "Find memory corruption in this binary"
+- "Kernel / driver / firmware 0-day hunt"
+- "Anticipate the kill chain for this incident"
+- "Validate this LLM-claimed bug"
+- "Score the exploitability of `<finding>`"
+
+Do not trigger for: routine SAST runs, dependency-CVE lookups, or generic "audit my code" requests that should go through ARES directly.
+
+## Inputs
+
+Required from the user (ask if missing):
+
+1. Target type — one of: `solana-program`, `evm-contract`, `c-cpp-source`, `rust-source`, `android-apk`, `binary-elf`, `binary-pe`, `linux-kernel-module`, `live-host`, `network-range-own-assets`
+2. Target locator — repo URL, file path, or host. Must be an asset the user owns or is authorized to test. Refuse otherwise.
+3. Trial budget — Cybergym-style. Default `(trials=10, cost_cap_usd=2.00)`. Confirm with user for budgets >$10.
+
+Optional:
+
+- Prior CVE family for variant analysis (`cve_seed=CVE-2024-XXXXX`)
+- Kill-chain anticipation flag (`anticipate=True` runs `raven/hunters/kill_chain_planner.py` after the validation pass)
+- Approval mode (`smart` default, `manual` for any action with destructive blast radius)
+
+## Pipeline — five mandatory stages
+
+### Stage 1 — Surface mapping (𝒯-grounded)
+
+Pick the right tool oracle by target type. Do not skip — this is the grounding step that makes every later claim auditable.
+
+| Target | Pipeline modules |
+|--------|------------------|
+| `solana-program` | `pipeline/prepare/ingester.py` + `pipeline/cross_language/solidity_analyzer.py` |
+| `evm-contract` | `pipeline/prepare/ingester.py` + `pipeline/cross_language/solidity_analyzer.py` |
+| `c-cpp-source` / `rust-source` | `pipeline/prepare/indexer.py` + `pipeline/cross_language/ffi_analyzer.py` + `pipeline/cross_language/taint_tracker.py` |
+| `android-apk` | `pipeline/prepare/ingester.py` + `pipeline/cross_language/wasm_analyzer.py` |
+| `binary-elf` / `binary-pe` | `pipeline/prepare/indexer.py` |
+| `linux-kernel-module` | `pipeline/prepare/indexer.py` + `pipeline/cross_language/ffi_analyzer.py` |
+| `live-host` | `pipeline/prepare/threat_modeler.py` |
+| `network-range-own-assets` | `pipeline/prepare/threat_modeler.py` |
+
+Output: a structured `SurfaceMap` JSON listing entry points, syscalls/instructions of interest, ABI boundaries, and known-good baselines.
+
+### Stage 2 — Scan / Hypothesis generation (𝓛-scored)
+
+Invoke `pipeline/scan/agent_router.py` with the `SurfaceMap` and `ThreatModel`. The router dispatches to specialized auditor agents (100+ agents by bug class) from `pipeline/scan/`. Cross-language targets also receive taint analysis from `pipeline/cross_language/taint_tracker.py` to flag data flows across language boundaries.
+
+Each agent emits `CandidateFinding` objects with:
+
+- A `bug_class` (one of: memory-corruption, integer-overflow, race-condition, auth-bypass, deserialization, type-confusion, signature-malleability, account-confusion, oracle-manipulation, etc.)
+- A `location` (file + line range, or function symbol, or instruction address)
+- A `precondition` (what attacker control is required)
+- A `hypothesis_score` in `[0, 1]` — the LLM's confidence, NOT the verdict
+- A linked CWE id (used in Stage 6 for D3FEND routing)
+
+Hypotheses are scored objects; they are NEVER the final verdict. Print them as "candidates", not "findings".
+
+### Stage 3 — Variant analysis branch (optional, 𝓜-detected)
+
+If `cve_seed` is set, run `raven/ml/variant_analyzer.py` against the seed CVE's pattern. This is the ZeroDayBench-style branch: it surfaces near-clones of the seed bug elsewhere in the target. Output is a `VariantCandidate` list — also scored objects, also routed to Stage 4.
+
+### Stage 4 — Validate / Multi-model debate (� → 𝒯)
+
+For each candidate from Stage 2 or Stage 3, invoke `pipeline/validate/debate_orchestrator.py`. This runs a cohort of debater agents (different models arguing for/against exploitability) from `pipeline/validate/`. No claim escapes this stage without passing debate.
+
+Validation paths by `bug_class`:
+
+| `bug_class` | Pipeline validators |
+|-------------|---------------------|
+| memory-corruption | `pipeline/prove/sanitizer_runner.py` (ASan/MSan) + `pipeline/prove_extension/formal_verification.py` |
+| race-condition | `pipeline/prove/sanitizer_runner.py` (TSan) + `pipeline/prove_extension/formal_verification.py` |
+| auth-bypass | `pipeline/prove/sandbox.py` + `pipeline/prove_extension/formal_verification.py` |
+| signature-malleability / account-confusion / oracle-manipulation | `pipeline/cross_language/solidity_analyzer.py` + `pipeline/cross_language/taint_tracker.py` |
+| deserialization | `pipeline/prove/harness_builder.py` + `pipeline/prove/fuzzer.py` |
+| every class | `pipeline/scan/finding_collector.py` cross-reference against NVD/OSV to filter known issues |
+
+A candidate emerges from Stage 4 as either:
+
+- `ValidatedFinding` — debate confirmed with confidence ≥ threshold
+- `unconfirmed` — no debate consensus; downgraded back to a low-prior hypothesis
+- `false_positive` — explicit refutation by debaters or tool oracle
+
+Only `ValidatedFinding` records advance to Stage 5.
+
+### Stage 5 — Dedup (𝓜)
+
+Run `pipeline/dedup/clustering.py` to collapse semantically equivalent findings. Uses embeddings from `pipeline/dedup/embedding_generator.py` and merges via `pipeline/dedup/merger.py`.
+
+### Stage 6 — Prove (𝒯-grounded)
+
+For each deduplicated finding, invoke `pipeline/prove/poc_generator.py` and `pipeline/prove/harness_builder.py`. For cryptographic properties, also invoke `pipeline/prove_extension/formal_verification.py`.
+
+Proof stages:
+- Self-contained claim (minimal code snippet)
+- Reachability harness (instrumented trigger)
+- Fuzzing / symbolic execution (`pipeline/prove/fuzzer.py`, `pipeline/prove/sandbox.py`)
+
+Output: `ProvenFinding` with PoC artifacts and sanitizer results.
+
+### Stage 7 — Enrich (𝒯 + 𝓜)
+
+For every `ProvenFinding`, invoke `pi
+[... truncado em 8000 caracteres]

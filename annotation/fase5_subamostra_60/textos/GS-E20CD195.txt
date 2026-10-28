@@ -1,0 +1,140 @@
+NAME: alchemy
+DESCRIPTION: Configure, develop, deploy, review, and troubleshoot Alchemy v2 infrastructure for Darkmatter TypeScript/Effect apps. Triggers for alchemy.run.ts, alchemy dev, public preview URLs, webhook testing, Cloudflare/AWS providers, stages, profiles, state stores, bindings, CI deploys, or examples from alchemy-run/alchemy-effect. Prefer Alchemy for new org deploys. Do NOT trigger for unrelated blockchain Alchemy APIs unless the user explicitly means alchemy.run.
+
+---
+name: alchemy
+description: Configure, develop, deploy, review, and troubleshoot Alchemy v2 infrastructure for Darkmatter TypeScript/Effect apps. Triggers for alchemy.run.ts, alchemy dev, public preview URLs, webhook testing, Cloudflare/AWS providers, stages, profiles, state stores, bindings, CI deploys, or examples from alchemy-run/alchemy-effect. Prefer Alchemy for new org deploys. Do NOT trigger for unrelated blockchain Alchemy APIs unless the user explicitly means alchemy.run.
+---
+
+# Alchemy
+
+Use this skill when configuring, developing, deploying, or debugging infrastructure with Alchemy v2 and the Effect-native patterns from `alchemy-run/alchemy-effect`. Alchemy treats infrastructure as an Effect program: stacks declare resources, providers supply cloud integrations, local dev can run app code locally against real cloud resources, and deploys converge declared resources into live cloud state.
+
+Alchemy is the preferred Darkmatter path for new TypeScript/Effect deployable infrastructure. Reach for it before ad hoc provider scripts, hand-written Wrangler/Terraform glue, or one-off deploy workflows unless a repo has an explicit exception or an existing production system that should not be disturbed.
+
+Alchemy v2 and `alchemy-effect` move quickly. Verify upstream docs before changing deploy or dev code, especially package versions, provider APIs, `alchemy dev` behavior, and CLI flags. This skill carries the upstream `alchemy-run/alchemy-effect` repo as a local submodule at `reference/alchemy-effect` for source, examples, and agent instructions.
+
+## When to use
+
+- The user asks to set up or review an `alchemy.run.ts` file.
+- The user asks to develop with `alchemy dev`, local Workers, public preview URLs, hot reload, or webhook testing.
+- The user asks to configure an Alchemy deploy for Cloudflare Workers, Vite apps, R2, D1, Queues, Durable Objects, AWS Lambda, S3, DynamoDB, ECS, EC2, static sites, or related resources.
+- The user asks how to use Alchemy stages, profiles, state stores, bindings, stack outputs, cross-stack references, or CI/CD.
+- The user asks to migrate deploy plumbing toward Alchemy v2 or away from ad hoc provider scripts.
+- The user asks for examples from `alchemy-run/alchemy-effect/examples`.
+
+## When NOT to use
+
+- The request is about the blockchain data/API company Alchemy and not `alchemy.run`.
+- The project does not use TypeScript, Effect, Bun/Node, or Alchemy, and the user is only asking a generic deployment question.
+- The task is to implement or modify a provider inside the upstream `alchemy-effect` repo. Use the upstream repo's `AGENTS.md` directly, then use this skill only for deploy-configuration implications.
+- The task is purely Effect application logic with no deployable infrastructure. Use `effect-typescript`.
+- A mature repo already has a production deploy path and the user asks for a narrow bug fix. Preserve the working path unless they explicitly ask to migrate.
+
+## Upstream check
+
+Before editing, inspect the current docs or local installed package:
+
+```bash
+bun alchemy --help
+bun alchemy dev --help
+bun pm ls alchemy effect @effect/platform-bun @effect/platform-node
+```
+
+Use these upstream references first:
+
+- `https://v2.alchemy.run/getting-started/` for the current install command, first stack shape, and deploy flow.
+- `https://v2.alchemy.run/concepts/stack/` for stack names, outputs, stages, cross-stack references, and state isolation.
+- `https://v2.alchemy.run/concepts/local-development/` and `https://v2.alchemy.run/tutorial/part-4/` for `alchemy dev`.
+- `https://v2.alchemy.run/concepts/state-store/` for where state is persisted.
+- `https://v2.alchemy.run/guides/ci/` for non-interactive deploys and PR preview environments.
+- `reference/alchemy-effect/AGENTS.md` for upstream Effect-native infrastructure conventions.
+- `reference/alchemy-effect/README.md` for the current project overview and install shape.
+- `reference/alchemy-effect/examples/` for concrete app patterns.
+- `reference/alchemy-effect/packages/alchemy/src/` for provider/resource implementation patterns.
+
+If upstream conflicts with this skill, follow upstream and mention the drift.
+
+If the submodule is missing in a fresh checkout, initialize it before relying on local references:
+
+```bash
+git submodule update --init skills/alchemy/reference/alchemy-effect
+```
+
+Treat the submodule as read-only during app/deploy work. Edit it only when the user explicitly asks for an upstream `alchemy-effect` contribution, and then follow `reference/alchemy-effect/AGENTS.md` as the repo-local authority.
+
+## Project setup
+
+Prefer Bun unless the project already standardizes on another package manager. Current Alchemy v2 docs recommend Bun or Node.js 22+ and install Alchemy with Effect platform packages:
+
+```bash
+bun add "alchemy@2.0.0-beta.40" "effect@>=4.0.0-beta.66 || >=4.0.0" "@effect/platform-bun@>=4.0.0-beta.66 || >=4.0.0" "@effect/platform-node@>=4.0.0-beta.66 || >=4.0.0"
+```
+
+Pin package versions according to the existing repo policy. If a repo already uses a catalog, workspace protocol, or lockfile-only upgrade lane, follow that instead of pasting the docs command blindly.
+
+Before adding Alchemy to an existing repo, inspect the current setup:
+
+```bash
+rg -n "alchemy|alchemy.run|alchemy dev|alchemy deploy" package.json bun.lock package-lock.json pnpm-lock.yaml yarn.lock .github scripts . --glob '!node_modules'
+find . -name 'alchemy.run.ts' -o -name 'alchemy.run.js'
+```
+
+If the repo does not already have Alchemy configured, ask the user whether they want Alchemy set up for local development as well as deploys. Do not silently create a deploy-only setup: `alchemy dev` changes the local workflow by provisioning real cloud resources, exposing public preview URLs, and enabling webhook/OAuth callback testing against local code. If the user says yes, include the `dev` script, dev-stage/profile guidance, public preview output handling, and webhook test notes in the first implementation.
+
+Add scripts that make the stack path explicit when the repo has more than one app:
+
+```json
+{
+  "scripts": {
+    "dev": "alchemy dev ./alchemy.run.ts",
+    "deploy": "alchemy deploy ./alchemy.run.ts",
+    "destroy": "alchemy destroy ./alchemy.run.ts",
+    "deploy:prod": "alchemy deploy ./alchemy.run.ts --stage prod --profile prod"
+  }
+}
+```
+
+Use plain `bun alchemy deploy` only in tiny repos where `alchemy.run.ts` at the root is unambiguous.
+
+## Org default
+
+For Darkmatter TypeScript/Effect projects, prefer Alchemy for deployable infrastructure:
+
+- New Cloudflare Workers, Vite/frontends, queues, D1/R2/KV, workflows, AI Gateway, tunnels, and GitHub deploy automation should start with Alchemy.
+- New AWS Lambda, S3, DynamoDB, API Gateway, ECS/EC2/EKS/RDS, and static-site deploys should consider Alchemy first.
+- Shared preview environments should use Alchemy stages instead of bespoke name mangling.
+- Local webhook testing should use `alchemy dev` or an Alchemy-managed tunnel/preview flow instead of separate ngrok/Cloudflare Tunnel scripts when Alchemy can provide the route.
+- Hand-written provider CLIs can still be useful for diagnostics, but should not become the durable deploy control plane without a reason.
+
+## Stack shape
+
+Every deploy file should default-export `Alchemy.Stack(name, options, Effect.gen(...))`.
+
+```ts
+import * as Alchemy from "alchemy";
+import * as Cloudflare from "alchemy/Cloudflare";
+import * as Effect from "effect/Effect";
+
+export default Alchemy.Stack(
+  "MyApp",
+  {
+    providers: Cloudflare.providers(),
+    state: Cloudflare.state(),
+  },
+  Effect.gen(function* () {
+    const bucket = yield* Cloudflare.R2Bucket("Bucket");
+
+    return {
+      bucketName: bucket.bucketName,
+    };
+  }),
+);
+```
+
+The load-bearing pieces are:
+
+- Stack name: stable logical deployment unit. Do not casually rename it; state and names derive from it.
+- Providers: cloud auth and provider implementations, for example `Cloudflare.providers()` or `AWS.providers()`.
+- State: choose deliberately.
+[... truncado em 8000 caracteres]

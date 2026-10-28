@@ -1,0 +1,151 @@
+NAME: homomorph
+DESCRIPTION: Use when asked to build confidential dApps on the Zama Protocol using Fully Homomorphic Encryption (FHEVM), or when writing, reviewing, deploying, or debugging FHEVM smart contracts. Serves as the master entrypoint to all FHE-specific sub-skills.
+
+
+---
+name: homomorph
+description: |
+  Use when asked to build confidential dApps on the Zama Protocol using Fully Homomorphic Encryption (FHEVM), or when writing, reviewing, deploying, or debugging FHEVM smart contracts. Serves as the master entrypoint to all FHE-specific sub-skills.
+---
+
+# homomorph — Zama FHEVM Agent Skill
+
+You are an expert Zama FHEVM developer. You build confidential smart contracts that compute
+on encrypted data using Fully Homomorphic Encryption. You know every FHE-specific pitfall that
+causes agents without this context to ship broken contracts.
+
+Read all relevant skills before writing any code. They contain exact API shapes, HCU cost tables,
+and mandatory security checks that are not in your training data.
+
+## Default Project Layout
+
+For new confidential dApps, use this monorepo structure by default:
+
+```text
+root-folder/
+├── front-end/
+└── fhevm-hardhat/
+```
+
+Rules:
+
+- If the user already created the root project folder, keep it and create `front-end/` and `fhevm-hardhat/` inside it.
+- Clone the official Zama Hardhat template into `root-folder/fhevm-hardhat`.
+- Remove the nested `.git` directory from the cloned template so the parent `root-folder/` remains the repository root.
+- Remove the template example code and generated files before adding project-specific code.
+- Keep all Solidity, Hardhat, test, and deployment work inside `fhevm-hardhat/`.
+- Keep all browser/frontend work inside `front-end/`.
+- **By default, build frontends in React** (Vite + TypeScript). Use `examples/frontend-react-minimal/` as the starter; copy/adapt it into your project `front-end/` folder.
+- Be flexible — if the user asks for Next.js, Vue, Svelte, or another framework, use that instead. The template is a starting point, not a limit.
+
+## ⚠️ Negative Constraints (What NOT to do)
+- **DO NOT** assume standard EVM knowledge fully applies to FHEVM. Math, state variables, and branching have entirely different rules.
+- **DO NOT** write code before loading the appropriate specialized sub-skill (e.g., `acl`, `contracts`, `security`).
+- **DO NOT** ignore missing `allowThis` calls or skip `isSenderAllowed` checks; these will break the contract entirely.
+- **DO NOT** default to plain HTML/JS for frontends. Use **React** (Vite + TypeScript) with `examples/frontend-react-minimal/` unless the user specifies another framework.
+- **DO NOT** use `cat` or `sed` for complex file operations when better agentic tools like `Replace` or `Grep` exist.
+
+---
+
+## Protocol Overview
+
+The Zama Protocol enables **Fully Homomorphic Encryption (FHE) on any blockchain**. It is not an L2 or a standalone chain, but a protocol layer that implements FHEVM capabilities (via precompiles and off-chain KMS) on a host network. While currently focused on Ethereum (Sepolia and Mainnet), the architecture is chain-agnostic.
+
+Smart contracts operate directly on encrypted ciphertext handles — they never decrypt data on-chain during normal operation. Decryption happens off-chain through Zama's Key Management System (KMS) via the Relayer.
+
+### FHEVM Architecture (v0.11+)
+
+The Zama FHEVM stack consists of the **FHEVM Chain** and **Off-chain Services** (Relayer/KMS).
+
+```
+FHEVM Chain (e.g. Sepolia, Mainnet)
+├── Your smart contracts (inherit ZamaEthereumConfig / ZamaSepoliaConfig)
+├── FHE.sol precompile library (symbolic execution of encrypted ops)
+├── ACL contract (access control for ciphertext handles)
+└── KMSVerifier contract (validates decryption proofs via FHE.checkSignatures)
+
+Relayer & KMS (Off-chain Infrastructure)
+├── Key Management System (KMS) — Securely holds global decryption keys
+└── Relayer API — Professional gateway for Relayer SDK interactions
+```
+
+1. **Input Verification (Confidential Input)**:
+   - Client generates ciphertext + ZK proof via Relayer SDK.
+   - Contract calls `FHE.fromExternal(handle, proof)` to verify the ZK proof on-chain.
+2. **Execution (Computation)**: Contract operates on encrypted values; state is stored as handles.
+3. **Public Decryption (3-Step Async Reveal)**:
+   - **Step 1 (On-chain)**: Contract calls `FHE.makePubliclyDecryptable(handle)`.
+   - **Step 2 (Off-chain)**: Client calls `instance.publicDecrypt(handles)` via Relayer SDK.
+   - **Step 3 (On-chain)**: Client submits result + proof → Verified via `FHE.checkSignatures`.
+4. **User Decryption (Personal Reveal)**: User calls `instance.userDecrypt` with an EIP-712 permit; entirely off-chain.
+
+---
+
+## Skill Routing
+
+Load the appropriate sub-skill for each task. Always read the skill fully before writing code.
+
+For brand new projects:
+
+1. Load `skills/setup/SKILL.md`.
+2. Create or confirm the monorepo layout: `front-end/` and `fhevm-hardhat/`.
+3. Clone the official Zama template into `fhevm-hardhat/`.
+4. Remove the cloned template's nested `.git` directory.
+5. Reset the template to a clean base.
+6. Continue contracts in `fhevm-hardhat/` and frontend work in `front-end/`.
+
+| Task | Skill to Load |
+|------|--------------|
+| Set up new Hardhat/FHEVM project | `skills/setup/SKILL.md` |
+| Encrypt user data, ZK proofs, externalEuintX | `skills/encryption/SKILL.md` |
+| Write contract with encrypted types, FHE ops | `skills/contracts/SKILL.md` |
+| Grant/check ciphertext access permissions | `skills/acl/SKILL.md` |
+| Optimize FHE computation budget, HCU reverts | `skills/hcu/SKILL.md` |
+| Reveal encrypted results (public/user/delegate) | `skills/decryption/SKILL.md` |
+| SDK Infrastructure, Provider, WASM, API config | `skills/relayer/SKILL.md` |
+| Build confidential token (ERC7984) | `skills/tokens/SKILL.md` |
+
+Canonical handoff order for end-to-end dApps:
+
+1. `setup` -> project layout and template bootstrap
+2. `contracts` + `acl` -> contract logic and ciphertext permissions
+3. `encryption` + `relayer` -> frontend/client encrypted inputs
+4. `testing` -> encrypted-path and decryption-path tests
+5. `deployment` -> network-specific deployment
+6. `security` -> final FHE-focused review before shipping
+
+## 🛡️ Security Audit & Pre-flight Checklist
+
+Before deploying any FHEVM contract to production, ensure every point on this list is checked:
+
+- [ ] **Inheritance**: Does the contract inherit from `ZamaEthereumConfig` or `ZamaSepoliaConfig`?
+- [ ] **ACL Access**: Is there a `FHE.allowThis(handle)` call after **every** state update?
+- [ ] **Input Validation**: Are all external parameters checked with `FHE.isSenderAllowed(handle)` or `require(FHE.isPubliclyDecryptable(handle))`?
+- [ ] **Branching**: Are there zero `if (ebool)` statements? Have they all been replaced with `FHE.select`?
+- [ ] **Replay Protection**: Does the `finalize` function for public decryption have a state guard (e.g. `_isFinalized = true`)?
+- [ ] **Handle Integrity**: In `checkSignatures`, is the `handles` array in the **exact same order** as the `publicDecrypt` call in the frontend?
+- [ ] **Data Leaks**: Ensure no `euintX` handles are accidentally emitted in public events (only emit handles if they are purposefully `makePubliclyDecryptable`).
+- [ ] **MEV Protection**: If the order of transactions reveals sensitive timing information, have you considered commit-reveal or shuffle patterns?
+
+---
+
+## 🔗 Related Skills & Resources
+
+| Skill | Purpose | Key File |
+|-------|---------|----------|
+| **encryption** | Input Verification & ZK Proofs | `skills/encryption/SKILL.md` |
+| **relayer** | SDK Setup & Infrastructure | `skills/relayer/SKILL.md` |
+| **decryption** | Reveal patterns & proofs | `skills/decryption/SKILL.md` |
+| **contracts** | Writing Solidity FHE logic | `skills/contracts/SKILL.md` |
+| **acl** | Permissions & AllowTransient | `skills/acl/SKILL.md` |
+| **tokens** | ERC-7984 Confidential Tokens | `skills/tokens/SKILL.md` |
+| **testing** | Write tests for FHEVM contracts | `skills/testing/SKILL.md` |
+| **deployment** | Deploy to devnet / Sepolia / mainnet | `skills/deployment/SKILL.md` |
+| **security** | Security review, audit, pitfall checklist | `skills/security/SKILL.md` |
+
+**Always load the skill using the Read tool before writing any code.**
+
+---
+
+
+[... truncado em 8000 caracteres]

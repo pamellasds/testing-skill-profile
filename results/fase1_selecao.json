@@ -1,0 +1,148 @@
+{
+  "db": "agent_skills_mandatory_only.db",
+  "db_bytes": 3936702464,
+  "config_sha256": {
+    "termos_dominio.json": "5825799db0c332967c2672099cbf8dc75941e9639437242166382049902f2791",
+    "termos_teste.json": "4fc3969b4afe064ad9f25e0f4d15d31345f88d399d78c5005e1bd05e36b642aa"
+  },
+  "n_termos": {
+    "fortes": 75,
+    "fracos": 17,
+    "teste": 56
+  },
+  "skills_distintas_escaneadas": 89649,
+  "recorte_dominio": 28244,
+  "recorte_por_regra": {
+    "com_forte": 27736,
+    "so_fracos_ge2": 508
+  },
+  "pool_candidatas": 4928,
+  "pool_copias_total": 12314,
+  "pool_repos_distintos_representante": 2100,
+  "pool_conteudos_com_copias": 1073,
+  "pool_max_copias": 302,
+  "top_termos_teste_no_pool": [
+    [
+      "unit[- ]?(tests?|testing)",
+      1169
+    ],
+    [
+      "fuzz(ing|er|ed)?",
+      1005
+    ],
+    [
+      "e2e( tests?| testing)?",
+      958
+    ],
+    [
+      "integration (tests?|testing)",
+      911
+    ],
+    [
+      "test suites?",
+      699
+    ],
+    [
+      "playwright",
+      586
+    ],
+    [
+      "test files?",
+      567
+    ],
+    [
+      "(test|code) coverage",
+      563
+    ],
+    [
+      "forge (test|coverage|snapshot)",
+      548
+    ],
+    [
+      "run (the )?tests",
+      449
+    ],
+    [
+      "test cases?",
+      369
+    ],
+    [
+      "formal verification",
+      351
+    ],
+    [
+      "write (unit |integration )?tests",
+      311
+    ],
+    [
+      "vitest",
+      309
+    ],
+    [
+      "fuzz (tests?|testing)",
+      307
+    ]
+  ],
+  "top_fortes_no_recorte": [
+    [
+      "blockchains?",
+      9017
+    ],
+    [
+      "on[- ]chain",
+      8576
+    ],
+    [
+      "mainnet",
+      6816
+    ],
+    [
+      "ethereum",
+      6622
+    ],
+    [
+      "smart[- ]?contracts?",
+      5375
+    ],
+    [
+      "solana",
+      5251
+    ],
+    [
+      "defi",
+      5094
+    ],
+    [
+      "erc[- ]?\\d{2,5}",
+      4700
+    ],
+    [
+      "evm",
+      4518
+    ],
+    [
+      "web3(\\.js|\\.py)?",
+      4150
+    ],
+    [
+      "nfts?",
+      4017
+    ],
+    [
+      "testnets?",
+      3729
+    ],
+    [
+      "solidity",
+      3504
+    ],
+    [
+      "eip[- ]?\\d{1,5}",
+      3074
+    ],
+    [
+      "arbitrum",
+      2930
+    ]
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "layer": "unit",
+  "source_db": "agent_skills_mandatory_only.db",
+  "selection": "keyword_matches.mandatory_hits + test_types layer exclusive/strong",
+  "repo": "youugiuhiuh/web3-demos",
+  "path": ".agents/skills/smart-contract-dev/SKILL.md",
+  "name": "smart-contract-dev",
+  "description": "Provides best practices, patterns, and security workflows for writing, testing, and deploying Solidity smart contracts using Foundry or Hardhat.",
+  "matched_layers": [
+    "unit"
+  ],
+  "matched_terms_by_layer": {
+    "unit": [
+      "unit test",
+      "unit tests"
+    ]
+  },
+  "matched_terms": [
+    "unit test",
+    "unit tests"
+  ],
+  "mandatory_hits": [
+    "dapp",
+    "erc1155",
+    "erc20",
+    "erc721",
+    "reentrancy",
+    "smart contract",
+    "smart contracts",
+    "smart-contract"
+  ],
+  "n_layers": 1,
+  "n_terms": 2
+}

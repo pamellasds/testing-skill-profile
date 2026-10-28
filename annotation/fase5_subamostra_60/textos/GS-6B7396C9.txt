@@ -1,0 +1,287 @@
+NAME: implement-rebound-retry
+DESCRIPTION: Implement Rebound retry orchestration for intelligent failure handling with exponential backoff, dead letter queues, and support for Kafka/HTTP destinations. Use when adding retry logic, handling transient failures, implementing circuit breakers, or building resilient services. Activates on: retry, rebound, exponential backoff, dead letter queue, dlq, failure handling, resilience.
+
+---
+name: implement-rebound-retry
+description: "Implement Rebound retry orchestration for intelligent failure handling with exponential backoff, dead letter queues, and support for Kafka/HTTP destinations. Use when adding retry logic, handling transient failures, implementing circuit breakers, or building resilient services. Activates on: retry, rebound, exponential backoff, dead letter queue, dlq, failure handling, resilience."
+---
+
+# Implement Rebound Retry Orchestration
+
+Build resilient applications with intelligent retry mechanisms using Rebound - a Go library for retry orchestration with exponential backoff and dead letter queues.
+
+**Repository**: [ruudy-sib/rebound](https://github.com/ruudy-sib/rebound) | **Package**: `github.com/ruudy-sib/rebound/pkg/rebound` | **References**: [pkg/rebound/README.md](https://github.com/ruudy-sib/rebound/blob/main/pkg/rebound/README.md)
+
+## Overview
+
+Rebound provides:
+- 🔄 **Exponential Backoff** - Intelligent retry scheduling with configurable delays
+- 📊 **Multiple Destinations** - Kafka topics and HTTP webhooks
+- ☠️ **Dead Letter Queue** - Automatic routing of exhausted retries
+- 🏗️ **Hexagonal Architecture** - Clean separation of concerns
+- 💉 **Dependency Injection** - First-class support for uber-go/dig
+- 📝 **Structured Logging** - Built on uber-go/zap
+
+## Installation
+
+```bash
+go get github.com/ruudy-sib/rebound/pkg/rebound@latest
+```
+
+## Quick Start: Basic Integration
+
+**Location**: Your service initialization code
+
+```go
+package main
+
+import (
+    "context"
+    "time"
+
+    "github.com/ruudy-sib/rebound/pkg/rebound"
+    "go.uber.org/zap"
+)
+
+func main() {
+    logger, _ := zap.NewProduction()
+
+    // Configure Rebound
+    cfg := &rebound.Config{
+        RedisAddr:    "localhost:6379",
+        PollInterval: 1 * time.Second,
+        Logger:       logger,
+        // RedisMode: "sentinel", // or "cluster" — default is "standalone"
+    }
+
+    // Create instance
+    rb, err := rebound.New(cfg)
+    if err != nil {
+        logger.Fatal("failed to create rebound", zap.Error(err))
+    }
+    defer rb.Close()
+
+    // Start worker
+    ctx := context.Background()
+    if err := rb.Start(ctx); err != nil {
+        logger.Fatal("failed to start rebound", zap.Error(err))
+    }
+
+    // Schedule a retry task
+    task := &rebound.Task{
+        ID:     "order-123",
+        Source: "order-service",
+        Destination: rebound.Destination{
+            Host:  "kafka.prod",
+            Port:  "9092",
+            Topic: "orders",
+        },
+        DeadDestination: rebound.Destination{
+            Host:  "kafka.prod",
+            Port:  "9092",
+            Topic: "orders-dlq",
+        },
+        MaxRetries:      5,
+        BaseDelay:       10, // seconds
+        ClientID:        "order-service",
+        MessageData:     `{"order_id": 123}`,
+        DestinationType: rebound.DestinationTypeKafka,
+    }
+
+    if err := rb.CreateTask(ctx, task); err != nil {
+        logger.Error("failed to create task", zap.Error(err))
+    }
+}
+```
+
+## Integration Patterns
+
+### Pattern 1: HTTP Handler Integration
+
+Use Rebound to retry failed HTTP operations:
+
+```go
+package handler
+
+import (
+    "net/http"
+    "github.com/ruudy-sib/rebound/pkg/rebound"
+    "go.uber.org/zap"
+)
+
+type OrderHandler struct {
+    rebound *rebound.Rebound
+    logger  *zap.Logger
+}
+
+func (h *OrderHandler) ProcessOrder(w http.ResponseWriter, r *http.Request) {
+    // Try processing
+    if err := h.processOrderLogic(r); err != nil {
+        // Schedule retry on failure
+        task := &rebound.Task{
+            ID:     fmt.Sprintf("order-%s", orderID),
+            Source: "order-service",
+            Destination: rebound.Destination{
+                URL: "https://payment-gateway.com/process",
+            },
+            DeadDestination: rebound.Destination{
+                URL: "https://payment-gateway.com/dlq",
+            },
+            MaxRetries:      3,
+            BaseDelay:       5,
+            ClientID:        "order-service",
+            MessageData:     orderJSON,
+            DestinationType: rebound.DestinationTypeHTTP,
+        }
+
+        if err := h.rebound.CreateTask(r.Context(), task); err != nil {
+            h.logger.Error("failed to schedule retry", zap.Error(err))
+            http.Error(w, "internal error", http.StatusInternalServerError)
+            return
+        }
+
+        w.WriteHeader(http.StatusAccepted)
+        return
+    }
+
+    w.WriteHeader(http.StatusOK)
+}
+```
+
+### Pattern 2: Kafka Consumer Integration
+
+Retry failed Kafka messages:
+
+```go
+package consumer
+
+import (
+    "context"
+    "github.com/segmentio/kafka-go"
+    "github.com/ruudy-sib/rebound/pkg/rebound"
+)
+
+type Consumer struct {
+    reader  *kafka.Reader
+    rebound *rebound.Rebound
+}
+
+func (c *Consumer) processMessage(ctx context.Context, msg kafka.Message) {
+    if err := c.handleMessage(msg); err != nil {
+        // Schedule retry with Rebound
+        task := &rebound.Task{
+            ID:     fmt.Sprintf("%s-%d-%d", msg.Topic, msg.Partition, msg.Offset),
+            Source: "kafka-consumer",
+            Destination: rebound.Destination{
+                Host:  "localhost",
+                Port:  "9092",
+                Topic: msg.Topic,
+            },
+            DeadDestination: rebound.Destination{
+                Host:  "localhost",
+                Port:  "9092",
+                Topic: msg.Topic + "-dlq",
+            },
+            MaxRetries:      5,
+            BaseDelay:       10,
+            ClientID:        "consumer-service",
+            MessageData:     string(msg.Value),
+            DestinationType: rebound.DestinationTypeKafka,
+        }
+
+        c.rebound.CreateTask(ctx, task)
+    }
+}
+```
+
+### Pattern 3: Dependency Injection (Recommended)
+
+Production-ready pattern with uber-go/dig:
+
+```go
+package main
+
+import (
+    "github.com/DTSL/golang-libraries/di"
+    "github.com/ruudy-sib/rebound/pkg/rebound"
+    "go.uber.org/zap"
+)
+
+func main() {
+    container := di.GetContainer()
+
+    // Provide configuration
+    container.Provide(func(logger *zap.Logger) *rebound.Config {
+        return &rebound.Config{
+            RedisAddr:    "redis.production.svc.cluster.local:6379",
+            PollInterval: 1 * time.Second,
+            Logger:       logger,
+            // RedisMode: "sentinel", // uncomment for HA
+        }
+    })
+
+    // Register Rebound
+    rebound.RegisterWithContainer(container)
+
+    // Use in your handlers
+    container.Invoke(func(rb *rebound.Rebound, logger *zap.Logger) error {
+        ctx := context.Background()
+        return rb.Start(ctx)
+    })
+}
+```
+
+## Destination Types
+
+## Redis Configuration
+
+Rebound supports three Redis deployment modes via the `RedisMode` config field:
+
+| Mode | Config Fields | Use Case |
+|------|--------------|----------|
+| `"standalone"` (default) | `RedisAddr` | Single instance, dev/simple prod |
+| `"sentinel"` | `RedisMasterName`, `RedisSentinelAddrs` | High availability with automatic failover |
+| `"cluster"` | `RedisClusterAddrs` | Horizontal scaling across multiple nodes |
+
+```go
+// Standalone (default)
+cfg := &rebound.Config{RedisAddr: "localhost:6379"}
+
+// Sentinel
+cfg := &rebound.Config{
+    RedisMode:          "sentinel",
+    RedisMasterName:    "mymaster",
+    RedisSentinelAddrs: []string{"sentinel-1:26379", "sentinel-2:26379"},
+}
+
+// Cluster
+cfg := &rebound.Config{
+    RedisMode:         "cluster",
+    RedisClusterAddrs: []string{"node-1:7000", "node-2:7001", "node-3:7002"},
+}
+```
+
+### Kafka Destinations
+
+**Basic (host + port + topic):**
+```go
+task := &rebound.Task{
+    Destination: rebound.Destination{
+        Host:  "kafka.prod",
+        Port:  "9092",
+        Topic: "events",
+    },
+    DestinationType: rebound.DestinationTypeKafka,
+}
+```
+
+**With SASL authentication** (`"PLAIN"`, `"SCRAM-SHA-256"`, or `"SCRAM-SHA-512"`):
+```go
+task := &rebound.Task{
+    Destination: rebound.Destination{
+        Host:          "kafka.prod",
+        Port:          "9092",
+        Topic:         "events",
+        SASLMechanism: "SCRAM-SHA-256",
+        SA
+[... truncado em 8000 caracteres]

@@ -1,0 +1,271 @@
+﻿skill_id,item,resposta,citacao,justificativa,contexto
+GS-08124CA5,Q1,UNCERTAIN,Tests are Solidity contracts that inherit from `forge-std/Test.sol` and include `setUp` and test functions.,The text instructs the agent to write isolated unit tests for Solidity contracts using Foundry's testing framework.,onchain
+GS-08124CA5,Q2,UNCERTAIN,Test against live network state: `forge test --fork-url http://127.0.0.1:8545 --fork-block-number 19000000`,The text instructs the agent to perform integration testing by interacting with a forked live network.,onchain
+GS-08124CA5,Q3,NO,,No explicit instruction to test shared interfaces between contracts or consumers.,
+GS-08124CA5,Q4,NO,,No explicit instruction to drive a user interface or external API.,
+GS-08124CA5,Q5,NO,,No explicit instruction to test the whole deployed system through its external interface.,
+GS-08124CA5,Q6,YES,"`function test_RevertWhen_Unauthorized() public { vm.prank(address(0xdead)); vm.expectRevert(""not owner""); counter.setNumber(999); }`",The text instructs the agent to test a user scenario (access control) from the user's point of view using business rules.,onchain
+GS-08124CA5,Q7,NO,,No explicit instruction for manual exploratory testing.,
+GS-08124CA5,Q8,UNCERTAIN,Run tests with verbosity: `forge test -vv`,The text instructs the agent to run tests using the Foundry test runner with different verbosity levels.,onchain
+GS-08124CA5,Q9,YES,`forge test --fork-url http://127.0.0.1:8545 --fork-block-number 19000000`,"The text instructs the agent to perform fork testing, a Web3-specific testing practice.",onchain
+GS-08FDF5B8,Q1,NO,,No instructions for isolated unit testing with test doubles.,
+GS-08FDF5B8,Q2,NO,,"No instructions for testing real junctions with external parts (e.g., DB, network, filesystem).",
+GS-08FDF5B8,Q3,NO,,No instructions for checking shared interfaces between consumer and provider.,
+GS-08FDF5B8,Q4,NO,,"No instructions for driving an interface (GUI, REST, CLI) with input → action → state.",
+GS-08FDF5B8,Q5,NO,,No instructions for testing the whole deployed system through its external interface.,
+GS-08FDF5B8,Q6,NO,,No instructions for testing user scenarios or business rules from the user's perspective.,
+GS-08FDF5B8,Q7,YES,"Monitor for crashes, hangs, or memory errors","Explicit manual exploration to find problems not covered by automated tests (e.g., crash analysis).",web2
+GS-08FDF5B8,Q8,NO,,No instructions for running tests with a named runner or in CI.,
+GS-08FDF5B8,Q9,NO,,"No instructions for Web3-specific testing (e.g., fork testing, fuzzing, formal verification).",
+GS-10D5B724,Q1,NO,,,
+GS-10D5B724,Q2,NO,,,
+GS-10D5B724,Q3,NO,,,
+GS-10D5B724,Q4,NO,,,
+GS-10D5B724,Q5,NO,,,
+GS-10D5B724,Q6,NO,,,
+GS-10D5B724,Q7,YES,When investigating security incidents that require analyzing Ethereum smart contract vulnerabilities,The text explicitly instructs manual exploration to find vulnerabilities in smart contracts before deployment.,onchain
+GS-10D5B724,Q8,NO,,,
+GS-10D5B724,Q9,YES,Slither performs fast static analysis using an intermediate representation to detect over 90 vulnerability patterns,"The text instructs the use of static analysis tools to detect vulnerabilities, which is a Web3-specific testing technique.",onchain
+GS-1F6FC776,Q1,NO,,No mention of isolated unit testing with test doubles or stubs.,
+GS-1F6FC776,Q2,YES,Runs dual-oracle token scanning on both `tokenIn` and `tokenOut`.,"Testing real junctions with external services (OKX API, GoPlus) for token risk analysis.",offchain_web3
+GS-1F6FC776,Q3,YES,"Guardian calls `slot0()`, `liquidity()`, `ticks()`, and `tickSpacing()` on the pool contract and interprets the raw state.",Checking compliance with Uniswap V3 ABI and event-based state reads for AMM pool analysis.,offchain_web3
+GS-1F6FC776,Q4,UNCERTAIN,Invoke `evaluateTrade` before any DEX swap execution on X Layer.,Driving an interface (agent → Guardian → verdict) for swap execution decisions.,offchain_web3
+GS-1F6FC776,Q5,UNCERTAIN,Invoke `evaluateTrade` before any arbitrage execution in a trading loop,Testing the whole deployed system through its external interface (swap execution in trading loops).,offchain_web3
+GS-1F6FC776,Q6,UNCERTAIN,"If anything is uncertain — API timeout, RPC failure, data anomaly — the trade is blocked.",Testing a user scenario (swap execution) with business rules (fail-closed on uncertainty).,offchain_web3
+GS-1F6FC776,Q7,NO,,No explicit mention of manual exploration for problem discovery.,
+GS-1F6FC776,Q8,UNCERTAIN,Invoke `evaluateTrade` before any DEX swap execution on X Layer. No exceptions.,Implicit automation requirement for security checks in a deployed system (agent + Guardian).,offchain_web3
+GS-1F6FC776,Q9,UNCERTAIN,"8-variant invariant fuzzer: zero-args, max-uint256, half/double/10x amounts, byte-flip, truncation",Web3-specific practice: invariant fuzzing for transaction simulation.,offchain_web3
+GS-2CD3DBBF,Q1,NO,,No instruction to test isolated units with test doubles.,
+GS-2CD3DBBF,Q2,NO,,No instruction to test real junctions with external parts like databases or networks.,
+GS-2CD3DBBF,Q3,YES,Utilize Action-State Differential Verification (taking pre- and post-trigger state snapshots in a local fork like Foundry) to definitively prove exploitability.,"Instructs verifying contract behavior against shared interfaces (e.g., ABI, state snapshots) to confirm exploitability.",onchain
+GS-2CD3DBBF,Q4,NO,,"No instruction to drive an interface (GUI, REST, CLI) for testing.",
+GS-2CD3DBBF,Q5,NO,,No instruction to test the whole deployed system through its external interface.,
+GS-2CD3DBBF,Q6,NO,,No instruction to test user scenarios or business rules from a user's perspective.,
+GS-2CD3DBBF,Q7,YES,"Explicitly state so, fall back to manual review, and mark findings as *manual review, not tool-confirmed*.",Instructs explicit manual exploration to find problems not covered by automated tools.,onchain
+GS-2CD3DBBF,Q8,UNCERTAIN,Leverage Foundry/Echidna in a Generate-Repair-Execute (GRE) loop to compile and test Proofs of Concept,Instructs running tests with a named runner (Foundry/Echidna) in an automated loop.,onchain
+GS-2CD3DBBF,Q9,YES,the MCP tools `evm_compile_and_diagnose` and `evm_run_tests` (structured failures with fuzz counterexamples),"Instructs fuzzing and invariant/property tests (e.g., fuzz counterexamples) for Web3-specific testing.",onchain
+GS-3154AE58,Q1,NO,,The text does not instruct testing an isolated unit with test doubles.,
+GS-3154AE58,Q2,NO,,"The text does not instruct testing a real junction with an external part (e.g., network, filesystem).",
+GS-3154AE58,Q3,NO,,The text does not instruct checking consumer-provider interface compliance.,
+GS-3154AE58,Q4,NO,,"The text does not instruct driving an interface (GUI, REST, CLI) for testing.",
+GS-3154AE58,Q5,NO,,The text does not instruct testing the whole deployed system through its external interface.,
+GS-3154AE58,Q6,NO,,The text does not instruct testing user scenarios or business rules from the user's perspective.,
+GS-3154AE58,Q7,NO,,The text does not instruct explicit manual exploration to find problems.,
+GS-3154AE58,Q8,NO,,The text does not instruct running tests with a named runner or in CI.,
+GS-3154AE58,Q9,NO,,"The text does not instruct Web3-specific testing practices like fork testing, fuzzing, or formal verification.",
+GS-390AE39F,Q1,UNCERTAIN,forge test --match-test testDeposit,Instructs testing isolated units (individual tests) with filtering capabilities.,onchain
+GS-390AE39F,Q2,UNCERTAIN,forge test --fork-url $RPC_URL,Instructs integration testing by connecting to a real external network state via fork.,onchain
+GS-390AE39F,Q3,NO,,"No explicit instruction to test consumer-provider interface compliance (e.g., ABI/ERC checks).",
+GS-390AE39F,Q4,NO,,"No explicit UI/CLI-driven interface testing (e.g., `cast` usage is for direct contract interaction, not UI).",
+GS-390AE39F,Q5,YES,forge script script/Deploy.s.sol --rpc-url sepolia --broadcast --verify,Instructs end-to-end deployment and verification of the entire system through its external interface.,onchain
+GS-390AE39F,Q6,UNCERTAIN,"function test_RevertWhen_Unauthorized() public { vm.expectRevert(""Unauthorized""); ... }",Instructs user-centric business rule testing via explicit test case for unauthorized access.,onchain
+GS-390AE39F,Q7,NO,,"No explicit manual exploration instructions (e.g., 'check on testnet').",
+GS-390AE39F,Q8,UNCERTAIN,forge test,Instructs automated testing via the `forge test` command.,onchain
+GS-390AE39F,Q9,UNCERTAIN,forge test --gas-report,"Instructs gas testing, a Web3-specific practice.",onchain
+GS-3ABAC1E8,Q1,NO,,,
+GS-3ABAC1E8,Q2,NO,,,
+GS-3ABAC1E8,Q3,NO,,,
+GS-3ABAC1E8,Q4,NO,,,
+GS-3ABAC1E8,Q5,NO,,,
+GS-3ABAC1E8,Q6,NO,,,
+GS-3ABAC1E8,Q7,NO,,,
+GS-3ABAC1E8,Q8,UNCERTAIN,"node ""${CLAUDE_PLUGIN_ROOT}/skills/x-follow/tests/run-tests.cjs""",The text instructs running tests using a named test runner (`run-tests.cjs`).,web2
+GS-3ABAC1E8,Q9,NO,,,
+GS-4ED28B40,Q1,NO,,,
+GS-4ED28B40,Q2,YES,"Build the action — `POST /v1/actions/enter` with `{ yieldId, address, arguments }` (amounts are human-readable strings, not wei). **Returns HTTP 201** with a `transactions[]` array.","The text instructs the agent to interact with an external API endpoint (`POST /v1/actions/enter`) and process its response (`transactions[]`), which qualifies as integration testing with an external service.",offchain_web3
+GS-4ED28B40,Q3,NO,,,
+GS-4ED28B40,Q4,YES,"Sign + broadcast each transaction — iterate `transactions[]` in **`stepIndex` order**; for each, parse and sign its `unsignedTransaction` with the wallet for that chain, then broadcast.","The text instructs the agent to drive an interface (API calls → transaction signing → broadcasting), which aligns with UI/CLI-driven testing.",offchain_web3
+GS-4ED28B40,Q5,YES,1. **Discover** — `GET /v1/yields?network=<network>&token=<token>` to find a yield id.,The text instructs the agent to test the whole deployed system through its external interface by following a sequence of API calls.,offchain_web3
+GS-4ED28B40,Q6,YES,Poll to confirm — `GET /v1/transactions/{id}` until status is `CONFIRMED` (there are no webhooks — poll with backoff).,"The text instructs the agent to test a user scenario (transaction lifecycle) from the user's perspective, including error handling (polling with backoff).",offchain_web3
+GS-4ED28B40,Q7,NO,,,
+GS-4ED28B40,Q8,NO,,,
+GS-4ED28B40,Q9,NO,,,
+GS-5D5BD062,Q1,NO,,No instructions for isolated unit testing with test doubles.,
+GS-5D5BD062,Q2,NO,,No instructions for integration testing with external services like databases or networks.,
+GS-5D5BD062,Q3,NO,,"No instructions for contract testing (e.g., ABI/ERC compliance).",
+GS-5D5BD062,Q4,NO,,"No instructions for UI testing (e.g., GUI, REST, or CLI interaction).",
+GS-5D5BD062,Q5,NO,,No instructions for end-to-end testing of deployed systems.,
+GS-5D5BD062,Q6,NO,,No instructions for acceptance testing from a user's perspective.,
+GS-5D5BD062,Q7,NO,,No explicit instructions for manual exploratory testing.,
+GS-5D5BD062,Q8,NO,,No instructions for running tests with a named runner or in CI.,
+GS-5D5BD062,Q9,NO,,"No instructions for Web3-specific testing (e.g., fork testing, fuzzing).",
+GS-67802516,Q1,NO,,,
+GS-67802516,Q2,NO,,,
+GS-67802516,Q3,NO,,,
+GS-67802516,Q4,NO,,,
+GS-67802516,Q5,NO,,,
+GS-67802516,Q6,NO,,,
+GS-67802516,Q7,NO,,,
+GS-67802516,Q8,NO,,,
+GS-67802516,Q9,NO,,,
+GS-70BC4162,Q1,NO,,,
+GS-70BC4162,Q2,NO,,,
+GS-70BC4162,Q3,NO,,,
+GS-70BC4162,Q4,NO,,,
+GS-70BC4162,Q5,NO,,,
+GS-70BC4162,Q6,NO,,,
+GS-70BC4162,Q7,NO,,,
+GS-70BC4162,Q8,NO,,,
+GS-70BC4162,Q9,NO,,,
+GS-73CEACC6,Q1,NO,,No mention of isolated unit testing with test doubles or mocked dependencies.,
+GS-73CEACC6,Q2,UNCERTAIN,Tests: free endpoint → 402 response → signed payment → content delivery.,"Instructs testing a real junction between client and server components, simulating a payment flow.",offchain_web3
+GS-73CEACC6,Q3,NO,,"No instructions to verify shared interfaces between consumer and provider (e.g., ABI/ERC compliance).",
+GS-73CEACC6,Q4,YES,Use it like regular fetch — payments happen automatically,Instructs driving an interface (HTTP client) with input (request) and resulting state (response).,offchain_web3
+GS-73CEACC6,Q5,UNCERTAIN,node scripts/test-e2e.js,Instructs testing the whole deployed system through its external interface (HTTP API) via a dedicated script.,offchain_web3
+GS-73CEACC6,Q6,UNCERTAIN,Tests: free endpoint → 402 response → signed payment → content delivery.,Instructs testing a user scenario (paying for a service) from the user's perspective.,offchain_web3
+GS-73CEACC6,Q7,NO,,No explicit manual exploration instructions; testing is automated.,
+GS-73CEACC6,Q8,UNCERTAIN,"# Run full end-to-end test (server + client, automated)","Instructs running tests with a named script (`test-e2e.js`), implying automation.",offchain_web3
+GS-73CEACC6,Q9,NO,,"No mention of fork testing, fuzzing, invariant tests, or formal verification.",
+GS-7B0CFE5B,Q1,YES,"Define the trait method, function signature, or ABI and write a test that compiles and fails against it *before* any implementation.","Instructs writing a failing test for an isolated unit (trait/function/ABI) before implementation, using test doubles (the 'contract' defined by the signature).",onchain
+GS-7B0CFE5B,Q2,NO,,"No explicit instruction to test real junctions with external parts (e.g., contracts ↔ contracts, RPC, or services).",
+GS-7B0CFE5B,Q3,YES,The type is the spec; the test is the proof.,Instructs verifying consumer-provider compliance via a shared interface (ABI/trait) through tests.,onchain
+GS-7B0CFE5B,Q4,NO,,"No explicit instruction to drive an interface (GUI, REST, CLI) with input → action → state checks.",
+GS-7B0CFE5B,Q5,YES,"Migrate one consumer per commit/PR, with test parity.",Instructs testing the whole deployed system (user → dApp → contract → indexer) through staged consumer migrations.,offchain_web3
+GS-7B0CFE5B,Q6,YES,Write down each one and treat it as a binding commitment that tests of the happy path do not protect:,"Instructs testing user scenarios/business rules (e.g., revert strings, event order) from the user's perspective.",onchain
+GS-7B0CFE5B,Q7,NO,,No explicit instruction for manual exploratory testing; focuses on automated checks and ADRs.,
+GS-7B0CFE5B,Q8,UNCERTAIN,"Run `cargo build` is clean with the deprecated item deleted (no remaining call sites),","Instructs automated checks (e.g., `cargo build`) as part of CI-like gates before removal.",web2
+GS-7B0CFE5B,Q9,UNCERTAIN,"Append new storage slots only — never reorder, retype, or remove an existing slot (especially behind a proxy).",Instructs Web3-specific practices like gas testing (storage slot management) and invariant checks (Hyrum's Law).,onchain
+GS-8E9F15CE,Q1,NO,,The text does not instruct the agent to write or run unit tests; it only identifies edge cases for testing.,
+GS-8E9F15CE,Q2,NO,,"No instructions to test real junctions with external parts (e.g., databases, networks).",
+GS-8E9F15CE,Q3,NO,,No instructions to verify shared interfaces or ABI compliance.,
+GS-8E9F15CE,Q4,NO,,"No instructions to drive an interface (GUI, REST, CLI) or use tools like `cast`.",
+GS-8E9F15CE,Q5,NO,,No instructions to test a deployed system through its external interface.,
+GS-8E9F15CE,Q6,NO,,No instructions to test user scenarios or business rules from a user's perspective.,
+GS-8E9F15CE,Q7,NO,,No explicit instructions for manual exploration or testing on testnet/dApp.,
+GS-8E9F15CE,Q8,NO,,"No instructions to run tests with a named runner or in CI (e.g., `forge test`, `hardhat test`).",
+GS-8E9F15CE,Q9,NO,,"No instructions for Web3-specific testing (fork testing, fuzzing, gas testing).",
+GS-A8AE3C72,Q1,NO,,No instructions for isolated unit testing with test doubles.,
+GS-A8AE3C72,Q2,NO,,"No instructions for testing real junctions with external parts (e.g., APIs, databases).",
+GS-A8AE3C72,Q3,NO,,"No instructions for checking consumer-provider interface compliance (e.g., ABI/ERC).",
+GS-A8AE3C72,Q4,NO,,"No instructions for driving an interface (GUI, REST, CLI) with input → action → state.",
+GS-A8AE3C72,Q5,NO,,No instructions for testing the whole deployed system through its external interface.,
+GS-A8AE3C72,Q6,NO,,No instructions for testing user scenarios or business rules from a user's perspective.,
+GS-A8AE3C72,Q7,NO,,No explicit instructions for manual exploration to find problems not covered by automated tests.,
+GS-A8AE3C72,Q8,NO,,No instructions for running tests with a named runner or in CI.,
+GS-A8AE3C72,Q9,NO,,"No instructions for Web3-specific testing (e.g., fork testing, fuzzing, gas testing).",
+GS-AF521793,Q1,NO,,No instruction to test isolated units with test doubles; the skill focuses on end-to-end QA execution.,
+GS-AF521793,Q2,YES,"Execute all steps - run dependency fixtures first, then the main fixture, all in one browser session",Instructs testing real junctions (fixtures with dependencies) in an off-chain Web3 context (browser automation).,offchain_web3
+GS-AF521793,Q3,NO,,No instruction to verify shared interfaces (ABI/ERC compliance) between consumer and provider.,
+GS-AF521793,Q4,YES,agent-browser --session qabot --profile ~/.agent-browser/profiles/qabot open <url>,"Instructs driving an interface (browser automation) with input → action → resulting state (e.g., wallet connection).",offchain_web3
+GS-AF521793,Q5,UNCERTAIN,"Use when user says 'qa test', 'run qabot', or when running automated QA.",Instructs testing the whole deployed system through its external interface (user commands).,offchain_web3
+GS-AF521793,Q6,YES,steps: - name: Step name instruction: Natural language instruction for agent-browser expected: What should be true after this step,"Instructs testing user scenarios/business rules (e.g., trade page functionality) from the user's perspective via fixtures.",offchain_web3
+GS-AF521793,Q7,UNCERTAIN,Interactive mode helps craft fixtures. Ask what to test,Explicitly instructs manual exploration (interactive mode) to refine test cases not covered by automated fixtures.,offchain_web3
+GS-AF521793,Q8,YES,Execute the fixture - run the tests via agent-browser,Instructs running tests with a named runner (`agent-browser`).,offchain_web3
+GS-AF521793,Q9,NO,,"No mention of Web3-specific testing techniques (fork testing, fuzzing, gas testing, etc.).",
+GS-B0D64E4B,Q1,NO,,No explicit instruction to test isolated units with test doubles.,
+GS-B0D64E4B,Q2,UNCERTAIN,multi-target addresses for `-t`,Instructs testing real junctions with external parts (multi-target addresses in onchain fork).,onchain
+GS-B0D64E4B,Q3,UNCERTAIN,generated Foundry PoCs (`work_dir/vulnerabilities/*.t.sol`),Instructs checking consumer-provider compliance via generated PoC contracts.,onchain
+GS-B0D64E4B,Q4,NO,,"No explicit instruction to drive an interface (GUI, REST, CLI) for UI testing.",
+GS-B0D64E4B,Q5,UNCERTAIN,Replay the minimized trace (`*_replayable`) and confirm determinism.,Instructs testing the whole deployed system through replaying exploit traces.,onchain
+GS-B0D64E4B,Q6,YES,Document the hypothesis class it matches and the smallest code-level root cause.,"Instructs testing user scenarios/business rules (e.g., fund-loss exploits, invariant violations) from a user's perspective.",onchain
+GS-B0D64E4B,Q7,YES,"Use ItyFuzz outputs as *evidence*, then widen/narrow the search based on what the evidence says.",Explicit manual exploration to find problems not covered by automated tests.,onchain
+GS-B0D64E4B,Q8,UNCERTAIN,Use the wrapper for deterministic logging: `python skills/ityfuzz-protocol-hunter/scripts/ityfuzz_run_evm.py`,Instructs running tests with a named runner for reproducibility.,offchain_web3
+GS-B0D64E4B,Q9,YES,Deep smart-contract fuzzing and exploit-sequence generation with ItyFuzz for EVM protocols,Instructs Web3-specific testing techniques like fuzzing and exploit-sequence generation.,onchain
+GS-B91B554A,Q1,NO,,No explicit instruction to test isolated units with test doubles.,
+GS-B91B554A,Q2,NO,,"No explicit instruction to test real junctions with external parts like databases, networks, or other services.",
+GS-B91B554A,Q3,NO,,No instruction to check compliance with shared interfaces (ABI/ERC) between consumer and provider.,
+GS-B91B554A,Q4,NO,,"No explicit instruction to drive an interface (GUI, REST, CLI) with input → action → resulting state.",
+GS-B91B554A,Q5,NO,,No explicit instruction to test the whole deployed system through its external interface.,
+GS-B91B554A,Q6,NO,,No explicit instruction to test user scenarios or business rules from the user's point of view.,
+GS-B91B554A,Q7,NO,,No explicit instruction for manual exploration to find problems not covered by automated tests.,
+GS-B91B554A,Q8,NO,,No explicit instruction to run tests with a named runner or in CI.,
+GS-B91B554A,Q9,NO,,"No explicit instruction for Web3-specific testing like fork testing, fuzzing, or formal verification.",
+GS-BA197833,Q1,NO,,No instructions for testing isolated units or mocking dependencies.,
+GS-BA197833,Q2,NO,,"No instructions for testing real junctions with external parts like databases, networks, or services.",
+GS-BA197833,Q3,NO,,No instructions for checking shared interfaces or contract compliance with ABIs/ERCs.,
+GS-BA197833,Q4,NO,,"No instructions for driving an interface (GUI, REST, CLI) or testing user actions.",
+GS-BA197833,Q5,NO,,No instructions for testing the whole deployed system through its external interface.,
+GS-BA197833,Q6,NO,,No instructions for testing user scenarios or business rules from a user's perspective.,
+GS-BA197833,Q7,NO,,No explicit instructions for manual exploration to find problems not covered by automated tests.,
+GS-BA197833,Q8,NO,,No instructions for running tests with a named runner or in CI.,
+GS-BA197833,Q9,NO,,"No instructions for Web3-specific testing like fork testing, fuzzing, or gas testing.",
+GS-BC140DEA,Q1,NO,,The text describes workflows and design principles but does not instruct testing an isolated unit or using test doubles.,
+GS-BC140DEA,Q2,NO,,"No instructions for testing real junctions with external parts (e.g., databases, networks, or services).",
+GS-BC140DEA,Q3,NO,,No guidance on checking shared interfaces or contract compliance with ABIs/ERCs.,
+GS-BC140DEA,Q4,NO,,"No instructions for driving an interface (GUI, REST, CLI) or using tools like `cast` for testing.",
+GS-BC140DEA,Q5,NO,,No mention of testing the whole deployed system through its external interface.,
+GS-BC140DEA,Q6,NO,,No instructions for testing user scenarios or business rules from a user's perspective.,
+GS-BC140DEA,Q7,NO,,No explicit instructions for manual exploration to find problems not covered by automated tests.,
+GS-BC140DEA,Q8,NO,,"No mention of running tests with a named runner or in CI (e.g., `forge test`, `hardhat test`).",
+GS-BC140DEA,Q9,NO,,"No instructions for Web3-specific testing like fork testing, fuzzing, or gas testing.",
+GS-BC5C90CB,Q1,NO,,The text does not instruct testing isolated units or provide any imperative for unit testing.,
+GS-BC5C90CB,Q2,NO,,"No instructions for testing real junctions with external parts (e.g., databases, networks) are provided.",
+GS-BC5C90CB,Q3,NO,,"No guidance on checking shared interfaces between consumer and provider (e.g., ABI/ERC compliance).",
+GS-BC5C90CB,Q4,NO,,"No instructions for driving an interface (GUI, REST, CLI) or testing user actions.",
+GS-BC5C90CB,Q5,NO,,No instructions for testing the whole deployed system through its external interface.,
+GS-BC5C90CB,Q6,NO,,No instructions for testing user scenarios or business rules from a user's perspective.,
+GS-BC5C90CB,Q7,NO,,No explicit instructions for manual exploration to find problems not covered by automated tests.,
+GS-BC5C90CB,Q8,NO,,No instructions for running tests with a named runner or in CI.,
+GS-BC5C90CB,Q9,NO,,"No instructions for Web3-specific testing (e.g., fork testing, fuzzing, formal verification).",
+GS-C9AB254C,Q1,NO,,The text does not instruct testing isolated units with test doubles.,
+GS-C9AB254C,Q2,NO,,The text does not instruct testing real junctions with external parts like databases or networks.,
+GS-C9AB254C,Q3,NO,,The text does not instruct checking consumer-provider interface compliance.,
+GS-C9AB254C,Q4,NO,,The text does not instruct driving an interface with input-action-state testing.,
+GS-C9AB254C,Q5,NO,,The text does not instruct testing the whole deployed system through its external interface.,
+GS-C9AB254C,Q6,NO,,The text does not instruct testing user scenarios or business rules from a user's perspective.,
+GS-C9AB254C,Q7,NO,,The text does not instruct explicit manual exploration to find problems.,
+GS-C9AB254C,Q8,NO,,The text does not instruct running tests with a named runner or in CI.,
+GS-C9AB254C,Q9,UNCERTAIN,Manual bounce handlers required,"Instructs handling asynchronous message failures, which is a Web3-specific testing requirement.",onchain
+GS-C9FA6536,Q1,NO,,The text does not instruct testing an isolated unit or mention test doubles.,
+GS-C9FA6536,Q2,NO,,"No instructions to test real junctions with external parts like databases, networks, or other services.",
+GS-C9FA6536,Q3,NO,,No instructions to check compliance with shared interfaces or ABIs.,
+GS-C9FA6536,Q4,NO,,"No instructions to drive an interface (GUI, REST, CLI) or use tools like `cast`.",
+GS-C9FA6536,Q5,NO,,No instructions to test the whole deployed system through its external interface.,
+GS-C9FA6536,Q6,NO,,No instructions to test user scenarios or business rules from a user's perspective.,
+GS-C9FA6536,Q7,NO,,No explicit manual exploration instructions for finding problems not covered by automated tests.,
+GS-C9FA6536,Q8,NO,,No instructions to run tests with a named runner or in CI.,
+GS-C9FA6536,Q9,NO,,"No instructions for Web3-specific testing like fork testing, fuzzing, or gas testing.",
+GS-CC3D0E75,Q1,NO,,No explicit instruction to test an isolated unit with test doubles.,
+GS-CC3D0E75,Q2,NO,,"No explicit instruction to test real junctions with external parts (e.g., contract ↔ contract or backend ↔ RPC).",
+GS-CC3D0E75,Q3,NO,,"No instruction to check consumer-provider interface compliance (e.g., ABI/ERC compliance).",
+GS-CC3D0E75,Q4,NO,,"No instruction to drive an interface (e.g., input → action → resulting state via GUI, REST, or CLI).",
+GS-CC3D0E75,Q5,NO,,"No instruction to test the whole deployed system through its external interface (e.g., user → front-end → wallet → contract).",
+GS-CC3D0E75,Q6,NO,,"No instruction to test user scenarios or business rules from the user's point of view (e.g., given/when/then).",
+GS-CC3D0E75,Q7,NO,,"No explicit instruction for manual exploratory testing (e.g., sessions on testnet or in the dApp).",
+GS-CC3D0E75,Q8,UNCERTAIN,Write tests in `test/`,"Instructs to write tests in a `test/` directory, implying automated testing with a runner (e.g., Hardhat or Foundry).",onchain
+GS-CC3D0E75,Q9,UNCERTAIN,Gas-optimized functions,"Instructs to validate gas optimization, which is a Web3-specific testing concern.",onchain
+GS-DB332250,Q1,NO,,No explicit instruction to test isolated units with test doubles.,
+GS-DB332250,Q2,NO,,"No explicit instruction to test real junctions with external parts like databases, networks, or other services.",
+GS-DB332250,Q3,NO,,"No explicit instruction to check consumer-provider interface compliance (e.g., ABI/ERC compliance).",
+GS-DB332250,Q4,NO,,"No explicit instruction to drive an interface (GUI, REST, CLI) for UI testing.",
+GS-DB332250,Q5,NO,,No explicit instruction to test the whole deployed system through its external interface.,
+GS-DB332250,Q6,NO,,No explicit instruction to test user scenarios or business rules from a user's perspective.,
+GS-DB332250,Q7,NO,,No explicit instruction for manual exploration to find problems not covered by automated tests.,
+GS-DB332250,Q8,NO,,No explicit instruction to run tests with a named runner or in CI.,
+GS-DB332250,Q9,YES,Fuzz test all math. Fork-test any external protocol integration.,Explicit instructions for Web3-specific testing practices like fuzzing and fork testing.,onchain
+GS-EC07CAEF,Q1,NO,,No explicit instruction to test isolated units with test doubles.,
+GS-EC07CAEF,Q2,YES,"Audit, exploit, and harden protocols that live *above* L1 — payment channels, rollups, sidechains, bridges, account abstraction, and data-availability layers.","Instructs testing real junctions with external components like sequencers, provers, and bridges.",onchain
+GS-EC07CAEF,Q3,YES,"Cross-chain bridge pre-deploy audit: lock-mint/burn-mint wrapper review, validator-set membership changes, signature aggregation soundness, message-replay protection across chain IDs, and rate-limiting on the wrapper contract.","Instructs checking compliance with shared interfaces (e.g., bridge contracts, validator sets).",onchain
+GS-EC07CAEF,Q4,YES,reproduce the exploit on an anvil fork at the pre-incident block,Instructs driving an interface (CLI tool `anvil`) to test state transitions.,offchain_web3
+GS-EC07CAEF,Q5,YES,"Reproduce the exploit on an anvil fork at the pre-incident block, identify the root cause, and write a regression test against the patched contract.",Instructs testing the whole deployed system (bridge + sequencer + validator) through its external interface.,offchain_web3
+GS-EC07CAEF,Q6,YES,"12 structured test cases (TC-L2-001 through TC-L2-012) across Static Analysis, Bridge Replay, Sequencer/Fraud-Proof Analysis, ZK Soundness, Lightning/HTLC, Account Abstraction, and DA Layer categories.","Instructs testing user scenarios/business rules (e.g., replay attacks, fraud proofs) from a user/system perspective.",onchain
+GS-EC07CAEF,Q7,YES,Local lab setup (Foundry + Anvil + OP Bedrock devnet + Arbitrum Nitro dev node + bridge simulator).,"Instructs explicit manual exploration (e.g., setting up devnets, simulating exploits).",offchain_web3
+GS-EC07CAEF,Q8,UNCERTAIN,write a regression test against the patched contract,"Instructs automation via named test runners (e.g., regression tests in CI).",offchain_web3
+GS-EC07CAEF,Q9,UNCERTAIN,"Slither/Echidna harnesses, and replay attack templates for every major L2 incident class",Instructs Web3-specific testing like fuzzing and invariant tests.,onchain
+GS-F3D0DDBE,Q1,NO,,No explicit instruction to test isolated units with test doubles.,
+GS-F3D0DDBE,Q2,NO,,"No explicit instruction to test real junctions with external parts like databases, networks, or other services.",
+GS-F3D0DDBE,Q3,NO,,"No explicit instruction to check consumer-provider interface compliance (e.g., ABI/ERC).",
+GS-F3D0DDBE,Q4,NO,,"No explicit instruction to drive an interface (GUI, REST, CLI) for testing.",
+GS-F3D0DDBE,Q5,NO,,No explicit instruction to test the whole deployed system through its external interface.,
+GS-F3D0DDBE,Q6,NO,,No explicit instruction to test user scenarios or business rules from the user's point of view.,
+GS-F3D0DDBE,Q7,NO,,No explicit instruction for manual exploratory testing.,
+GS-F3D0DDBE,Q8,NO,,No explicit instruction to run tests with a named runner or in CI.,
+GS-F3D0DDBE,Q9,NO,,"No explicit instruction for Web3-specific testing like fork testing, fuzzing, or formal verification.",
+GS-FB9148D4,Q1,NO,,The text does not instruct testing an isolated unit with test doubles.,
+GS-FB9148D4,Q2,NO,,"The text does not instruct testing a real junction with an external part (e.g., DB, network, filesystem).",
+GS-FB9148D4,Q3,NO,,The text does not instruct checking consumer-provider interface compliance.,
+GS-FB9148D4,Q4,NO,,"The text does not instruct driving an interface (GUI, REST, CLI) for testing.",
+GS-FB9148D4,Q5,NO,,The text does not instruct testing the whole deployed system through its external interface.,
+GS-FB9148D4,Q6,NO,,The text does not instruct testing user scenarios or business rules from a user's perspective.,
+GS-FB9148D4,Q7,NO,,The text does not instruct explicit manual exploration to find problems.,
+GS-FB9148D4,Q8,NO,,The text does not instruct running tests with a named runner or in CI.,
+GS-FB9148D4,Q9,NO,,"The text does not instruct Web3-specific testing (e.g., fork testing, fuzzing, gas testing).",
+GS-FC1A561E,Q1,NO,,No explicit instruction to test isolated units with test doubles.,
+GS-FC1A561E,Q2,NO,,"No explicit instruction to test real junctions with external parts like DB, network, or other services.",
+GS-FC1A561E,Q3,NO,,"No explicit instruction to test consumer-provider interface compliance (e.g., ABI/ERC compliance).",
+GS-FC1A561E,Q4,NO,,"No explicit instruction to drive an interface (GUI, REST, CLI) for testing.",
+GS-FC1A561E,Q5,NO,,No explicit instruction to test the whole deployed system through its external interface.,
+GS-FC1A561E,Q6,NO,,No explicit instruction to test user scenarios or business rules from a user's perspective.,
+GS-FC1A561E,Q7,NO,,No explicit instruction for manual exploration in the text.,
+GS-FC1A561E,Q8,UNCERTAIN,Slither (all detectors enabled),The document instructs using automated tools like Slither in CI/CD.,onchain
+GS-FC1A561E,Q9,UNCERTAIN,"Echidna (fuzzing, 10k+ runs)",The document instructs using fuzzing techniques for testing.,onchain

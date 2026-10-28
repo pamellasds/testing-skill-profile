@@ -1,0 +1,50 @@
+{
+  "modelo": "ministral-14b-2512",
+  "temperatura": 0,
+  "instrumento_sha256": "520415df15746d90cde8c3df78ce68def700fa1d08733b7342405509902a5b36",
+  "prompt_correcao_sha256": "981c1436a6b2609eaa429a8e3d3f4fee11649a92f12e23f5dfc1db7c719e5753",
+  "conjunto": "calibracao_30",
+  "execucoes": {
+    "exec1": {
+      "skills": 30,
+      "classe_dominio": {
+        "onchain": 8,
+        "web2_incidental": 11,
+        "offchain_web3": 5,
+        "misto": 6
+      },
+      "yes_por_camada": {
+        "Q1": 1,
+        "Q2": 4,
+        "Q3": 4,
+        "Q4": 4,
+        "Q5": 4,
+        "Q6": 6,
+        "Q7": 5,
+        "Q8": 1,
+        "Q9": 5
+      },
+      "praticas": {
+        "P7_good": 1,
+        "P5_good": 7,
+        "P1_bad": 6,
+        "P10_good": 27,
+        "P2_good": 10,
+        "P3_good": 11,
+        "P4_good": 6,
+        "P8_bad": 5,
+        "P9_bad": 6,
+        "P6_bad": 5,
+        "P5_bad": 2,
+        "P9_good": 5,
+        "P6_good": 5,
+        "P8_good": 4,
+        "P10_bad": 1,
+        "P1_good": 4
+      },
+      "itens_com_evidencia": 260,
+      "itens_uncertain": 121,
+      "skills_com_2a_tentativa": 29
+    }
+  }
+}

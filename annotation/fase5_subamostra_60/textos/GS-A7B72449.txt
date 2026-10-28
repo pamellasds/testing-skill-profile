@@ -1,0 +1,133 @@
+NAME: meteora-agent
+DESCRIPTION: WORKFLOW SKILL — Panduan lengkap bagi agent untuk membangun aplikasi analisis liquidity pool meteora.ag dengan langkah terstruktur dan pencegahan kesalahan.
+
+---
+name: meteora-agent
+description: "WORKFLOW SKILL — Panduan lengkap bagi agent untuk membangun aplikasi analisis liquidity pool meteora.ag dengan langkah terstruktur dan pencegahan kesalahan."
+version: v3.63.5-Hardened
+---
+
+## 🛡️ ESM RUNTIME RESOLUTION MANDATE (v3.63.5-Hardened)
+- **Mandatory Extension**: Seluruh import relatif di dalam direktori `api/` (Serverless Functions) **WAJIB** menggunakan ekstensi `.js` (contoh: `import { data } from './database.js'`).
+- **Type Segregation**: Gunakan `import type` untuk seluruh referensi TypeScript guna memastikan *clean stripping* saat runtime.
+- **Pre-Fix Audit**: Sebelum melakukan modifikasi arsitektural, jalankan `node scripts/audits/check_sync_status.cjs` untuk memastikan paritas sistem.
+- **Parity Verification**: Gunakan endpoint `/api/admin/parity-audit` untuk verifikasi akhir setelah implementasi kode baru.
+
+# Skill: meteora-agent
+
+## Use When
+- Membangun aplikasi analisis liquidity pool berbasis data `meteora.ag`
+- Membutuhkan workflow step-by-step dari setup hingga deployment
+- Harus menjaga keamanan konfigurasi dan meminimalkan kesalahan implementasi
+- Perlu membuat dokumentasi, testing, dan risiko compliance
+
+## Goal
+Bantu agent membuat aplikasi backend + dashboard yang:
+- Mengambil data dari API resmi `meteora.ag`
+- Menyimpan dan menganalisis harga, volume, likuiditas, dan aktivitas buy/sell
+- Mendeteksi potensi scam / rug pull
+- Memberi alert dan rekomendasi risiko
+- Menyediakan dokumentasi lengkap dan SOP operasional
+
+## Recommended Structure
+1. `backend/`
+   - `collector/`
+   - `analysis/`
+   - `storage/`
+   - `alerts/`
+   - `api/`
+2. `frontend/`
+   - dashboard display
+3. `infrastructure/`
+   - Docker, deployment scripts
+4. `docs/`
+   - PRD, roadmap, task board, SOP
+
+## Step-by-Step Workflow
+
+### 1. Setup Awal
+- Buat repository dan struktur folder yang jelas
+- Tambahkan `README.md`, `.gitignore`, dan `LICENSE`
+- Pilih stack backend (Python/Node.js) dan frontend (React/Next.js)
+- Siapkan `.env.example` untuk konfigurasi API, database, dan notifikasi
+- Pastikan tidak ada kredensial hardcoded di kode
+
+### 2. Riset dan Koneksi API
+- Cari API dokumentasi `meteora.ag` atau gunakan endpoint resmi yang valid
+- Identifikasi data yang dibutuhkan: harga, volume, buy/sell, liquidity, metadata token
+- Perhatikan rate limit, auth, dan Terms of Service
+- Buat konektor API dengan retry dan backoff
+- Validasi response sebelum data diproses
+
+### 3. Data Pipeline dan Storage
+- Definisikan model data internal untuk harga, volume, liquidity, dan metadata token
+- Implementasikan normalisasi dan validasi data
+- Gunakan database yang tepat: PostgreSQL / TimescaleDB untuk time-series
+- Simpan data historis dan metadata pool/token
+- Gunakan cache (misal Redis) bila perlu untuk data real-time
+
+### 4. Analisis dan Scoring
+- Bangun modul analisis volume, buy/sell imbalance, dan momentum
+- Tambahkan analisis likuiditas, slippage, dan volatilitas
+- Rancang skor risiko dengan level `low`, `medium`, `high`, `suspected scam`
+- Hindari mengandalkan satu metrik tunggal; gunakan kombinasi indikator
+
+### 5. Deteksi Scam / Rug Pull
+- Cek distribusi kepemilikan token besar
+- Verifikasi status lock LP
+- Pantau aktivitas wallet creator / deployer
+- Deteksi pola pump-and-dump, fake volume, dan minting abnormal
+- Jangan buat klaim profit; hanya tampilkan risiko dan indikasi
+
+### 6. Alert dan Notifikasi
+- Buat rule engine untuk memicu alert berdasarkan skor risiko
+- Gunakan notifikasi Slack, Telegram, atau email
+- Sertakan konteks lengkap: token, metrik, trigger rule, dan level risiko
+- Pastikan alert konservatif untuk mengurangi false positives
+
+### 7. Dashboard dan Presentation
+- Buat UI dashboard sederhana tapi informatif
+- Tampilkan grafik harga, volume, liquidity, dan risk score
+- Sertakan daftar alert terbaru dan status token/pool
+- Pastikan refresh data otomatis dan UI responsif
+
+### 8. Testing dan Validation
+- Siapkan unit test untuk konektor API, pipeline, dan analisis
+- Gunakan data historis mock atau snapshot untuk backtesting
+- Validasi hasil alert terhadap kejadian nyata atau simulasi
+- Perbaiki rule dan threshold berdasarkan performa testing
+
+### 9. Dokumentasi dan Operasional
+- Dokumentasikan setup, arsitektur, dan penggunaan
+- Buat SOP untuk deployment, monitoring, dan update rule
+- Tambahkan disclaimer risiko dan catatan compliance
+- Catat semua asumsi dan batasan sistem
+
+## Kesalahan yang Harus Dihindari
+- Hardcode API keys atau kredensial dalam kode
+- Mengabaikan Terms of Service `meteora.ag`
+- Mengimplementasikan trading otomatis tanpa review
+- Menggunakan data tidak diverifikasi untuk alert produksi
+- Menetapkan threshold alert terlalu agresif sebelum backtest
+- Tidak menulis dokumentasi dan SOP operasi
+
+## Quality Safeguards
+- Gunakan environment variables untuk konfigurasi sensitif
+- Terapkan validasi schema pada setiap response API
+- Gunakan logging dan monitoring untuk deteksi error
+- Buat review checklist untuk tiap komponen utama
+- Dokumentasikan asumsi desain dan pilihan teknologi
+
+## Recommended Artifacts
+- `PRD-meteora-agent.md`
+- `App-Plan-meteora-agent.md`
+- `Sprint-1-Roadmap-meteora-agent.md`
+- `Sprint-2-Roadmap-meteora-agent.md`
+- `Sprint-3-Roadmap-meteora-agent.md`
+- `Sprint-4-Roadmap-meteora-agent.md`
+- `Task-Board-meteora-agent.md`
+- `README.md`
+- `.env.example`
+
+## Notes
+Jika tidak tersedia API resmi `meteora.ag`, gunakan mock data untuk prototyping, lalu ganti dengan koneksi resmi sebelum produksi.

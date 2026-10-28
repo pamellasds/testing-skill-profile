@@ -1,0 +1,150 @@
+NAME: create-mollusk-testing
+DESCRIPTION: Rapidly scaffold a Mollusk-based testing framework for Solana programs, establishing deterministic foundations for subsequent operations and validations
+
+---
+name: create-mollusk-testing
+description: Rapidly scaffold a Mollusk-based testing framework for Solana programs, establishing deterministic foundations for subsequent operations and validations
+argument-hint: [create-mollusk-testing]
+allowed-tools:
+  - Read
+  - Grep
+  - Glob
+  - Task
+  - Bash
+---
+
+# Mollusk Testing Framework Setup
+
+**Primary Objective:** For a given Solana program codebase, rapidly and correctly establish a Mollusk-based testing framework with a minimal test case, providing deterministic foundations for subsequent operations and validations.
+
+## When to Use
+
+- The current project contains a Solana program codebase
+- The user explicitly requests creation of a testing framework for the Solana program
+
+## When NOT to Use
+
+- The current project does not contain a Solana program codebase
+- The `tests/` directory already contains a `sailor_test_endpoint.rs` file (indicating the testing framework has already been established)
+
+## Execution Flow
+
+### Step 1: Identify the Program Codebase Directory
+
+First, determine the exact program codebase directory and program name. A typical program directory structure:
+
+```
+src/
+  instructions/
+  states/
+  lib.rs
+Cargo.toml
+Xargo.toml
+```
+
+The `src` directory contains the program source files.
+
+**Important:** For Anchor-based programs, the `Anchor.toml` file exists at the workspace root, which is NOT the program codebase directory. The actual program codebase resides under `programs/<program-name>/`. If multiple programs exist and the user has not specified which one, you MUST halt the current task and prompt the user to select **exactly one** program before proceeding with the framework setup.
+
+Once the program codebase directory is identified, all subsequent commands MUST be executed with this directory as the working directory.
+
+The program name is the `package.name` field in `Cargo.toml`. If `lib.name` is also present, prioritize `lib.name` over `package.name`.
+
+### Step 2: Verify Prerequisites and Install Dependencies
+
+1. Execute `cargo check` in the working directory to verify the program compiles without errors. If compilation fails, HALT the task and instruct the user to resolve the errors before retrying.
+
+2. Search for the `target/sbpf-solana-solana/release` directory:
+   - If it does NOT exist, HALT the task and instruct the user to run `anchor build` or `cargo sbpf-build` first, then retry.
+   - If it exists, capture its absolute path as the SBF output directory for use in subsequent steps.
+
+3. Execute `cargo nextest --version` to verify nextest is installed. If not available, HALT the task and instruct the user to install it via `cargo install cargo-nextest`, then retry.
+
+4. Install Mollusk framework dependencies by executing ALL of the following `cargo add` commands:
+
+```sh
+cargo add --dev mollusk-svm
+cargo add --dev solana-precompiles solana-account solana-pubkey solana-feature-set solana-program solana-sdk
+cargo add --dev mollusk-svm-programs-token
+cargo add --dev spl-associated-token-account-interface
+cargo add --dev spl_token_interface
+```
+
+### Step 3: Create the Testing Framework and Write the Initial Test Case
+
+1. Create the `tests/` directory in the working directory if it does not exist.
+
+2. Create a file named `sailor_test_endpoint.rs` in the `tests/` directory. If **this file already exists**, clear its contents and rewrite from scratch.
+
+3. Implement the initial test function `test_endpoints` in `sailor_test_endpoint.rs`:
+
+```rust
+#[test]
+fn test_endpoints() {
+  // ...
+}
+```
+
+This test function MUST include the following components:
+
+1. **Initialize a Mollusk instance:** `let mut mollusk = Mollusk::new(<program_id>, <program_name>)`
+
+2. **Register additional programs** to the Mollusk environment (Token Program, Associated Token Program, System Program, etc.):
+
+```rust
+let (token_program, token_program_account) = mollusk_svm_programs_token::token::keyed_account();
+let (associated_token_program, associated_token_program_account) = mollusk_svm_programs_token::associated_token::keyed_account();
+let (system_program, system_program_account) = mollusk_svm::program::keyed_account_for_system_program();
+
+mollusk_svm_programs_token::token::add_program(&mut mollusk);
+mollusk_svm_programs_token::associated_token::add_program(&mut mollusk);
+```
+
+3. **Select a minimal instruction** for the test case based on your understanding of the program:
+   - Prioritize initialization instructions as test candidates
+   - Instructions with minimal account requirements are also suitable choices
+
+4. **Prepare instruction data and account inputs** for the selected instruction
+
+5. **Execute the instruction:** `mollusk.process_instruction(&instruction, &accounts)`
+
+6. **Assert the expected outcome:** `assert!(result.program_result.is_ok())`
+
+Refer to [sailor_test_endpoint.rs](./examples/sailor_test_endpoint.rs) as a reference implementation.
+
+### Step 4: Execute, Debug, and Finalize the Test Case
+
+After completing the initial test case, iterate through run-and-fix cycles until the test passes.
+
+First, run `cargo check --test sailor_test_endpoint` to verify the test compiles. If compilation errors occur, analyze the error messages, cross-reference with the codebase source and reference documentation, and correct the test code accordingly.
+
+Once `cargo check` passes, execute the test using:
+
+```sh
+SBF_OUT_DIR="<program-sbf-directory>" cargo nextest r --test sailor_test_endpoint
+```
+
+Replace `<program-sbf-directory>` with the absolute path to the SBF output directory obtained in Step 2.
+
+**Example:**
+```sh
+SBF_OUT_DIR="/opt/ctf/staking/target/sbpf-solana-solana/release" cargo nextest r --test sailor_test_endpoint
+```
+
+Analyze the test results. If the test passes, the task is complete. If the test fails, examine the failure details, cross-reference with the codebase source and reference documentation, and modify the test code accordingly.
+
+Repeat this process until all tests pass.
+
+## References
+
+The following documentation will help you understand the Mollusk framework. Read them in order from top to bottom; consult later references only if earlier ones do not resolve your issue.
+
+### Mollusk Local Documentation
+
+- [Mollusk Basics](./references/blueshift-101.mdx) — An introductory tutorial covering fundamental Mollusk framework usage
+- [Mollusk Advanced](./references/blueshift-advanced.mdx) — An advanced tutorial covering sophisticated Mollusk framework techniques
+- [Mollusk README](./references/mollusk-readme.md) — The official Mollusk framework README with comprehensive overview and primary usage patterns
+
+### Context7 MCP
+
+If the Context7 MCP tool is available, use it to query the https://github.com/anza-xyz/mollusk repository directly for additional detailed information about the Mollusk framework.

@@ -1,0 +1,73 @@
+NAME: zeus-research-frontier
+DESCRIPTION: Load when the task is choosing or scoping research/roadmap work on Zeus — "what should we build next", "where can Zeus advance the state of the art", "is this feature/scheme novel", "can we claim X publicly", picking up stalled work (bip-321, android-16kb-page-size, LSPS7 refund UI, payLightningInvoiceStreaming), or writing external-facing claims (blog posts, release notes, conference talks, comparisons with other wallets). Covers the four maintainer-endorsed research directions (self-custodial UX parity, protocol leadership, multi-backend robustness, privacy leadership), candidate infrastructure problems, and the proof/reproducibility standards required before any public novelty claim.
+
+---
+name: zeus-research-frontier
+description: Load when the task is choosing or scoping research/roadmap work on Zeus — "what should we build next", "where can Zeus advance the state of the art", "is this feature/scheme novel", "can we claim X publicly", picking up stalled work (bip-321, android-16kb-page-size, LSPS7 refund UI, payLightningInvoiceStreaming), or writing external-facing claims (blog posts, release notes, conference talks, comparisons with other wallets). Covers the four maintainer-endorsed research directions (self-custodial UX parity, protocol leadership, multi-backend robustness, privacy leadership), candidate infrastructure problems, and the proof/reproducibility standards required before any public novelty claim.
+---
+
+# Zeus Research Frontier
+
+Open problems where Zeus can advance the state of the art in self-custodial Lightning wallets, plus the standards for claiming anything publicly. Four directions below are maintainer-endorsed (2026-07-06); everything labeled **candidate** or **open** is discovery output, not endorsed roadmap.
+
+## When to use / When NOT to use
+
+**Use this skill when:**
+- Deciding what research or frontier work to pick up next in this repo.
+- Picking up a stalled thread named here (LSPS7 refund UI, `bip-321` branch, `payLightningInvoiceStreaming`, `android-16kb-page-size`, NUT-15 upstreaming).
+- Writing anything external-facing that makes a claim about Zeus (novelty, "first", benchmarks, privacy properties).
+- Evaluating whether a feature idea is genuinely novel vs. already known in the ecosystem.
+
+**Do NOT use this skill for:**
+- *How* to turn a hunch into an accepted change (evidence bar, idea lifecycle) → **zeus-research-methodology**.
+- Concrete analysis recipes (race analysis, dispatch audits, migration proofs) → **zeus-proof-and-analysis-toolkit**.
+- The node-lifecycle-races problem specifically → **zeus-node-lifecycle-campaign** (it has its own executable campaign).
+- Backend capability mechanics and adding an RPC → **zeus-backends-and-capabilities**.
+- Storage/migration changes (several steps below touch defaults or persisted data — those are gated) → **zeus-storage-and-migrations** and **zeus-change-control**.
+- Domain theory (what BOLT12/LSPS/Cashu *are* in depth) → **zeus-lightning-reference**. This skill defines terms only enough to scope the work.
+
+## Glossary (first-use definitions)
+
+| Term | Meaning here |
+|---|---|
+| LSP | Lightning Service Provider — a well-connected node that sells inbound capacity (channels) to wallets |
+| LSPS1 / LSPS7 | Interop specs for buying channels from an LSP (LSPS1) and extending a channel lease (LSPS7) |
+| JIT channel | "Just-in-time" channel an LSP opens while a payment is in flight, so a fresh wallet can receive |
+| BOLT11 / BOLT12 | Lightning invoice formats; BOLT12 "offers" are static, reusable payment codes |
+| NWC | Nostr Wallet Connect (NIP-47) — remote-control a wallet over nostr relays |
+| Cashu / ecash / NUT-15 | Chaumian ecash protocol; a "mint" is its custodian; NUT-15 = paying one invoice from multiple mints via MPP |
+| MPP | Multi-part payment — one invoice paid in several HTLC shards |
+| CLINK / noffer | Nostr-based payment negotiation (`noffer1…` bech32 codes, kind-21001 events) |
+| BIP-321 | Successor to BIP-21 `bitcoin:` payment URIs (unified on-chain + Lightning QR) |
+| hodl invoice / preimage | Invoice whose settlement is deferred until a chosen secret (preimage) is released — lets a third party hold payments for an offline wallet |
+| Tor / .onion | Anonymity network / its hidden-service addresses; Zeus embeds Tor via `react-native-nitro-tor` |
+| Embedded node | A full Lightning node compiled into the app: `embedded-lnd` (Go, gomobile) or `ldk-node` (Rust, uniffi) |
+| supports\*() | Per-backend capability flags in `backends/*.ts`, dispatched through `utils/BackendUtils.ts` — the gate for every feature |
+
+---
+
+## Direction 1 — Self-custodial UX parity (zero-config receive, background payments, swaps)
+
+**Why current SOTA fails.** Custodial wallets receive instantly with zero setup and work while the app is closed. Self-custodial mobile wallets need inbound liquidity (a channel) before first receive, and the node is offline whenever the OS suspends the app — so unattended receive/pay is unreliable. No shipping wallet has closed both gaps without custody.
+
+**Zeus's specific assets.**
+- Two embedded node engines behind one UI: `embedded-lnd` (gomobile AAR/xcframework) and `ldk-node` (uniffi FFI, ZeusLN fork `v0.7.0-zeus-pathfinder-config` per `fetch-libraries-versions.json`).
+- A three-generation LSP stack in `stores/LSPStore.ts`: Olympus Flow 2.0 REST (default `https://0conf.lnolymp.us`, JIT invoice wrapping via `jit_bolt11`), LSPS1 over three transports (custom message type `37913`, REST, native — chosen per backend via `supportsLSPScustomMessage` / `supportsLSPS1rest` / `supportsLSPS1native`), and LSPS7 lease extension (`supportsLSPS7native`, currently `true` only on `backends/LdkNode.ts`).
+- ZEUS Pay lightning address (`stores/LightningAddressStore.ts`) with three receive modes — `zaplocker`, `cashu`, `nwc` — giving offline receive without custody of keys.
+- Boltz-protocol swaps (`stores/SwapStore.ts`, default host `https://swaps.zeuslsp.com/api/v2` defined in `stores/SettingsStore.ts`) with deterministic rescue keys (`DERIVATION_PATH = 'm/44/0/0/0'`).
+
+**First three concrete steps in this repo.**
+1. **Finish LSPS7.** The refund-address UI in `views/LSPS7/index.tsx` is disabled behind `{false && (` with the comment `TODO add conditions for refund onchain address` (search: `grep -n "false && (" views/LSPS7/index.tsx`). Note `state.refundOnchainAddress` is ALREADY plumbed into both LSPS7 order paths (`stores/LSPStore.ts` lines ~1174 and ~1207); because the input is fenced, the value is always `''`. The remaining work is defining when the LSP requires a refund address and enabling the fenced input block — not re-implementing the wiring.
+2. **Measure NWC background delivery before changing it.** `stores/NostrWalletConnectStore.ts` (3232 lines, zero tests) runs the wallet-service side; iOS keep-alive is a background-audio hack (`ios/zeus/NWCAudioKeepAlive.m` + bundled ambient `.m4a` files in `ios/zeus/`), Android uses a persistent foreground service gated by the AsyncStorage flag `persistentNWCServicesEnabled` (constant `NWC_PERSISTENT_SERVICE_ENABLED` in the store). Build a delivery-success-rate harness (N payment attempts against a backgrounded device, per platform, per keep-alive mode) so improvements are measurable. Measurement recipes: **zeus-diagnostics-and-tooling**.
+3. **Map the fresh-install receive funnel.** Instrument the path from new embedded wallet → first receive: `views/Wallet/Wallet.tsx` post-connect LSP init (`getLSPInfo`, `initChannelAcceptor`), Flow JIT wrapping in `stores/LSPStore.ts` (note: wrapping mutates the invoice amount by subtracting the zero-conf fee and silently degrades to unwrapped on failure), and `views/Receive.tsx`. Record where users stall and what fees they pay.
+
+**You have a result when:** a fresh install on both platforms receives a Lightning payment within a bounded time (pick and publish the bound, e.g. 5 minutes) with zero manual channel-management screens, and the measured all-in fee vs. a custodial baseline is documented. Falsified if any step requires the user to understand channels, or if background NWC payment delivery stays below the published target rate.
+
+---
+
+## Direction 2 — Protocol leadership (BOLT12, Cashu NUT-15, CLINK, BIP-321)
+
+**Why current SOTA fails.** BOLT12 offers barely exist on mobile: receiving to an offer needs an online node with blinded-path support, so most wallets ship nothing. Multimint ecash payments (NUT-15) are unimplemented in mainstream client libraries. Unified payment URIs (BIP-321) are stalled ecosystem-wide.
+
+**Zeus's specific assets.** Offers already work on two backends — `supportsOffers()` is `true` only in `backends/CLNRest.ts` and `backends/LdkNode.ts` (verify: `gr
+[... truncado em 8000 caracteres]

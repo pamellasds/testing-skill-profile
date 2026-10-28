@@ -1,0 +1,239 @@
+NAME: edge-case-identification
+DESCRIPTION: Use to identify boundary conditions, null inputs, empty collections, and failure scenarios for a given function or feature. Do NOT use for writing test code or general test case design.
+
+
+---
+name: edge-case-identification
+description: >
+  Use to identify boundary conditions, null inputs, empty collections, and failure scenarios for a given function or feature.
+  Do NOT use for writing test code or general test case design.
+version: "1.1.0"
+time_saved: "Manual: 1-2 hours (brainstorming, research, documentation) | With skill: 5-10 minutes"
+license: Proprietary — Personal Use Only
+category: testing
+complexity: Intermediate
+tokens: ~7000
+tags: [edge-cases, boundary-testing, corner-cases, failure-scenarios]
+author: vheins
+---
+
+# Skill: Edge Case Identification
+
+## Purpose
+Systematically identifies edge cases, boundary conditions, and failure scenarios for a given function, api, or feature. it produces a comprehensive catalog of unusual, extreme, or unexpected inputs that could cause bugs, crashes, or incorrect behavior. the output helps developers write more robust code and comprehensive tests.
+
+## Input
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
+| `{{code_context}}` | string | yes | The function, API endpoint, or feature specification to analyze |
+| `{{tech_stack}}` | string | yes | Target technology stack (e.g., "Java + Spring Boot", "Go + Gin") |
+| `{{input_types}}` | string | no | Specific input types to focus on (e.g., "strings, numbers, dates") |
+
+## Prompt
+
+Given this code or feature:
+```
+{{code_context}}
+```
+
+Tech stack: {{tech_stack}}
+Input types: {{input_types}}
+
+Systematically identify all edge cases, boundary conditions, and failure scenarios using these categories:
+
+**1. Numeric Boundaries**
+- Zero, negative zero, positive/negative infinity
+- Maximum and minimum values for the data type (INT_MAX, INT_MIN, etc.)
+- Just below minimum, just above maximum
+- Floating point precision issues (0.1 + 0.2 ≠ 0.3)
+- NaN (Not a Number)
+- Very large numbers causing overflow
+- Very small numbers causing underflow
+
+**2. String Boundaries**
+- Empty string ("")
+- Single character
+- Maximum length string
+- String with only whitespace
+- String with special characters: null bytes, unicode, emojis, RTL characters
+- String with SQL/HTML/script injection attempts
+- String with newlines, tabs, carriage returns
+- String in different encodings (UTF-8, ASCII, Latin-1)
+
+**3. Collection Boundaries**
+- Empty array/list/set
+- Single-element collection
+- Collection at maximum capacity
+- Null collection vs empty collection
+- Collection with null elements
+- Collection with duplicate elements
+- Nested collections (array of arrays)
+
+**4. Null and Undefined**
+- Null input where object expected
+- Undefined vs null (JavaScript/TypeScript)
+- Optional parameters not provided
+- Null in nested objects (obj.prop.subprop where prop is null)
+
+**5. Date and Time Edge Cases**
+- Epoch time (1970-01-01)
+- Dates before epoch (negative timestamps)
+- Leap years, leap seconds
+- Daylight saving time transitions
+- Different timezones
+- Invalid dates (February 30, month 13)
+- Date format parsing edge cases
+
+**6. Concurrency and State**
+- Race conditions (simultaneous access)
+- Deadlock scenarios
+- State changes during operation
+- Reentrancy issues
+- Resource exhaustion (connection pool, memory)
+
+**7. External Dependencies**
+- Network timeout
+- API returns 500 error
+- Database connection lost
+- File system full
+- Permission denied
+- Service unavailable
+
+**8. Business Logic Boundaries**
+- Minimum and maximum allowed values per business rules
+- State transitions that should be impossible
+- Combinations of inputs that violate invariants
+- Off-by-one errors in loops or ranges
+
+For each edge case, provide:
+- **Category**: Which category above
+- **Edge Case**: Description of the scenario
+- **Input Example**: Concrete example value
+- **Expected Behavior**: What should happen (error, default, special handling)
+- **Risk Level**: Critical / High / Medium / Low
+- **Likelihood**: How likely this is to occur in production
+
+## Examples
+
+@examples/input.md
+@examples/output.md
+
+## Input Boundary Cases
+1. File exactly 50MB — should succeed (boundary)
+2. File 50MB + 1 byte — should reject with 413
+3. Empty file (0 bytes) — reject with 400
+
+## File Type Cases
+4. Valid PDF with wrong extension (.pdf renamed to .exe) — MIME sniff should catch
+5. Polyglot file (valid PDF + embedded ZIP) — malware scanner should flag
+6. Corrupted PDF header — reject with 422
+
+## Concurrency Cases
+7. Same user uploads 10 files simultaneously — rate limit should apply
+8. S3 upload timeout mid-transfer — cleanup temp file, return 503
+
+## Security Cases
+9. Filename with path traversal: `../../etc/passwd.pdf` — sanitize filename
+10. Zip bomb disguised as DOCX — size limit after decompression
+```
+
+## Numeric Boundaries
+
+**Edge Case 1: Age is exactly 18 (lower boundary)**
+- **Category**: Numeric Boundaries
+- **Input Example**: `age = 18`
+- **Expected Behavior**: Should return `true` (inclusive boundary)
+- **Risk Level**: High
+- **Likelihood**: High (common legal age)
+
+**Edge Case 2: Age is 17 (just below lower boundary)**
+- **Category**: Numeric Boundaries
+- **Input Example**: `age = 17`
+- **Expected Behavior**: Should return `false`
+- **Risk Level**: High
+- **Likelihood**: High
+
+**Edge Case 3: Age is exactly 120 (upper boundary)**
+- **Category**: Numeric Boundaries
+- **Input Example**: `age = 120`
+- **Expected Behavior**: Should return `true` (inclusive boundary)
+- **Risk Level**: Medium
+- **Likelihood**: Low (rare but possible)
+
+**Edge Case 4: Age is 121 (just above upper boundary)**
+- **Category**: Numeric Boundaries
+- **Input Example**: `age = 121`
+- **Expected Behavior**: Should return `false`
+- **Risk Level**: Medium
+- **Likelihood**: Low
+
+**Edge Case 5: Age is zero**
+- **Category**: Numeric Boundaries
+- **Input Example**: `age = 0`
+- **Expected Behavior**: Should return `false`
+- **Risk Level**: High
+- **Likelihood**: Medium (data entry error)
+
+**Edge Case 6: Age is negative**
+- **Category**: Numeric Boundaries
+- **Input Example**: `age = -5`
+- **Expected Behavior**: Should return `false`
+- **Risk Level**: High
+- **Likelihood**: Medium (data corruption or malicious input)
+
+**Edge Case 7: Age is a decimal**
+- **Category**: Numeric Boundaries
+- **Input Example**: `age = 18.5`
+- **Expected Behavior**: Should handle gracefully (round down, reject, or accept)
+- **Risk Level**: Medium
+- **Likelihood**: Medium (user enters "18.5 years old")
+
+**Edge Case 8: Age is NaN**
+- **Category**: Numeric Boundaries
+- **Input Example**: `age = NaN`
+- **Expected Behavior**: Should return `false` or throw error
+- **Risk Level**: Critical
+- **Likelihood**: High (result of invalid parsing)
+
+**Edge Case 9: Age is Infinity**
+- **Category**: Numeric Boundaries
+- **Input Example**: `age = Infinity`
+- **Expected Behavior**: Should return `false`
+- **Risk Level**: Medium
+- **Likelihood**: Low (division by zero upstream)
+
+**Edge Case 10: Age is null (type coercion)**
+- **Category**: Null and Undefined
+- **Input Example**: `age = null as any`
+- **Expected Behavior**: TypeScript should catch at compile time, but runtime should reject
+- **Risk Level**: High
+- **Likelihood**: Medium (API receives null from client)
+
+**Edge Case 11: Age is undefined**
+- **Category**: Null and Undefined
+- **Input Example**: `age = undefined as any`
+- **Expected Behavior**: Should reject or throw error
+- **Risk Level**: High
+- **Likelihood**: Medium (missing parameter)
+
+**Edge Case 12: Age is a string that looks like a number**
+- **Category**: Type Coercion
+- **Input Example**: `age = "25" as any`
+- **Expected Behavior**: TypeScript prevents this, but JavaScript would coerce. Should validate type.
+- **Risk Level**: High
+- **Likelihood**: High (API receives string from query param)
+
+## Summary
+- **Total Edge Cases Identified**: 12
+- **Critical Risk**: 1
+- **High Risk**: 8
+- **Medium Risk**: 3
+- **Recommended Actions**:
+  1. Add explicit type guard: `if (typeof age !== 'number' || isNaN(age))`
+  2. Add range validation before comparison
+  3. Document whether decimals are allowed
+  4. Add unit tests for all 12 edge cases
+```
+
+### Ex
+[... truncado em 8000 caracteres]

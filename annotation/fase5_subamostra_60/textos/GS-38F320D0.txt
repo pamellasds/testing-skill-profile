@@ -1,0 +1,194 @@
+NAME: solidity-nft
+DESCRIPTION: NFT 開発スキル。ERC721/ERC1155 トークン標準、マーケットプレイス設計、 メタデータ管理（オンチェーン・IPFS・動的 NFT）のパターンを提供する。 ユーザーが "NFT", "ERC721", "ERC1155", "マーケットプレイス", "メタデータ", "solidity-nft" 等と言った時に使用。
+
+
+---
+name: solidity-nft
+description: >
+  NFT 開発スキル。ERC721/ERC1155 トークン標準、マーケットプレイス設計、
+  メタデータ管理（オンチェーン・IPFS・動的 NFT）のパターンを提供する。
+  ユーザーが "NFT", "ERC721", "ERC1155", "マーケットプレイス",
+  "メタデータ", "solidity-nft" 等と言った時に使用。
+allowed_tools:
+  - Read
+  - Write
+  - Edit
+  - Bash
+  - Glob
+  - Grep
+  - Task
+  - AskUserQuestion
+---
+
+# solidity-nft: NFT 開発スキル
+
+NFT 開発における トークン標準選択、マーケットプレイス設計、メタデータ戦略を提供するドメイン特化スキル。
+
+## 対象
+
+- ERC721 / ERC1155 / ERC6551（Token Bound Accounts）
+- NFT マーケットプレイス（オーダーブック・オークション）
+- メタデータ管理（オンチェーン・IPFS・動的 NFT）
+- ロイヤリティ（EIP-2981）
+
+## ワークフロー
+
+### Step 1: 要件に応じたリファレンス選択
+
+ユーザーの要件から NFT の対象ドメインを判定する:
+
+| ユースケース | リファレンス | 読み込み時の注目ポイント |
+|------------|------------|---------------------|
+| トークン発行・ミント | `references/token-standards.md` | ERC721 vs ERC1155 の選択基準、ERC721A のガス最適化、ERC6551 の TBA パターン |
+| マーケットプレイス構築 | `references/marketplace-patterns.md` | オーダーブック vs オークション、エスクロー、ロイヤリティ徴収 |
+| メタデータ設計 | `references/metadata-patterns.md` | オンチェーン vs IPFS vs 動的 NFT、OpenSea 互換メタデータスキーマ |
+
+複数ドメインが関連する場合（例: ミント + メタデータ）は全ての該当リファレンスを読み込む。
+
+**検証ゲート**: 少なくとも 1 つのドメインが特定できること。要件が不明確な場合は AskUserQuestion で確認する。
+
+### Step 2: トークン標準の決定
+
+要件に基づきトークン標準を選択する:
+
+| 要件 | 推奨標準 | 理由 |
+|------|---------|------|
+| 1:1 のユニークアイテム | ERC721 | 最も広くサポートされる。OpenSea / マーケットプレイス互換性が高い |
+| 大量ミント（1000+） | ERC721A | ERC721 互換。バッチミントでガス 60-70% 削減 |
+| 同一アイテムの複数発行 | ERC1155 | FT と NFT を同一コントラクトで管理。ゲームアイテムに最適 |
+| ゲームアイテム（複数種類） | ERC1155 | `balanceOf(account, tokenId)` で種類別の保有数を効率的に管理 |
+| NFT にウォレット機能を持たせたい | ERC6551 | NFT 自体がスマートアカウントを持ち、資産の保有・トランザクション実行が可能 |
+
+**判断が難しい場合**: AskUserQuestion で「アイテムの種類数」「同一アイテムの発行数」「ガスコスト重視か機能重視か」を確認する。
+
+**検証ゲート**: トークン標準が決定し、対応する OpenZeppelin / Solady / ERC721A ライブラリが利用可能であること。
+
+### Step 3: コード生成・レビュー
+
+1. `solidity-core` の `language-patterns.md` に従い NatSpec・コーディング規約を適用する。
+2. NFT 固有の考慮事項を組み込む:
+   - ミント関数には必ずアクセス制御（`onlyOwner` / Merkle proof / 署名検証）
+   - `MAX_SUPPLY` 上限の設定
+   - メタデータ URI の設計（`baseURI` + `tokenId`、または個別 URI）
+   - ロイヤリティ: EIP-2981 の `royaltyInfo` 実装
+3. テストコードを同時に生成する:
+   - ミント（成功・上限超過・権限不足）
+   - transfer・approve
+   - メタデータ URI の正当性
+   - ロイヤリティ計算の正確性
+
+**検証ゲート**: `forge build` がエラーなく完了すること。`forge test` で全テストがパスすること。
+
+### Step 4: メタデータ・マーケットプレイス確認
+
+1. **メタデータ**: OpenSea / マーケットプレイスの標準に準拠しているか:
+   - `name`, `description`, `image` フィールドが存在するか
+   - `attributes` が trait 表示に対応しているか
+   - `tokenURI` が有効な JSON を返すか
+2. **ロイヤリティ**: EIP-2981 の `royaltyInfo` が正しいアドレスと金額を返すか
+3. **列挙**: `ERC721Enumerable` が必要な場合はガスコストのトレードオフを理解した上で導入しているか
+
+**検証ゲート**: `tokenURI` が有効な JSON を返し、OpenSea メタデータ標準に準拠していること。
+
+## 使用例
+
+### 例 1: ジェネラティブ NFT コレクション
+
+**ユーザー入力**: 「10,000 体の NFT コレクションを作りたい。ホワイトリスト付きでミントしたい」
+
+**アクション**:
+1. Step 1: トークン発行 + メタデータ → `token-standards.md` + `metadata-patterns.md` を読み込み
+2. Step 2: 大量ミント → ERC721A を選択（バッチミントでガス削減）
+3. Step 3: 以下を生成:
+   - `src/GenesisNFT.sol` — ERC721A 継承。Merkle proof によるホワイトリスト検証、`MAX_SUPPLY = 10_000`、reveal 機能（初期は placeholder URI → 後で baseURI を更新）
+   - `src/libraries/MerkleVerifier.sol` — Merkle proof 検証ヘルパー
+   - `test/GenesisNFT.t.sol` — ホワイトリスト検証、ミント上限、reveal 前後の URI テスト
+   - `script/GenerateMerkleRoot.s.sol` — ホワイトリストからの Merkle root 生成スクリプト
+4. Step 4: メタデータが OpenSea 標準に準拠しているか確認。ロイヤリティ設定（5% を推奨）
+
+**結果**: Merkle proof ホワイトリスト付きの ERC721A コレクションがテスト・スクリプト付きで生成される。
+
+### 例 2: 動的 NFT（ゲーム内レベルアップ）
+
+**ユーザー入力**: 「NFT のレベルが上がるとメタデータが変わるようにしたい」
+
+**アクション**:
+1. Step 1: メタデータ設計 → `metadata-patterns.md` を読み込み → 動的 NFT パターンを選択
+2. Step 2: 1:1 ユニーク → ERC721 を選択
+3. Step 3: 以下を生成:
+   - `src/DynamicNFT.sol` — ERC721URIStorage 継承。`level` mapping、`levelUp` 関数、`tokenURI` をオンチェーンで動的生成（Base64 エンコード JSON + SVG）
+   - `test/DynamicNFT.t.sol` — レベルアップ前後の tokenURI 変化テスト、権限チェック
+4. Step 4: `tokenURI` がレベルに応じて正しい JSON を返すか確認
+
+**結果**: レベルに応じてメタデータが自動更新されるオンチェーン NFT が生成される。
+
+### 例 3: ERC1155 ゲームアイテム
+
+**ユーザー入力**: 「ゲームのアイテム（剣・盾・ポーション）を NFT として発行したい。ポーションは消費可能にして」
+
+**アクション**:
+1. Step 1: 複数種類 + 消費 → `token-standards.md` の ERC1155 セクションを読み込み
+2. Step 2: 複数種類のアイテム → ERC1155 を選択
+3. Step 3: 以下を生成:
+   - `src/GameItems.sol` — ERC1155 継承。アイテム ID 定数（`SWORD = 0`, `SHIELD = 1`, `POTION = 2`）。`mint` / `mintBatch`、`usePotion` 関数（`burn` で消費）
+   - `test/GameItems.t.sol` — ミント、バッチ転送、ポーション消費、残高確認テスト
+4. Step 4: `uri` 関数が各アイテム ID に対して正しいメタデータを返すか確認
+
+**結果**: FT（ポーション：消費可能）と NFT（剣・盾：ユニーク）を同一コントラクトで管理するゲームアイテムが生成される。
+
+## トラブルシューティング
+
+### 1. OpenSea でメタデータが表示されない
+
+**症状**: NFT が OpenSea に表示されるが、画像・属性が出ない
+
+**原因と対策**:
+- **`tokenURI` が無効な JSON を返す**: `cast call <address> "tokenURI(uint256)" <tokenId>` で返り値を確認する。JSON が正しい形式か検証する。
+- **IPFS ゲートウェイの問題**: `ipfs://` プレフィックスを使用しているか確認。HTTPS ゲートウェイ URL（`https://ipfs.io/ipfs/...`）でもアクセス可能にする。
+- **メタデータのキャッシュ**: OpenSea は メタデータをキャッシュする。更新後は OpenSea API の `refresh_metadata` を呼び出す。
+- **`image` フィールドの MIME タイプ**: SVG の場合は `data:image/svg+xml;base64,...` 形式を使用する。
+
+### 2. 大量ミント時のガスコストが高い
+
+**症状**: 1件ミントごとに 100k+ gas かかる
+
+**原因と対策**:
+- **ERC721 の `_safeMint` を使用**: ERC721A に切り替えることで、バッチミント時のガスを 60-70% 削減できる。`forge install chiru-labs/ERC721A` でインストール。
+- **`ERC721Enumerable` の使用**: Enumerable は追加のストレージ書き込みでガスが高い。不要な場合は削除する。`totalSupply` は counter 変数で代替可能。
+- **ストレージの最適化**: `uint256` の tokenId カウンターを `uint96` 等に縮小し、struct 内でパッキングする。
+
+### 3. ミントが `MaxSupplyReached` でリバートする
+
+**症状**: まだ MAX_SUPPLY に達していないのにリバートする
+
+**原因と対策**:
+- **カウンターの不一致**: `_tokenIdCounter` が 0 始まりか 1 始まりかを確認する。`MAX_SUPPLY = 10_000` で 0 始まりの場合、最後の tokenId は 9999。
+- **バッチミント時の上限チェック**: `_tokenIdCounter + quantity > MAX_SUPPLY` ではなく `_tokenIdCounter + quantity <= MAX_SUPPLY` で判定しているか確認する。
+
+### 4. ロイヤリティが マーケットプレイスで適用されない
+
+**症状**: EIP-2981 を実装したが、一部のマーケットプレイスでロイヤリティが徴収されない
+
+**原因と対策**:
+- **EIP-2981 は任意準拠**: EIP-2981 はオフチェーンの照会標準であり、オンチェーンで強制はされない。マーケットプレイスが EIP-2981 をサポートしているか確認する。
+- **Operator Filter（非推奨）**: OpenSea の OperatorFilterRegistry は 2023 年に非推奨化された。新規プロジェクトでは EIP-2981 のみ実装する。
+- **ロイヤリティ率の確認**: `royaltyInfo(tokenId, salePrice)` が正しい金額を返すか `cast call` で確認する。推奨率は 2.5-7.5%。
+
+### 5. ERC6551 Token Bound Account のデプロイが失敗する
+
+**症状**: NFT に紐づくアカウントの作成が失敗する
+
+**原因と対策**:
+- **Registry アドレスの確認**: ERC6551 Registry は各チェーンに公式デプロイされている。正しいアドレスを使用しているか確認する。
+- **implementation アドレスの確認**: `createAccount` に渡す implementation コントラクトが正しくデプロイされているか確認する。
+- **salt の衝突**: 同じ NFT + salt で既にアカウントが存在する場合は `account()` で既存アドレスを取得する。
+
+## 注意事項
+
+- ミント関数には必ず適切なアクセス制御を設定する（public mint でも `MAX_PER_TX` / `MAX_PER_WALLET` の制限を推奨）。
+- 大量ミント時のガスコストを考慮する（ERC721A 等の最適化実装の検討）。
+- メタデータの永続性を確保する（IPFS pinning / Arweave）。CID（Content Identifier）は不変であるため、メタデータ変更には新しい CID が必要。
+- ロイヤリティは EIP-2981 を実装し、マーケットプレイスでの強制力の限界を理解する。
+- 基盤的なパターン（アクセス制御、ガス最適化等）は `solidity-core` を参照する。
+- フロントエンド統合（ミント UI、ギャラリー表示）は `web3-frontend` を参照する。
+- OpenZeppelin コントラクトの利用を推奨し、独自実装は避ける。

@@ -1,0 +1,227 @@
+NAME: 
+DESCRIPTION: 
+
+---
+name: self-improving-skills
+description: Meta-skill for autonomous skill evolution: usage tracking, feedback collection, gap analysis, automated improvement cycles, version control, effectiveness scoring, pattern extraction from failures, and continuous knowledge integration
+license: MIT
+compatibility: opencode
+metadata:
+  audience: all-agents
+  domain: meta-learning
+  paradigm: self-improvement
+  capabilities:
+    - skill-usage-tracking
+    - feedback-collection
+    - gap-analysis
+    - automated-improvement
+    - version-control
+    - effectiveness-scoring
+    - failure-pattern-extraction
+    - knowledge-integration
+    - skill-evolution
+    - cross-skill-synthesis
+    - best-practice-discovery
+    - anti-pattern-detection
+    - skill-deprecation
+    - skill-merging
+    - skill-splitting
+  prerequisites: none
+  integrates_with:
+    - all skills
+    - understanding
+    - workflow-general
+    - prompt-engineering
+---
+
+## Self-Improving Skills — Meta-Learning System
+
+### Core Philosophy
+
+> **Skills are not static documents. They are living knowledge bases that evolve through usage, feedback, and deliberate improvement.**
+> A skill that doesn't improve is a skill that decays. Technology moves fast — skills must move faster.
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│              SELF-IMPROVING SKILL LIFECYCLE                  │
+│                                                              │
+│  ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐  │
+│  │  CREATE  │──▶│  DEPLOY  │──▶│  TRACK   │──▶│ COLLECT  │  │
+│  │  SKILL   │   │  & USE   │   │  USAGE   │   │ FEEDBACK │  │
+│  └──────────┘   └──────────┘   └──────────┘   └──────────┘  │
+│       ▲                                              │      │
+│       │                                              ▼      │
+│  ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐  │
+│  │ DEPLOY   │◀──│  REVIEW  │◀──│ GENERATE │◀──│ ANALYZE  │  │
+│  │  v2.0    │   │  & TEST  │   │ IMPROVE  │   │  & GAP   │  │
+│  └──────────┘   └──────────┘   └──────────┘   └──────────┘  │
+│                                                              │
+│  Continuous Loop: Every usage → feedback → analysis → improve│
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 1. Skill Metadata & Versioning
+
+### 1.1 Skill Registry Format
+
+Every skill maintains a `SKILL_META.md` file alongside `SKILL.md`:
+
+```yaml
+# SKILL_META.md
+skill: frontend-react
+version: 3.2.1
+created: 2026-01-15
+last_updated: 2026-05-17
+author: lore-master
+
+# Usage Metrics
+usage_count: 147
+success_rate: 0.94
+avg_effectiveness: 8.7/10
+last_used: 2026-05-17
+
+# Feedback
+positive_feedback: 23
+negative_feedback: 3
+suggestions: 7
+
+# Evolution
+changelog:
+  - version: 3.2.1
+    date: 2026-05-17
+    changes:
+      - "Added React 19 Server Actions patterns"
+      - "Fixed outdated useEffect cleanup example"
+    reason: "User feedback: missing React 19 patterns"
+  - version: 3.2.0
+    date: 2026-04-20
+    changes:
+      - "Added use() hook documentation"
+      - "Updated Suspense patterns"
+    reason: "React 19 release"
+
+# Known Gaps
+gaps:
+  - "Missing React Compiler (React 19) optimization patterns"
+  - "Need more examples for Server Components data fetching"
+  - "Outdated testing section (still references React Testing Library)"
+
+# Dependencies
+depends_on:
+  - typescript
+  - frontend-tailwind
+used_by:
+  - mobile-tauri
+  - apple-parallax-web
+
+# Effectiveness by Category
+effectiveness:
+  code_generation: 9.2
+  debugging: 8.5
+  architecture: 8.8
+  best_practices: 9.0
+  troubleshooting: 7.8
+```
+
+### 1.2 Version Semantics
+
+| Version Change | When | Example |
+|---------------|------|---------|
+| **MAJOR** (1.0.0 → 2.0.0) | Breaking changes, paradigm shift | React 18 → React 19 patterns |
+| **MINOR** (1.2.0 → 1.3.0) | New patterns, sections, examples | Added use() hook documentation |
+| **PATCH** (1.2.1 → 1.2.2) | Bug fixes, corrections, clarifications | Fixed incorrect useEffect example |
+
+---
+
+## 2. Usage Tracking
+
+### 2.1 Usage Log Format
+
+Every skill usage is logged in `.opencode/skills/<name>/USAGE_LOG.md`:
+
+```markdown
+# Usage Log: frontend-react
+
+| Date | Agent | Task Type | Outcome | Effectiveness | Feedback |
+|------|-------|-----------|---------|---------------|----------|
+| 2026-05-17 | lore-master | Code Generation | Success | 9/10 | "Perfect, exactly what I needed" |
+| 2026-05-16 | ui-god | Debugging | Success | 7/10 | "Worked but missing edge case" |
+| 2026-05-15 | vibe-coder | Architecture | Partial | 6/10 | "Good start, needed more detail" |
+| 2026-05-14 | lore-master | Code Generation | Failed | 3/10 | "Outdated patterns, React 19 not covered" |
+```
+
+### 2.2 Automatic Usage Detection
+
+When a skill is loaded via `skill` tool, the system automatically:
+
+1. **Increment usage count** in SKILL_META.md
+2. **Record task type**: Code Generation, Debugging, Architecture, Review, etc.
+3. **Track outcome**: Success, Partial, Failed
+4. **Request effectiveness score**: 1-10 rating
+5. **Collect feedback**: What worked, what didn't, what's missing
+
+### 2.3 Usage Analytics
+
+```
+┌─────────────────────────────────────────────────────────┐
+│              USAGE ANALYTICS DASHBOARD                   │
+│                                                         │
+│  Skill: frontend-react                                  │
+│  Version: 3.2.1                                         │
+│                                                         │
+│  Usage Over Time:                                       │
+│  Jan: ████ 12    Feb: ██████ 18    Mar: ████████ 24    │
+│  Apr: ██████████ 30    May: ██████████████ 42          │
+│                                                         │
+│  Success Rate: 94% (138/147)                            │
+│  Avg Effectiveness: 8.7/10                              │
+│                                                         │
+│  By Task Type:                                          │
+│  Code Generation: 67 uses → 9.2/10                      │
+│  Debugging: 34 uses → 8.5/10                            │
+│  Architecture: 28 uses → 8.8/10                         │
+│  Review: 18 uses → 7.9/10                               │
+│                                                         │
+│  Trend: ↗ Improving (last 30 days: +0.3 effectiveness) │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 3. Feedback Collection
+
+### 3.1 Feedback Types
+
+| Type | Trigger | Action |
+|------|---------|--------|
+| **Explicit** | User rates output | Record score + comment |
+| **Implicit** | Agent retries with different approach | Infer low effectiveness |
+| **Error-Based** | Generated code fails | Log error pattern |
+| **Gap-Based** | Agent says "skill doesn't cover X" | Add to gaps list |
+| **Outdated** | Agent notes deprecated patterns | Flag for update |
+| **Success** | Agent says "this worked perfectly" | Reinforce pattern |
+
+### 3.2 Feedback Collection Protocol
+
+```
+┌─────────────────────────────────────────────────────────┐
+│              FEEDBACK COLLECTION FLOW                    │
+│                                                         │
+│  After skill usage:                                     │
+│                                                         │
+│  1. Agent self-evaluates:                               │
+│     "How effective was this skill for the task?"        │
+│     Score: 1-10                                        │
+│                                                         │
+│  2. Agent identifies gaps:                              │
+│     "What was missing from the skill?"                  │
+│     → Add to gaps list                                 │
+│                                                         │
+│  3. Agent notes outdated content:                       │
+│     "What patterns are deprecated?"                     │
+│     → Flag for update     
+[... truncado em 8000 caracteres]

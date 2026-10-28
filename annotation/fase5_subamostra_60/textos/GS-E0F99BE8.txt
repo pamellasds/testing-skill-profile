@@ -1,0 +1,257 @@
+NAME: agent-orchestration
+DESCRIPTION: Multi-agent orchestration patterns including coordinator agents, LlmAgent vs WorkflowAgent selection, agent-as-tool pattern, and inter-agent communication via session state. PROACTIVELY activate for: (1) multi-agent systems and agent coordination, (2) sub-agent delegation and agent-as-tool implementation, (3) workflow orchestration with LlmAgent and WorkflowAgent. Triggers: "multi-agent", "orchestration", "agent team"
+
+
+---
+name: agent-orchestration
+version: "1.0"
+description: >
+  Multi-agent orchestration patterns including coordinator agents, LlmAgent vs WorkflowAgent selection, agent-as-tool pattern, and inter-agent communication via session state.
+  PROACTIVELY activate for: (1) multi-agent systems and agent coordination, (2) sub-agent delegation and agent-as-tool implementation, (3) workflow orchestration with LlmAgent and WorkflowAgent.
+  Triggers: "multi-agent", "orchestration", "agent team"
+core-integration:
+  techniques:
+    primary: ["structured_decomposition"]
+    secondary: []
+  contracts:
+    input: "none"
+    output: "none"
+  patterns: "none"
+  rubrics: "none"
+---
+
+# Agent Orchestration: Multi-Agent System Patterns
+
+## Core Principles
+
+Complex problems often require multiple specialized agents working together. ADK provides robust patterns for orchestrating agent teams, enabling modular, maintainable, and scalable agentic systems.
+
+**Key Insight**: Single monolithic agents with overly complex prompts are harder to maintain and debug than teams of focused specialists coordinated by a simple orchestrator.
+
+## Agent Types: LlmAgent vs WorkflowAgent
+
+### LlmAgent (Dynamic Reasoning)
+
+**Purpose**: For tasks where the next action depends on runtime reasoning and context.
+
+**Characteristics**:
+- LLM decides which tool to call and when
+- Flexible, adaptive behavior
+- Suitable for open-ended problems
+- Can handle unexpected inputs
+
+**Use Cases**:
+- Conversational assistants
+- Complex problem-solving requiring judgment
+- Tasks with unpredictable user requests
+- Research and analysis workflows
+
+**Example**:
+```python
+from google import genai
+from google.genai import types
+
+async def create_research_agent() -> types.Agent:
+    """
+    Create LlmAgent for research tasks.
+
+    The agent dynamically decides whether to search, read, or summarize
+    based on user questions and intermediate findings.
+    """
+    client = genai.Client(vertexai=True)
+
+    # Define tools
+    search_tool = types.Tool(function_declarations=[...])
+    read_tool = types.Tool(function_declarations=[...])
+    summarize_tool = types.Tool(function_declarations=[...])
+
+    # LlmAgent with dynamic tool selection
+    agent = types.LlmAgent(
+        model="gemini-2.0-flash-exp",
+        system_instruction="""
+        You are a research assistant. For each user query:
+        1. Use search_tool to find relevant sources
+        2. Use read_tool to examine source content
+        3. Use summarize_tool to synthesize findings
+
+        Adapt your approach based on the query complexity.
+        """,
+        tools=[search_tool, read_tool, summarize_tool]
+    )
+
+    return agent
+```
+
+### WorkflowAgent (Deterministic Flow)
+
+**Purpose**: For tasks with predictable, repeatable processes where the execution flow is known in advance.
+
+**Characteristics**:
+- Hardcoded execution sequence
+- Predictable, reliable behavior
+- No LLM reasoning overhead for flow control
+- Ideal for automation pipelines
+
+**Types**:
+- **SequentialAgent**: Execute agents one after another
+- **ParallelAgent**: Execute agents concurrently
+- **LoopAgent**: Repeat agent execution with conditions
+
+**Use Cases**:
+- Data processing pipelines
+- Validation workflows
+- Multi-stage transformations
+- Scheduled automation tasks
+
+**Example - SequentialAgent**:
+```python
+from google.genai import types
+
+async def create_document_processor() -> types.SequentialAgent:
+    """
+    Sequential workflow for document processing.
+
+    Flow: Upload -> Parse -> Validate -> Store (deterministic sequence)
+    """
+    # Define sub-agents for each stage
+    upload_agent = types.LlmAgent(
+        model="gemini-2.0-flash-exp",
+        system_instruction="Validate and upload documents to storage.",
+        tools=[upload_tool]
+    )
+
+    parse_agent = types.LlmAgent(
+        model="gemini-2.0-flash-exp",
+        system_instruction="Extract structured data from documents.",
+        tools=[parse_tool]
+    )
+
+    validate_agent = types.LlmAgent(
+        model="gemini-2.0-flash-exp",
+        system_instruction="Validate extracted data against schema.",
+        tools=[validate_tool]
+    )
+
+    store_agent = types.LlmAgent(
+        model="gemini-2.0-flash-exp",
+        system_instruction="Store validated data in database.",
+        tools=[store_tool]
+    )
+
+    # Sequential workflow
+    workflow = types.SequentialAgent(
+        agents=[upload_agent, parse_agent, validate_agent, store_agent]
+    )
+
+    return workflow
+```
+
+**Example - ParallelAgent**:
+```python
+async def create_parallel_analyzer() -> types.ParallelAgent:
+    """
+    Parallel analysis workflow.
+
+    Run sentiment analysis, entity extraction, and summarization
+    simultaneously for speed.
+    """
+    sentiment_agent = types.LlmAgent(
+        model="gemini-2.0-flash-exp",
+        system_instruction="Analyze sentiment of the text.",
+        tools=[sentiment_tool]
+    )
+
+    entity_agent = types.LlmAgent(
+        model="gemini-2.0-flash-exp",
+        system_instruction="Extract named entities from text.",
+        tools=[entity_tool]
+    )
+
+    summary_agent = types.LlmAgent(
+        model="gemini-2.0-flash-exp",
+        system_instruction="Generate concise summary of text.",
+        tools=[summary_tool]
+    )
+
+    # Parallel execution (faster)
+    parallel_workflow = types.ParallelAgent(
+        agents=[sentiment_agent, entity_agent, summary_agent]
+    )
+
+    return parallel_workflow
+```
+
+### Decision Matrix: Which Agent Type?
+
+| Scenario | Agent Type | Rationale |
+|----------|------------|-----------|
+| Answering unpredictable user questions | LlmAgent | Requires dynamic reasoning |
+| Processing uploaded files through fixed steps | SequentialAgent | Deterministic pipeline |
+| Running multiple independent analyses | ParallelAgent | No dependencies, gain speed |
+| Customer support with varying needs | LlmAgent | Adaptive to user situation |
+| Daily report generation | LoopAgent | Repeatable schedule |
+| Code review (lint -> test -> analyze) | SequentialAgent | Fixed validation sequence |
+
+## Coordinator Pattern (Recommended Architecture)
+
+### Root Coordinator with Specialist Sub-Agents
+
+**Architecture**: Single coordinator agent dispatches tasks to specialized agents based on request type.
+
+**Benefits**:
+- Clear separation of concerns
+- Easy to add new specialists
+- Simple routing logic
+- Improved debuggability
+
+**Implementation**:
+```python
+from google import genai
+from google.genai import types
+from pydantic import BaseModel, ConfigDict, Field
+
+# Specialist agents
+async def create_code_specialist() -> types.LlmAgent:
+    """Agent specialized in code generation and review."""
+    return types.LlmAgent(
+        model="gemini-2.0-flash-exp",
+        system_instruction="""
+        You are a senior software engineer specializing in Python.
+
+        Your responsibilities:
+        - Generate production-ready code with type hints
+        - Review code for bugs and improvements
+        - Suggest optimal algorithms and data structures
+
+        Always follow PEP 8 and include comprehensive docstrings.
+        """,
+        tools=[code_analyzer_tool, code_formatter_tool]
+    )
+
+async def create_architecture_specialist() -> types.LlmAgent:
+    """Agent specialized in system architecture."""
+    return types.LlmAgent(
+        model="gemini-2.0-flash-exp",
+        system_instruction="""
+        You are a principal architect with 15+ years experience.
+
+        Your responsibilities:
+        - Design scalable system architectures
+        - Evaluate trade-offs between approaches
+        - Create architecture decision records (ADRs)
+
+        Focus on maintainability, scalability, and security.
+        """,
+        tools=[diagram_tool, adr_tool]
+    )
+
+async def create_test_specialist() -> types.LlmAgent:
+    """Agent specialized in testing."""
+    return types.LlmAgent(
+        model="gemini-2.0-flash-exp",
+        system_instruction="""
+        You are a test automation engineer.
+
+        Your responsibilities:
+        - Generate compr
+[... truncado em 8000 caracteres]

@@ -1,0 +1,196 @@
+NAME: wiki-maintenance
+DESCRIPTION: Comprehensive wiki operations on the Obsidian wiki at ~/wiki — routine maintenance (frontmatter, tags, lint, orphans, git), content expansion (concepts, entities), batch quality sprints, and crisis repair (YAML corruption, citation gaps, duplicate deduplication).
+
+---
+name: wiki-maintenance
+description: Comprehensive wiki operations on the Obsidian wiki at ~/wiki — routine maintenance (frontmatter, tags, lint, orphans, git), content expansion (concepts, entities), batch quality sprints, and crisis repair (YAML corruption, citation gaps, duplicate deduplication).
+category: wiki
+---
+
+# Wiki Maintenance Playbook
+
+## Scope
+Routine maintenance operations on the Obsidian wiki at `~/wiki` (tech wiki) or `~/wiki-life` (life wiki): frontmatter fixes, tag cleanup, lint validation, orphan detection, git housekeeping.
+
+## Prerequisites
+```bash
+# For tech wiki:
+cd ~/wiki
+
+# For life wiki:
+cd ~/wiki-life
+```
+
+## Lint Validation (always run after any change)
+
+### Tech wiki (~/wiki)
+```bash
+node scripts/wiki-lint.mjs .
+# Expected: 0 error(s). Warnings are informational.
+```
+
+### Life wiki (~/wiki-life)
+**No lint script exists** — validation is manual via Python execute_code or shell inspection:
+```bash
+# Check frontmatter completeness
+for f in entities/*.md concepts/*.md comparisons/*.md cases/*.md queries/*.md; do
+  head -10 "$f" | grep -q "^type:" || echo "MISSING type: $f"
+  head -10 "$f" | grep -q "^created:" || echo "MISSING created: $f"
+  head -10 "$f" | grep -q "^updated:" || echo "MISSING updated: $f"
+  head -10 "$f" | grep -q "^tags:" || echo "MISSING tags: $f"
+done
+
+# Check index.md stats vs actual
+for d in entities concepts cases comparisons queries reviews "raw/articles"; do
+  count=$(ls $d/*.md 2>/dev/null | wc -l | tr -d ' ')
+  echo "$d: $count"
+done
+```
+
+## Skills Sync — Multi-Category rsync
+
+Skills live in **multiple category subdirectories** under `~/.hermes/skills/`: `wiki/`, `creative/`, `devops/`, `software-development/`, `apple/`, `autonomous-ai-agents/`, `mcp/`, etc. The wiki's `skills/` directory is the **union of all categories**, synced via rsync.
+
+### Pitfall: Single-Category rsync + --delete Deletes Other Categories
+
+**Symptom**: After syncing `~/.hermes/skills/wiki/` → `~/wiki/skills/` with `--delete`, skills like `anti-ai-style-library`, `design-md`, `comfyui` etc. disappear from `~/wiki/skills/` because they live in `~/.hermes/skills/creative/`, not `~/.hermes/skills/wiki/`.
+
+**Wrong** (only syncs wiki-category skills, deletes everything else):
+```bash
+rsync -av --delete ~/.hermes/skills/wiki/ ~/wiki/skills/
+```
+
+**Correct** — sync ALL categories, one rsync per source dir **without --delete** (use --delete only on the first/primary source):
+```bash
+# Primary sync (wiki category, with --delete to remove stale files)
+rsync -av --delete ~/.hermes/skills/wiki/ ~/wiki/skills/
+
+# Additive syncs (other categories, NO --delete — they only add, never remove wiki-category files)
+for cat in creative devops software-development apple autonomous-ai-agents mcp productivity research media data-science github note-taking smart-home social-media red-teaming mlops gaming email; do
+  src="$HOME/.hermes/skills/$cat/"
+  [ -d "$src" ] && rsync -av "$src" ~/wiki/skills/
+done
+```
+
+**Why no --delete on secondary categories**: If creative skills sync with `--delete`, it would remove wiki-category files that don't exist in creative/. The `--delete` flag means "make the destination look exactly like the source" — removing anything not in the source.
+
+**Safer alternative** — sync the parent directory directly (includes all categories):
+```bash
+# This copies ALL skill categories at once, --delete is safe here
+rsync -av --delete ~/.hermes/skills/ ~/wiki/skills/ --exclude='*.pyc' --exclude='__pycache__'
+```
+
+**Caveat**: This also copies non-category files (e.g., `DESCRIPTION.md` at the top level). Verify with `git status` after sync.
+
+**Recovery if skills were deleted**: Re-run the correct rsync command, then `git add skills/ && git commit`.
+
+### Nested .git Directories in Skills
+
+Skill dirs under `~/.hermes/skills/` must NOT contain `.git/` subdirectories — Git clients discover them and display phantom repos. See `references/nested-git-repo-cleanup.md` for diagnosis and fix.
+
+## Common Operations
+
+### Entity Census — Pitfall: `-maxdepth 1` Misses Subdirectory Files
+
+When counting entities in `entities/`, always use **recursive** `find`. The `entities/` directory contains both top-level `.md` files AND subdirectories (e.g., `entities/1-million-exposed-ai-services-hackernews/`) that hold additional `.md` files.
+
+**Wrong** (undercounts by ~300 files):
+```bash
+find ~/wiki/entities -maxdepth 1 -type f -name "*.md" | wc -l
+# Returns ~2450 (misses subdirectory files)
+```
+
+**Correct**:
+```bash
+find ~/wiki/entities -type f -name "*.md" | wc -l
+# Returns ~2767 (includes all levels)
+```
+
+**Breakdown** (as of 2026-06-25):
+- Top-level `.md` files: ~2,450
+- Subdirectory `.md` files: ~317
+- Total recursive: ~2,767
+
+**When user asks "how many entities"**: Always report the recursive count. The subdirectory files are real entities (often paired with asset dirs), not noise.
+
+### Wikilink Graph Analysis & Knowledge Hub Discovery
+
+When analyzing wiki structure (e.g., for book planning, content audit, or MOC creation), build a cross-reference graph from wikilinks:
+
+```python
+import os, re
+from collections import defaultdict
+
+entities_dir = os.path.expanduser("~/wiki/entities")
+
+link_to = defaultdict(set)  # slug -> set of slugs linking to it
+
+for fname in sorted(os.listdir(entities_dir)):
+    if not fname.endswith('.md') or not os.path.isfile(os.path.join(entities_dir, fname)):
+        continue
+    with open(os.path.join(entities_dir, fname), 'r', encoding='utf-8') as f:
+        content = f.read()
+    slug = fname.replace('.md', '')
+    wikilinks = re.findall(r'\[\[(?:entities/)?([^\]|]+?)(?:\|[^\]]+)?\]\]', content)
+    for link in wikilinks:
+        link_slug = link.strip().split('/')[-1]
+        if link_slug != slug:
+            link_to[link_slug].add(slug)
+
+# Top knowledge hubs (highest in-degree)
+top_hubs = sorted(link_to.items(), key=lambda x: -len(x[1]))[:20]
+for slug, refs in top_hubs:
+    print(f"  {len(refs):3d} refs  {slug}")
+```
+
+**What the graph reveals**:
+- **Hubs** (high in-degree): Knowledge anchors — use as chapter/section anchors when structuring books or MOCs
+- **Orphans** (0 in + 0 out): Truly disconnected
+- **Domain clusters**: Tag co-occurrence + link density reveals topic boundaries
+
+**See**: `references/wiki-knowledge-graph-analysis.md` for full book-structuring methodology.
+
+### Frontmatter Tag Cleanup
+**Problem**: Files with `tags: []` (empty array) or duplicate `tags:` YAML keys (last-value-wins — empty array overwrites real tags).
+
+**Detection**:
+```python
+import os, re
+wiki_path = "entities"
+empty = []; dup = []
+for root, dirs, files in os.walk(wiki_path):
+    for f in files:
+        if not f.endswith('.md'): continue
+        fp = os.path.join(root, f)
+        with open(fp) as fh: content = fh.read()
+        fm_match = re.search(r'^---\n(.*?)\n---', content, re.DOTALL)
+        if not fm_match: continue
+        fm = fm_match.group(1)
+        if re.search(r'^tags:\s*\[\s*\]', fm, re.MULTILINE): empty.append(fp)
+        if fm.count('tags:') > 1: dup.append(fp)
+```
+
+**Fix empty arrays — keyword-based auto-tagging**:
+```python
+import re
+
+def auto_tag(title, body, source):
+    ti = title.lower(); bd = body.lower(); s = source.lower()
+    kw_map = [
+        ('nvidia', ['nvidia', 'gpu kernel', 'cuda']),
+        ('claude-code', ['claude']),
+        ('anthropic', ['anthropic']),
+        ('security', ['security', 'hack', 'vulnerability', 'supply chain', 'exploit', 'malicious', 'phishing', 'fuzzing', 'cve']),
+        ('agent', ['agent']),
+        ('multi-agent', ['multi-agent', 'multiagent', 'multi agent']),
+        ('harness-engineering', ['harness']),
+        ('rag', ['rag', 'retrieval']),
+        ('memory', ['memory']),
+        ('mcp', ['mcp']),
+        ('llm', ['llm', 'language model', '大模型', 'gpt', 'gemma', 'deepseek', 'minimax']),
+        ('skill', ['skill']),
+        ('openclaw', ['openclaw']),
+        ('aws', ['aws', 'amazon', 'bedrock', 'sagemaker']),
+        ('open-source', ['open-source', 'open source', '开源']),
+      
+[... truncado em 8000 caracteres]

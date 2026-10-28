@@ -1,0 +1,232 @@
+NAME: example-counter
+DESCRIPTION: Generate a complete Midnight Network counter DApp from scratch — Compact smart contract, interactive CLI, wallet setup, DUST generation, deploy + interact loop, Docker configs for local/preprod/preview, and tests. Use when a user wants to build a full Midnight DApp, bootstrap a new project, understand the end-to-end lifecycle, or needs working boilerplate for wallet + contract + CLI. This skill produces the official midnightntwrk/example-counter reference implementation using yarn workspaces.
+
+---
+name: example-counter
+description: Generate a complete Midnight Network counter DApp from scratch — Compact smart contract, interactive CLI, wallet setup, DUST generation, deploy + interact loop, Docker configs for local/preprod/preview, and tests. Use when a user wants to build a full Midnight DApp, bootstrap a new project, understand the end-to-end lifecycle, or needs working boilerplate for wallet + contract + CLI. This skill produces the official midnightntwrk/example-counter reference implementation using yarn workspaces.
+---
+
+# Example Counter DApp Skill
+
+This skill generates the complete, runnable `midnightntwrk/example-counter` reference DApp. It covers every file: Compact contract, TypeScript sources, entry points for each network, Docker compose files, test infrastructure, and all supporting config. The code matches the official implementation at `github.com/midnightntwrk/example-counter` (v2.1.1).
+
+**Primary references:**
+- `github.com/midnightntwrk/example-counter` — official reference repo
+- `docs.midnight.network/guides/deploy-mn-app` — official deploy guide
+- `docs.midnight.network/guides/interact-with-mn-app` — official interact guide
+- `docs.midnight.network/relnotes/support-matrix` — authoritative version compatibility matrix
+
+**Package versions match the official compatibility matrix (May 2026).** Always cross-check against the support matrix before pinning versions — Midnight packages update frequently and version mismatches cause `ETARGET` errors at install time.
+
+---
+
+## 1) Project Structure
+
+Generate this exact layout:
+
+```
+my-dapp/
+├── package.json                    # Root workspace config
+├── compose.yml                     # Docker: full local stack (root, localhost-only)
+│
+├── contract/
+│   ├── package.json                # @midnight-ntwrk/counter-contract
+│   ├── tsconfig.json
+│   ├── tsconfig.build.json
+│   ├── vitest.config.ts
+│   ├── eslint.config.mjs
+│   ├── .prettierrc
+│   ├── .vscode/
+│   │   ├── launch.json
+│   │   └── tasks.json
+│   └── src/
+│       ├── counter.compact         # Compact smart contract
+│       ├── index.ts                # Re-exports managed contract + witnesses
+│       ├── witnesses.ts            # CounterPrivateState type + witnesses object
+│       ├── managed/                # Compiled contract output (gitignored)
+│       └── test/
+│           ├── counter-simulator.ts
+│           └── counter.test.ts
+│
+└── counter-cli/
+    ├── package.json                # @midnight-ntwrk/counter-cli
+    ├── tsconfig.json
+    ├── tsconfig.build.json
+    ├── vitest.config.ts
+    ├── vitest.setup.ts
+    ├── eslint.config.mjs
+    ├── .prettierrc.json
+    ├── proof-server.yml            # Docker: proof server only (preprod/preview)
+    ├── standalone.yml              # Docker: full local stack (node + indexer + proof server)
+    ├── standalone.env.example
+    └── src/
+        ├── index.ts                # Re-exports api + cli
+        ├── cli.ts                  # Interactive CLI (wallet, deploy, join, increment)
+        ├── api.ts                  # Core API (wallet creation, deploy, increment, providers)
+        ├── config.ts               # Network configuration classes
+        ├── common-types.ts         # Type definitions
+        ├── logger-utils.ts         # Pino logger setup
+        ├── preprod.ts              # Preprod entry point
+        ├── preview.ts              # Preview entry point
+        ├── standalone.ts           # Local entry point (with Docker lifecycle)
+        ├── preprod-start-proof-server.ts
+        ├── preview-start-proof-server.ts
+        └── test/
+            ├── commons.ts          # Test environment helpers
+            └── counter.api.test.ts # API integration tests
+```
+
+---
+
+## 2) Prerequisites
+
+```bash
+# Node.js 22.15+ required
+node --version
+
+# Yarn 1.x (classic) required
+yarn --version
+
+# Docker required (proof server + optional local stack)
+docker --version
+
+# Install Compact compiler
+curl --proto '=https' --tlsv1.2 -sSf \
+  https://github.com/midnightntwrk/compact/releases/latest/download/compact-installer.sh | sh
+source $HOME/.local/bin/env
+compact update 0.30.0
+compact compile --version
+```
+
+---
+
+## 3) Root `package.json`
+
+```json
+{
+  "name": "example-counter",
+  "version": "2.1.1",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "workspaces": [
+    "counter-cli",
+    "contract"
+  ],
+  "scripts": {
+    "test": "NODE_OPTIONS='--experimental-vm-modules' vitest run",
+    "test:local": "MIDNIGHT_NETWORK=local yarn test",
+    "env:up": "docker compose up -d --wait",
+    "env:down": "docker compose down",
+    "validate": "yarn env:up && yarn test:local; yarn env:down"
+  },
+  "dependencies": {
+    "@midnight-ntwrk/compact-runtime": "0.16.0",
+    "@midnight-ntwrk/ledger-v8": "8.0.3",
+    "@midnight-ntwrk/midnight-js-contracts": "4.0.4",
+    "@midnight-ntwrk/midnight-js-http-client-proof-provider": "4.0.4",
+    "@midnight-ntwrk/midnight-js-indexer-public-data-provider": "4.0.4",
+    "@midnight-ntwrk/midnight-js-level-private-state-provider": "4.0.4",
+    "@midnight-ntwrk/midnight-js-network-id": "4.0.4",
+    "@midnight-ntwrk/midnight-js-node-zk-config-provider": "4.0.4",
+    "@midnight-ntwrk/midnight-js-types": "4.0.4",
+    "@midnight-ntwrk/midnight-js-utils": "4.0.4",
+    "@midnight-ntwrk/testkit-js": "4.0.4",
+    "@midnight-ntwrk/wallet-sdk-address-format": "3.1.0",
+    "@midnight-ntwrk/wallet-sdk-dust-wallet": "3.0.0",
+    "@midnight-ntwrk/wallet-sdk-facade": "3.0.0",
+    "@midnight-ntwrk/wallet-sdk-hd": "3.0.1",
+    "@midnight-ntwrk/wallet-sdk-shielded": "2.1.0",
+    "@midnight-ntwrk/wallet-sdk-unshielded-wallet": "2.1.0",
+    "axios": "^1.15.0",
+    "pino": "^9.0.0",
+    "pino-pretty": "^13.0.0",
+    "rxjs": "^7.8.2",
+    "testcontainers": "^11.13.0",
+    "ws": "^8.14.2"
+  },
+  "devDependencies": {
+    "@midnight-ntwrk/midnight-js-compact": "4.0.4",
+    "@types/node": "^22.0.0",
+    "@types/ws": "^8.5.9",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  },
+  "resolutions": {
+    "@midnight-ntwrk/ledger-v8": "8.0.3",
+    "@midnight-ntwrk/midnight-js-network-id": "4.0.4",
+    "@midnight-ntwrk/compact-runtime": "0.16.0"
+  },
+  "packageManager": "yarn@1.22.22"
+}
+```
+
+---
+
+## 4) Workspace Package: `contract/package.json`
+
+```json
+{
+  "name": "@midnight-ntwrk/counter-contract",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "compact": "compact compile src/counter.compact src/managed/counter",
+    "test": "vitest run",
+    "test:compile": "npm run compact && vitest run",
+    "build": "rm -rf dist && tsc --project tsconfig.build.json && cp -Rf ./src/managed ./dist/managed && cp ./src/counter.compact ./dist",
+    "lint": "eslint src",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  }
+}
+```
+
+---
+
+## 5) Workspace Package: `counter-cli/package.json`
+
+```json
+{
+  "name": "@midnight-ntwrk/counter-cli",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "standalone": "docker compose -f standalone.yml pull && tsx src/standalone.ts",
+    "test-api": "docker compose -f standalone.yml pull && DEBUG='testcontainers' vitest run",
+    "build": "rm -rf dist && tsc --project tsconfig.build.json",
+    "lint": "eslint src",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "preview": "tsx src/preview.ts",
+    "preview-ps": "docker compose -f proof-server.yml pull && tsx src/preview-start-proof-server.ts",
+    "preprod": "tsx src/preprod.ts",
+    "preprod-ps": "docker compose -f proof-server.yml pull && tsx src/preprod-start-proof-server.ts"
+  },
+  "dependencies": {
+    "@midnight-ntwrk/counter-contract": "*"
+  }
+}
+```
+
+---
+
+## 6) `contr
+[... truncado em 8000 caracteres]

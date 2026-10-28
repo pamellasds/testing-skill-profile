@@ -1,0 +1,1416 @@
+[
+  {
+    "repo": "youugiuhiuh/web3-demos",
+    "path": ".agents/skills/smart-contract-dev/SKILL.md",
+    "name": "smart-contract-dev",
+    "source": "examples_pyramid",
+    "pilot_layer_hint": "unit",
+    "matched_layers_keywords": [
+      "unit"
+    ],
+    "content_truncated": false,
+    "content_chars_sent": 2178,
+    "artifact_type": "test_guidance_skill",
+    "confidence": "high",
+    "checklist": {
+      "E0": {
+        "is_test_related": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Every smart contract must have corresponding unit tests that explicitly test standard execution flow, exact reverts via cheatcodes/assertions, and event emission.",
+            "reason": "Explicit mention of testing requirements for smart contracts."
+          }
+        },
+        "has_observable_guidance": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Testing Standards: Every smart contract must have corresponding unit tests that explicitly test standard execution flow, exact reverts via cheatcodes/assertions, and event emission.",
+            "reason": "Provides clear, actionable testing guidelines."
+          }
+        }
+      },
+      "test_level": {
+        "component": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Every smart contract must have corresponding unit tests"
+          }
+        },
+        "component_integration": {
+          "answer": "UNCERTAIN",
+          "evidence": null
+        },
+        "system": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "system_integration": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "acceptance": {
+          "answer": "NO",
+          "evidence": null
+        }
+      },
+      "test_type": {
+        "functional": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "explicitly test standard execution flow"
+          }
+        },
+        "non_functional": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Checks-Effects-Interactions (CEI), reentrancy safe, gas-optimized, security workflows"
+          }
+        },
+        "non_functional_aspects": {
+          "performance": {
+            "answer": "YES",
+            "evidence": {
+              "quote": "gas-optimized"
+            }
+          },
+          "security": {
+            "answer": "YES",
+            "evidence": {
+              "quote": "smart contract security, reentrancy safe, Checks-Effects-Interactions (CEI)"
+            }
+          },
+          "usability": {
+            "answer": "NO",
+            "evidence": null
+          },
+          "reliability": {
+            "answer": "NO",
+            "evidence": null
+          },
+          "compatibility": {
+            "answer": "NO",
+            "evidence": null
+          }
+        }
+      },
+      "test_technique": {
+        "black_box": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "white_box": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "explicitly test standard execution flow, exact reverts via cheatcodes/assertions"
+          }
+        },
+        "experience_based": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "equivalence_partitioning": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "boundary_value_analysis": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "decision_table_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "state_transition_testing": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "explicitly test standard execution flow, event emission"
+          }
+        },
+        "statement_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "branch_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "error_guessing": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "exact reverts via cheatcodes/assertions"
+          }
+        },
+        "exploratory_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "checklist_based_testing": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Validation Checklist: Before testing or finalizing a Solidity contract, verify:"
+          }
+        }
+      },
+      "test_purpose": {
+        "confirmation": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Every smart contract must have corresponding unit tests that explicitly test standard execution flow"
+          }
+        },
+        "regression": {
+          "answer": "NO",
+          "evidence": null
+        }
+      },
+      "test_strategy": {
+        "test_pyramid": {
+          "answer": "NO",
+          "evidence": null
+        }
+      },
+      "extensions": {
+        "smoke_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "mutation_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "fuzz_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "property_invariant_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "fork_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "load_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "stress_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "contract_testing": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Every smart contract must have corresponding unit tests"
+          }
+        }
+      }
+    },
+    "skills_evidenced": {
+      "test_level": [
+        "component"
+      ],
+      "test_type": [
+        "functional"
+      ],
+      "non_functional_aspects": [
+        "performance"
+      ],
+      "test_technique": [
+        "white_box",
+        "error_guessing"
+      ],
+      "test_purpose": [
+        "confirmation"
+      ],
+      "test_strategy": [],
+      "extensions": [
+        "contract_testing"
+      ]
+    },
+    "verification_ok": false,
+    "verification_issues": [
+      "test_type.non_functional",
+      "test_type.non_functional_aspects.security",
+      "test_technique.state_transition_testing",
+      "test_technique.checklist_based_testing"
+    ],
+    "dropped_non_verbatim": [
+      "test_type.non_functional",
+      "test_technique.state_transition_testing",
+      "test_technique.checklist_based_testing",
+      "test_type.non_functional_aspects.security"
+    ]
+  },
+  {
+    "repo": "abelrguezr/hacktricks-skills",
+    "path": "skills/pentesting-web/dapps-DecentralizedApplications/SKILL.MD",
+    "name": "pentest-dapps",
+    "source": "examples_pyramid",
+    "pilot_layer_hint": "integration",
+    "matched_layers_keywords": [
+      "integration"
+    ],
+    "content_truncated": false,
+    "content_chars_sent": 7490,
+    "artifact_type": "test_guidance_skill",
+    "confidence": "high",
+    "checklist": {
+      "E0": {
+        "is_test_related": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "How to pentest decentralized applications (DApps). Use this skill whenever the user mentions DApps, Web3 applications, blockchain applications, smart contracts, or wants to audit/penetrate test any decentralized application.",
+            "reason": "The document explicitly instructs on testing methodologies for DApps, including audit and penetration testing."
+          }
+        },
+        "has_observable_guidance": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "A comprehensive guide for security testing of decentralized applications.",
+            "reason": "The document provides detailed testing methodologies, attack vectors, and testing phases."
+          }
+        }
+      },
+      "test_level": {
+        "component": {
+          "answer": "YES",
+          "evidence": null
+        },
+        "component_integration": {
+          "answer": "YES",
+          "evidence": null
+        },
+        "system": {
+          "answer": "YES",
+          "evidence": null
+        },
+        "system_integration": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Test backend-blockchain synchronization",
+            "reason": "The document explicitly mentions integration testing between backend and blockchain."
+          }
+        },
+        "acceptance": {
+          "answer": "NO",
+          "evidence": null
+        }
+      },
+      "test_type": {
+        "functional": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Test for XSS (critical in DApps - can manipulate wallet interactions)",
+            "reason": "The document includes functional testing instructions for vulnerabilities like XSS."
+          }
+        },
+        "non_functional": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Client-side vulnerabilities have amplified impact in DApps since clients perform blockchain operations",
+            "reason": "The document addresses non-functional aspects like security and reliability."
+          }
+        },
+        "non_functional_aspects": {
+          "performance": {
+            "answer": "YES",
+            "evidence": {
+              "quote": "DoS via Poor Transaction Time Handling",
+              "reason": "The document includes performance-related testing for denial-of-service scenarios."
+            }
+          },
+          "security": {
+            "answer": "YES",
+            "evidence": {
+              "quote": "Web3-Specific Attack Vectors",
+              "reason": "The document focuses heavily on security vulnerabilities and attack vectors."
+            }
+          },
+          "usability": {
+            "answer": "NO",
+            "evidence": null
+          },
+          "reliability": {
+            "answer": "YES",
+            "evidence": {
+              "quote": "Backend-blockchain desync (race condition)",
+              "reason": "The document addresses reliability concerns like race conditions and synchronization."
+            }
+          },
+          "compatibility": {
+            "answer": "YES",
+            "evidence": {
+              "quote": "Mishandling of Asset Classes",
+              "reason": "The document includes testing for compatibility with different asset types (e.g., ERC-20, ERC-721)."
+            }
+          }
+        }
+      },
+      "test_technique": {
+        "black_box": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Test for XSS (critical in DApps - can manipulate wallet interactions)",
+            "reason": "The document instructs testing without assuming internal knowledge of the system."
+          }
+        },
+        "white_box": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Review contract code for vulnerabilities",
+            "reason": "The document includes instructions for reviewing internal code (smart contracts)."
+          }
+        },
+        "experience_based": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Common Vulnerability Scenarios",
+            "reason": "The document leverages known attack vectors and scenarios from experience."
+          }
+        },
+        "equivalence_partitioning": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "boundary_value_analysis": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "decision_table_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "state_transition_testing": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Test backend-blockchain synchronization",
+            "reason": "The document includes testing for state transitions between backend and blockchain."
+          }
+        },
+        "statement_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "branch_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "error_guessing": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Mishandling of Asset Classes",
+            "reason": "The document instructs testing for potential errors like asset misclassification."
+          }
+        },
+        "exploratory_testing": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Testing Methodology (Phase 1: Reconnaissance)",
+            "reason": "The document encourages exploration of the system to identify attack surfaces."
+          }
+        },
+        "checklist_based_testing": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Quick Reference: Attack Vector Checklist",
+            "reason": "The document provides a checklist for testing specific attack vectors."
+          }
+        }
+      },
+      "test_purpose": {
+        "confirmation": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Testing Methodology (Phase 2: Client-Side Testing)",
+            "reason": "The document instructs testing to confirm the absence of vulnerabilities."
+          }
+        },
+        "regression": {
+          "answer": "NO",
+          "evidence": null
+        }
+      },
+      "test_strategy": {
+        "test_pyramid": {
+          "answer": "NO",
+          "evidence": null
+        }
+      },
+      "extensions": {
+        "smoke_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "mutation_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "fuzz_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "property_invariant_testing": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Backend-blockchain desync (race condition)",
+            "reason": "The document includes testing for invariants like synchronization between backend and blockchain."
+          }
+        },
+        "fork_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "load_testing": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "DoS via Poor Transaction Time Handling",
+            "reason": "The document includes testing for load-related vulnerabilities like denial-of-service."
+          }
+        },
+        "stress_testing": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "DoS via Poor Transaction Time Handling",
+            "reason": "The document includes stress-testing scenarios like handling concurrent requests."
+          }
+        },
+        "contract_testing": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Phase 4: Smart Contract Testing",
+            "reason": "The document explicitly instructs testing of smart contracts."
+          }
+        }
+      }
+    },
+    "skills_evidenced": {
+      "test_level": [
+        "system_integration"
+      ],
+      "test_type": [
+        "functional",
+        "non_functional"
+      ],
+      "non_functional_aspects": [
+        "performance",
+        "security",
+        "reliability",
+        "compatibility"
+      ],
+      "test_technique": [
+        "black_box",
+        "white_box",
+        "experience_based",
+        "state_transition_testing",
+        "error_guessing",
+        "checklist_based_testing"
+      ],
+      "test_purpose": [],
+      "test_strategy": [],
+      "extensions": [
+        "property_invariant_testing",
+        "load_testing",
+        "stress_testing",
+        "contract_testing"
+      ]
+    },
+    "verification_ok": false,
+    "verification_issues": [
+      "test_level.component",
+      "test_level.component_integration",
+      "test_level.system",
+      "test_technique.exploratory_testing",
+      "test_purpose.confirmation"
+    ],
+    "dropped_non_verbatim": [
+      "test_level.component",
+      "test_level.component_integration",
+      "test_level.system",
+      "test_technique.exploratory_testing",
+      "test_purpose.confirmation"
+    ]
+  },
+  {
+    "repo": "flare-foundation/flare-ai-skills",
+    "path": "skills/flare-fcc-skill/SKILL.md",
+    "name": "flare-fcc",
+    "source": "examples_pyramid",
+    "pilot_layer_hint": "system_e2e",
+    "matched_layers_keywords": [
+      "system_e2e"
+    ],
+    "content_truncated": true,
+    "content_chars_sent": 14000,
+    "artifact_type": "not_test_related",
+    "confidence": "high",
+    "checklist": {
+      "E0": {
+        "is_test_related": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "has_observable_guidance": {
+          "answer": "NO",
+          "evidence": null
+        }
+      },
+      "test_level": {
+        "component": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "component_integration": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "system": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "system_integration": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "acceptance": {
+          "answer": "NO",
+          "evidence": null
+        }
+      },
+      "test_type": {
+        "functional": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "non_functional": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "non_functional_aspects": {
+          "performance": {
+            "answer": "NO",
+            "evidence": null
+          },
+          "security": {
+            "answer": "NO",
+            "evidence": null
+          },
+          "usability": {
+            "answer": "NO",
+            "evidence": null
+          },
+          "reliability": {
+            "answer": "NO",
+            "evidence": null
+          },
+          "compatibility": {
+            "answer": "NO",
+            "evidence": null
+          }
+        }
+      },
+      "test_technique": {
+        "black_box": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "white_box": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "experience_based": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "equivalence_partitioning": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "boundary_value_analysis": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "decision_table_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "state_transition_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "statement_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "branch_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "error_guessing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "exploratory_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "checklist_based_testing": {
+          "answer": "NO",
+          "evidence": null
+        }
+      },
+      "test_purpose": {
+        "confirmation": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "regression": {
+          "answer": "NO",
+          "evidence": null
+        }
+      },
+      "test_strategy": {
+        "test_pyramid": {
+          "answer": "NO",
+          "evidence": null
+        }
+      },
+      "extensions": {
+        "smoke_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "mutation_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "fuzz_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "property_invariant_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "fork_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "load_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "stress_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "contract_testing": {
+          "answer": "NO",
+          "evidence": null
+        }
+      }
+    },
+    "skills_evidenced": {
+      "test_level": [],
+      "test_type": [],
+      "non_functional_aspects": [],
+      "test_technique": [],
+      "test_purpose": [],
+      "test_strategy": [],
+      "extensions": []
+    },
+    "verification_ok": true,
+    "verification_issues": [],
+    "dropped_non_verbatim": []
+  },
+  {
+    "repo": "Lay3rLabs/wavs-aave-guardian",
+    "path": ".claude/skills/test-contracts/SKILL.md",
+    "name": "test-contracts",
+    "source": "candidates",
+    "pilot_layer_hint": "fuzz_property",
+    "matched_layers_keywords": [
+      "fuzz_property",
+      "unit"
+    ],
+    "content_truncated": false,
+    "content_chars_sent": 894,
+    "artifact_type": "test_guidance_skill",
+    "confidence": "high",
+    "checklist": {
+      "E0": {
+        "is_test_related": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Run the Solidity smart contract tests",
+            "reason": "The skill explicitly instructs running tests for Solidity smart contracts."
+          }
+        },
+        "has_observable_guidance": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "If tests fail, analyze the output, identify the root cause, and suggest a fix.",
+            "reason": "The skill provides explicit guidance on handling test failures and debugging."
+          }
+        }
+      },
+      "test_level": {
+        "component": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Core unit tests (deposit, withdraw, LP, hedge)",
+            "reason": "Evidence of unit-level testing for isolated components (e.g., `SmartVault.t.sol`)."
+          }
+        },
+        "component_integration": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Delta rebalancing tests",
+            "reason": "Tests for interactions between components (e.g., rebalancing logic)."
+          }
+        },
+        "system": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Stateful invariant tests",
+            "reason": "Tests for broader system-level behavior (e.g., invariants across contracts)."
+          }
+        },
+        "system_integration": {
+          "answer": "UNCERTAIN",
+          "evidence": null
+        },
+        "acceptance": {
+          "answer": "NO",
+          "evidence": null
+        }
+      },
+      "test_type": {
+        "functional": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Core unit tests (deposit, withdraw, LP, hedge)",
+            "reason": "Tests explicitly describe functional behaviors (e.g., deposit, withdraw)."
+          }
+        },
+        "non_functional": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "WAVS race condition / cooldown tests",
+            "reason": "Tests for non-functional aspects like concurrency and timing."
+          }
+        },
+        "non_functional_aspects": {
+          "performance": {
+            "answer": "NO",
+            "evidence": null
+          },
+          "security": {
+            "answer": "YES",
+            "evidence": {
+              "quote": "race condition / cooldown tests",
+              "reason": "Tests explicitly target security-related concerns (race conditions)."
+            }
+          },
+          "usability": {
+            "answer": "NO",
+            "evidence": null
+          },
+          "reliability": {
+            "answer": "YES",
+            "evidence": {
+              "quote": "Stateful invariant tests",
+              "reason": "Invariant tests imply reliability checks for state consistency."
+            }
+          },
+          "compatibility": {
+            "answer": "NO",
+            "evidence": null
+          }
+        }
+      },
+      "test_technique": {
+        "black_box": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "white_box": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Run Solidity smart contract tests using Foundry forge",
+            "reason": "Tests are executed at the code level (Solidity), implying white-box access."
+          }
+        },
+        "experience_based": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "equivalence_partitioning": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "boundary_value_analysis": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "decision_table_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "state_transition_testing": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Stateful invariant tests",
+            "reason": "Tests explicitly mention stateful behavior and invariants."
+          }
+        },
+        "statement_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "branch_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "error_guessing": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "If tests fail, analyze the output, identify the root cause, and suggest a fix.",
+            "reason": "Guidance implies proactive error hypothesis and debugging."
+          }
+        },
+        "exploratory_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "checklist_based_testing": {
+          "answer": "NO",
+          "evidence": null
+        }
+      },
+      "test_purpose": {
+        "confirmation": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Run the Solidity smart contract tests",
+            "reason": "Primary purpose is to verify contract behavior (confirmation)."
+          }
+        },
+        "regression": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Core unit tests (deposit, withdraw, LP, hedge)",
+            "reason": "Unit tests imply regression checks for core functionality."
+          }
+        }
+      },
+      "test_strategy": {
+        "test_pyramid": {
+          "answer": "NO",
+          "evidence": null
+        }
+      },
+      "extensions": {
+        "smoke_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "mutation_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "fuzz_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "property_invariant_testing": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Stateful invariant tests",
+            "reason": "Explicit mention of invariant testing."
+          }
+        },
+        "fork_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "load_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "stress_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "contract_testing": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Run Solidity smart contract tests using Foundry forge",
+            "reason": "Skill is explicitly for contract-level testing."
+          }
+        }
+      }
+    },
+    "skills_evidenced": {
+      "test_level": [
+        "component",
+        "component_integration",
+        "system"
+      ],
+      "test_type": [
+        "functional",
+        "non_functional"
+      ],
+      "non_functional_aspects": [
+        "security",
+        "reliability"
+      ],
+      "test_technique": [
+        "white_box",
+        "state_transition_testing",
+        "error_guessing"
+      ],
+      "test_purpose": [
+        "confirmation",
+        "regression"
+      ],
+      "test_strategy": [],
+      "extensions": [
+        "property_invariant_testing",
+        "contract_testing"
+      ]
+    },
+    "verification_ok": true,
+    "verification_issues": [],
+    "dropped_non_verbatim": []
+  },
+  {
+    "repo": "Matro81/ModernFlyouts-Enhance",
+    "path": ".agent/skills/blockchain-engineer/SKILL.md",
+    "name": "blockchain-engineer",
+    "source": "candidates",
+    "pilot_layer_hint": "fork",
+    "matched_layers_keywords": [
+      "fork",
+      "formal_symbolic",
+      "fuzz_property",
+      "unit"
+    ],
+    "content_truncated": false,
+    "content_chars_sent": 2433,
+    "artifact_type": "test_guidance_skill",
+    "confidence": "high",
+    "checklist": {
+      "E0": {
+        "is_test_related": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Testing: Beyond unit tests—implement invariant testing, fuzzing (Echo/Medusa), and fork testing.",
+            "reason": "Explicit mention of testing techniques and strategies."
+          }
+        },
+        "has_observable_guidance": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Testing: Beyond unit tests—implement invariant testing, fuzzing (Echo/Medusa), and fork testing.",
+            "reason": "Clear instructions on testing methodologies and tools."
+          }
+        }
+      },
+      "test_level": {
+        "component": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Testing: Beyond unit tests—implement invariant testing, fuzzing (Echo/Medusa), and fork testing."
+          }
+        },
+        "component_integration": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "system": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "system_integration": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "acceptance": {
+          "answer": "NO",
+          "evidence": null
+        }
+      },
+      "test_type": {
+        "functional": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "non_functional": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Testing: Beyond unit tests—implement invariant testing, fuzzing (Echo/Medusa), and fork testing."
+          }
+        },
+        "non_functional_aspects": {
+          "performance": {
+            "answer": "NO",
+            "evidence": null
+          },
+          "security": {
+            "answer": "YES",
+            "evidence": {
+              "quote": "Advanced Security: Protect value through formal verification, fuzzing, and rigorous audit preparation."
+            }
+          },
+          "usability": {
+            "answer": "NO",
+            "evidence": null
+          },
+          "reliability": {
+            "answer": "NO",
+            "evidence": null
+          },
+          "compatibility": {
+            "answer": "NO",
+            "evidence": null
+          }
+        }
+      },
+      "test_technique": {
+        "black_box": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "white_box": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Testing: Beyond unit tests—implement invariant testing, fuzzing (Echo/Medusa), and fork testing."
+          }
+        },
+        "experience_based": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "equivalence_partitioning": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "boundary_value_analysis": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "decision_table_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "state_transition_testing": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "invariant testing"
+          }
+        },
+        "statement_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "branch_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "error_guessing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "exploratory_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "checklist_based_testing": {
+          "answer": "NO",
+          "evidence": null
+        }
+      },
+      "test_purpose": {
+        "confirmation": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Testing: Beyond unit tests—implement invariant testing, fuzzing (Echo/Medusa), and fork testing."
+          }
+        },
+        "regression": {
+          "answer": "NO",
+          "evidence": null
+        }
+      },
+      "test_strategy": {
+        "test_pyramid": {
+          "answer": "NO",
+          "evidence": null
+        }
+      },
+      "extensions": {
+        "smoke_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "mutation_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "fuzz_testing": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "fuzzing (Echo/Medusa)"
+          }
+        },
+        "property_invariant_testing": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "invariant testing"
+          }
+        },
+        "fork_testing": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "fork testing"
+          }
+        },
+        "load_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "stress_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "contract_testing": {
+          "answer": "YES",
+          "evidence": {
+            "quote": "Testing: Beyond unit tests—implement invariant testing, fuzzing (Echo/Medusa), and fork testing."
+          }
+        }
+      }
+    },
+    "skills_evidenced": {
+      "test_level": [
+        "component"
+      ],
+      "test_type": [
+        "non_functional"
+      ],
+      "non_functional_aspects": [
+        "security"
+      ],
+      "test_technique": [
+        "white_box",
+        "state_transition_testing"
+      ],
+      "test_purpose": [
+        "confirmation"
+      ],
+      "test_strategy": [],
+      "extensions": [
+        "fuzz_testing",
+        "property_invariant_testing",
+        "fork_testing",
+        "contract_testing"
+      ]
+    },
+    "verification_ok": true,
+    "verification_issues": [],
+    "dropped_non_verbatim": []
+  },
+  {
+    "repo": "linkxzhou/build-your-own-x-skills",
+    "path": "skills/blockchain-cryptocurrency-blockchain-ecomunsing-blockchain/SKILL.md",
+    "name": "blockchain-cryptocurrency-blockchain-ecomunsing-blockchain",
+    "source": "candidates",
+    "pilot_layer_hint": "regression",
+    "matched_layers_keywords": [
+      "regression"
+    ],
+    "content_truncated": false,
+    "content_chars_sent": 1534,
+    "artifact_type": "not_test_related",
+    "confidence": "low",
+    "checklist": {
+      "E0": {
+        "is_test_related": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "has_observable_guidance": {
+          "answer": "NO",
+          "evidence": null
+        }
+      },
+      "test_level": {
+        "component": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "component_integration": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "system": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "system_integration": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "acceptance": {
+          "answer": "NO",
+          "evidence": null
+        }
+      },
+      "test_type": {
+        "functional": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "non_functional": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "non_functional_aspects": {
+          "performance": {
+            "answer": "NO",
+            "evidence": null
+          },
+          "security": {
+            "answer": "NO",
+            "evidence": null
+          },
+          "usability": {
+            "answer": "NO",
+            "evidence": null
+          },
+          "reliability": {
+            "answer": "NO",
+            "evidence": null
+          },
+          "compatibility": {
+            "answer": "NO",
+            "evidence": null
+          }
+        }
+      },
+      "test_technique": {
+        "black_box": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "white_box": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "experience_based": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "equivalence_partitioning": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "boundary_value_analysis": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "decision_table_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "state_transition_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "statement_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "branch_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "error_guessing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "exploratory_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "checklist_based_testing": {
+          "answer": "NO",
+          "evidence": null
+        }
+      },
+      "test_purpose": {
+        "confirmation": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "regression": {
+          "answer": "NO",
+          "evidence": null
+        }
+      },
+      "test_strategy": {
+        "test_pyramid": {
+          "answer": "NO",
+          "evidence": null
+        }
+      },
+      "extensions": {
+        "smoke_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "mutation_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "fuzz_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "property_invariant_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "fork_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "load_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "stress_testing": {
+          "answer": "NO",
+          "evidence": null
+        },
+        "contract_testing": {
+          "answer": "NO",
+          "evidence": null
+        }
+      }
+    },
+    "skills_evidenced": {
+      "test_level": [],
+      "test_type": [],
+      "non_functional_aspects": [],
+      "test_technique": [],
+      "test_purpose": [],
+      "test_strategy": [],
+      "extensions": []
+    },
+    "verification_ok": true,
+    "verification_issues": [],
+    "dropped_non_verbatim": []
+  }
+]

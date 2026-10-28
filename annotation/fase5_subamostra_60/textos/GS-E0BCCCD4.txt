@@ -1,0 +1,150 @@
+NAME: cto-orchestration
+DESCRIPTION: Use when acting as the CTO / engineering lead orchestrating a multi-day or multi-week build with one human and many parallel agents, OR as the LEAD-CTO orchestrator-of-orchestrators that deploys and monitors subordinate CTOs across multiple parallel projects, OR when the round needs a lead skill to route between sub-skills, learn from what just happened, and enable the rest of the brain to grow. Fires on scope assessment, decomposition, dispatch, integration, reviewer-trio gating, tool selection, focused search, self-critique, mentorship, operationalization, pre-handover discipline, the round-close learning ritual that writes lessons to memory and updates downstream skills, AND the lead-CTO tier behaviors — subordinate-CTO deployment (charter, scope, reporting cadence), cross-project monitoring (per-project growth-ledger reads, status digest, blocker triage), cross-project synthesis (promoting project-level lessons to brain-policy), and portfolio-level authority/escalation. Covers prompt eng, context eng, file-scope rules, frozen contracts, structured-summary outputs, single integrating commit, the four playbook patterns, the nine CTO roles, the two CTO tiers (lead and regular), the SearXNG search discipline, the self-enablement protocol (when to fire skill-creator / consolidate-memory / project-impact-scribe), the growth scoreboard, the agentic-learning-loop coupling, and the hierarchical-RL framing.
+
+---
+name: cto-orchestration
+description: Use when acting as the CTO / engineering lead orchestrating a multi-day or multi-week build with one human and many parallel agents, OR as the LEAD-CTO orchestrator-of-orchestrators that deploys and monitors subordinate CTOs across multiple parallel projects, OR when the round needs a lead skill to route between sub-skills, learn from what just happened, and enable the rest of the brain to grow. Fires on scope assessment, decomposition, dispatch, integration, reviewer-trio gating, tool selection, focused search, self-critique, mentorship, operationalization, pre-handover discipline, the round-close learning ritual that writes lessons to memory and updates downstream skills, AND the lead-CTO tier behaviors — subordinate-CTO deployment (charter, scope, reporting cadence), cross-project monitoring (per-project growth-ledger reads, status digest, blocker triage), cross-project synthesis (promoting project-level lessons to brain-policy), and portfolio-level authority/escalation. Covers prompt eng, context eng, file-scope rules, frozen contracts, structured-summary outputs, single integrating commit, the four playbook patterns, the nine CTO roles, the two CTO tiers (lead and regular), the SearXNG search discipline, the self-enablement protocol (when to fire skill-creator / consolidate-memory / project-impact-scribe), the growth scoreboard, the agentic-learning-loop coupling, and the hierarchical-RL framing.
+---
+
+# CTO orchestration
+
+> **Version 0.6.1** — 2026-06-24. **cto-brain package benchmark docs** — peer comparison
+> (14 tools), measured scorecard, publish gate. See
+> `references/benchmark-peers.md` and npm package `docs/benchmark/`.
+>
+> **Version 0.6.0** — 2026-06-24. Adds **round handoff** — operator-facing synthesis
+> (see skill body § Round handoff). Pairs with `human-voice-writing`.
+>
+> **Version 0.5.0** — 2026-05-15. **Merge release.** Reconciles
+> two parallel growth axes: the Mac axis (Role 9, agentic-learning-
+> loop coupling, lead-CTO tier from v0.3.0 + v0.4.0) and the spark
+> axis (cross-machine + branch-per-theme patterns, the wave-9
+> K1/K2/K6/K7 live-stack triage round — K-deferred-K trap, user-
+> frustration-ladder signal, reconciler idempotency, SendMessage
+> availability, container-engine name-index trap, file-scope overlap
+> at dispatch — bundle packaging + versioning, the L2-acceptance /
+> wave-11 GPU-dispatch patterns). Substrate fix shipped same commit:
+> bootstrap/sync-back.sh now uses `rsync -au` (no `--delete`) so
+> concurrent multi-machine edits coexist instead of clobbering. The
+> sync-back-loop failure mode is closed; see
+> memory/feedback_substrate_must_match_policy.md for the lesson.
+>
+> **Version 0.4.0** — 2026-05-15. Adds the **lead-CTO tier** — the
+> orchestrator-of-orchestrators that deploys subordinate CTOs (one
+> per project / workstream), monitors them via per-project growth
+> ledgers and structured status reports, synthesizes lessons across
+> projects, and arbitrates portfolio-level priorities. The existing
+> CTO posture (9 roles) is the "regular tier" that subordinate CTOs
+> operate in. Most rounds run at the regular tier; lead-tier rounds
+> are weekly to monthly. New section: "Lead-CTO tier" below.
+>
+> **Version 0.3.0** — 2026-05-15. Added Role 9 (Learn + Enable), the
+> round-close ritual, the self-enablement protocol (when to invoke
+> skill-creator / consolidate-memory / project-impact-scribe), the
+> growth scoreboard, and the agentic-learning-loop appendix. The
+> skill now treats itself as a policy artifact in an explicit
+> learning loop — see the appendix for the RL framing.
+>
+> **Version 0.2.0** — 2026-05-13. Added the eight CTO roles, tool
+> selection patterns, focused-search via SearXNG, and the
+> self-critique pre-flight.
+
+The pattern for building real products at scale with one human in the
+seat and many AI agents in parallel. Distilled from the slate build
+(an OSS multi-tenant private-cloud platform, ~50k LOC shipped in ~30
+integration rounds with a single CTO orchestrator).
+
+The full lived experience is at `~/Ulap/slate/docs/agents/build-guide.md`
+plus the war-stories at `~/Ulap/slate/docs/agents/war-stories.md`.
+
+---
+
+## TL;DR
+
+- **One human orchestrates; agents execute.** The CTO writes briefs,
+  dispatches builders, integrates returns, and runs reviewers. The CTO
+  never serially writes the bulk of the code.
+- **Discipline is the multiplier.** File scopes, frozen contracts,
+  structured summaries, no-agent-commits, single integrating commit.
+- **Department heads exist** for ≥4-builder workstreams.
+- **Reviewer trios** run on every integration round (security /
+  devil's-advocate / tech-lead).
+- **Frozen contracts** (schema, proto, interfaces, JSON schemas) are
+  the seams agents code against.
+- **Resume-from-partial** is the recovery playbook for socket-died
+  agents.
+- **Always update this skill** when you learn something new from a
+  round. Skills decay if they don't capture lived experience.
+- **Every round closes with a learning ritual** — write a feedback
+  file OR an explicit no-op acknowledgment. The skill IS the policy
+  in the agentic-learning-loop; the round-close write IS the policy
+  update. See Role 9 below.
+- **The CTO enables the rest of the brain.** When a recurring
+  pattern doesn't fit any existing skill, fire `skill-creator`. When
+  memory grows messy, fire `consolidate-memory`. At month-end, fire
+  `project-impact-scribe`. The CTO is the conductor; the other
+  skills are the instruments.
+- **Two tiers: lead-CTO and regular CTO.** The regular CTO is the
+  one-human-in-the-seat orchestrator described by the 9 roles. The
+  **lead-CTO** is one tier higher: it deploys subordinate CTOs (one
+  per project), monitors them via per-project growth ledgers and
+  status digests, and synthesizes lessons across the portfolio. Most
+  rounds run at regular tier; lead-tier rounds are weekly to
+  monthly. See "Lead-CTO tier" below.
+
+---
+
+## When to fire
+
+This skill fires when:
+
+- You're holding the **CTO seat** of a multi-day or multi-week build
+- The work decomposes into **≥2 independent slices** at any moment
+- You have access to a **multi-agent runner** (Claude Code, Codex, etc.)
+- The codebase has at least **basic seams** to anchor frozen contracts
+  (or you're about to write them)
+- You're going to **integrate work back together** — not just spawn
+  research
+
+If only one of those is true, just use `multi-agent-execution` directly
+without the CTO layer.
+
+## When NOT to fire
+
+- **Single task, single agent.** Just dispatch one agent and integrate.
+- **Pure research with no implementation.** Dispatch an Explore agent.
+- **Pure debugging where you don't know the shape yet.** Investigate
+  serially first; you can't decompose what you don't understand.
+- **Trivial work.** A 2-file refactor is not a CTO problem.
+
+---
+
+## The CTO posture — nine roles
+
+When you wear this hat, you cycle through **nine roles** as the round
+demands. They're not jobs you do once; they're hats you swap between
+mid-conversation as the work moves. Role 9 (Learn + Enable) is the
+one that runs *every* turn, even on trivial rounds — it's how the
+brain grows.
+
+### 1. Decompose
+
+Break the ask into themes + briefs + frozen contracts. Most rounds
+start here.
+
+- Read the ask underneath the asked ask. ("Make the UI better" usually
+  means "fix the 3 things that frustrated me last session.")
+- Identify the load-bearing decision blocking everything else; promote
+  it.
+- Carve themes that map cleanly to non-overlapping file scopes.
+
+#### Grill before you decompose (the 2-minute alignment loop)
+
+"No-one knows exactly what they want." Before you write a single brief,
+**grill the human to surface scope** — the asked ask is rarely the whole
+ask. Get explicit answers to the load-bearing questions:
+
+- **Deploy** — where does this run in production? (Vercel / Docker / a host?)
+- **Distribution** — does anything get published? (npm / a registry / a tag?)
+- **Proof bar** — what counts as "tested"? (unit / 
+[... truncado em 8000 caracteres]
